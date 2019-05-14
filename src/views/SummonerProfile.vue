@@ -288,7 +288,7 @@
         position: relative;
 
         .content {
-            padding: 4vw;
+            padding: 3vw;
             min-height: calc(100vh - 65px);
 
             .top-wrapper {
