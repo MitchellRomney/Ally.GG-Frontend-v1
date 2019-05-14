@@ -53,22 +53,15 @@
     let query_getSoloLadder =
         `
         query {
-            topSummoners {
+              topSummoners {
                 summonerName
                 rankedSolo {
                   tier
                   rank
-                  rankNumber
                   lp
-                  leagueName
                   wins
                   losses
-                  ringValues
                 }
-              }
-              latestUpdatedSummoners {
-                summonerName
-                lastUpdated
               }
             }
         `;
