@@ -253,7 +253,7 @@
                 axios.defaults.xsrfCookieName = 'csrftoken';
                 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
                 axios({
-                    url: "http://localhost:8040/graphql",
+                    url: process.env.VUE_APP_API_URL + '/graphql',
                     method: 'post',
                     data: {
                         query: query_getSummonerInfo,

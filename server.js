@@ -1,5 +1,3 @@
-// server.js
-
 let express = require('express');
 let path = require('path');
 let serveStatic = require('serve-static');

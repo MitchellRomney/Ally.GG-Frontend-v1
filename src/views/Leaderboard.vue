@@ -121,7 +121,7 @@
             getSoloLadder() {
                 axios({
                     method: "POST",
-                    url: "http://localhost:8040/graphql",
+                    url: process.env.VUE_APP_API_URL + '/graphql',
                     data: {
                         query: query_getSoloLadder,
                         variables: {},
