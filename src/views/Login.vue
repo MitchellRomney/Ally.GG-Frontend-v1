@@ -69,19 +69,21 @@
         mutation TokenAuth($username: String!, $password: String!) {
           tokenAuth(username: $username, password: $password) {
             token
-            id
-            username
-            firstName
-            lastName
-            isStaff
-            isActive
-            isSuperuser
-            lastLogin
-            dateJoined
-            Profiles {
+            user {
               id
-              dateModified
-              dateCreated
+              username
+              firstName
+              lastName
+              isStaff
+              isActive
+              isSuperuser
+              lastLogin
+              dateJoined
+              Profiles {
+                id
+                dateModified
+                dateCreated
+              }
             }
           }
         }
@@ -122,14 +124,19 @@
                         },
                     }
                 }).then((response) => {
-                    let token = response.data.data.tokenAuth.token;
-                    let user = response.data.data.tokenAuth.user;
 
+                    // Get the JWT token and set it in the Cookies to keep session.
+                    let token = response.data.data.tokenAuth.token;
+                    this.$cookie.set('token', token);
+
+                    // Get the user information from the response and set the userId in cookies.
+                    let user = response.data.data.tokenAuth.user;
+                    this.$cookie.set('userId', user.id);
+
+                    // Put the user information in the current state.
                     this.$store.state.user = user;
 
-                    this.$cookie.set('token', token);
-                    this.$cookie.set('id', user.id);
-
+                    // Redirect to home.
                     this.$router.push('/');
                 });
             },

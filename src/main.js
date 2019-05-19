@@ -5,10 +5,10 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {faHome, faUsers, faTrophy, faBell, faCaretDown} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import router from './router'
+import store from './store.js'
 import titleMixin from './mixins/titleMixin'
 import VueCookie from 'vue-cookie'
 import Axios from 'axios'
-
 
 Vue.use(VueCookie);
 Vue.use(Vuex);
@@ -28,22 +28,16 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
 Vue.prototype.$http = Axios;
-const token = Vue.cookie.get('token');
-if (token) {
-    Vue.prototype.$http.defaults.headers.common['Authorization'] = token
+if (process.env.NODE_ENV !== 'development') {
+    Vue.prototype.$http.defaults.headers.common['secure'] = true;
+    Vue.prototype.$http.defaults.headers.common['httpOnly'] = true;
 }
 
-const store = new Vuex.Store({
-    state: {
-        user: {},
-        token: Vue.cookie.get('token')
-    },
-    mutations: {
-        setUser(state, user) {
-            state.user = user;
-        }
-    }
-});
+Date.prototype.addDays = function(days) {
+    let date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+}
 
 new Vue({
     router,

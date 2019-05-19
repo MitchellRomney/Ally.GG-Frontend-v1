@@ -16,7 +16,7 @@
                     <font-awesome-icon icon="caret-down"/>
                 </a>
                 <ul v-if="open_menu" class="options-dropdown">
-                    <li><a href="/logout">Logout</a></li>
+                    <li><a @click="logout">Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -35,6 +35,11 @@
         methods: {
             toggleMenu() {
                 this.open_menu = !this.open_menu;
+            },
+            logout() {
+                this.$cookie.delete('token');
+                this.$cookie.delete('user');
+                this.$router.go();
             }
         },
         computed: {
@@ -120,6 +125,10 @@
                     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
                     transition: all 0.3s ease-in-out 0s, visibility 0s linear 0.3s, z-index 0s linear 0.01s;
                     text-align: center;
+
+                    li {
+                        cursor: pointer;
+                    }
                 }
 
                 i {
