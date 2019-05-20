@@ -13,6 +13,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.8.2",
     "@fortawesome/vue-fontawesome": "^0.1.6",
     "@types/jwt-decode": "^2.2.1",
+    "async": "^3.0.0",
     "axios": "^0.18.0",
     "connect-history-api-fallback": "^1.6.0",
     "core-js": "^2.6.5",

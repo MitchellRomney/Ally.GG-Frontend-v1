@@ -28,6 +28,9 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
 Vue.prototype.$http = Axios;
+Vue.prototype.$http.xsrfCookieName = 'csrftoken';
+Vue.prototype.$http.xsrfHeaderName = 'X-CSRFToken';
+
 if (process.env.NODE_ENV !== 'development') {
     Vue.prototype.$http.defaults.headers.common['secure'] = true;
     Vue.prototype.$http.defaults.headers.common['httpOnly'] = true;

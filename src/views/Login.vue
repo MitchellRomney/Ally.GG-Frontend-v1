@@ -21,18 +21,19 @@
                     <h2 class="welcome">Welcome to <span>Ally.GG</span></h2>
                     <h3 class="byline">Let's improve your League of Legends experience.</h3>
                 </div>
-                <div class="form">
+                <form @submit.prevent="login" class="form">
                     <div class="username">
                         <label for="username_input"><b>Username:</b></label>
-                        <input id="username_input" v-model="username" placeholder="Enter your username...">
+                        <input id="username_input" v-model="username" placeholder="Enter your username..."
+                               autocomplete="on">
                     </div>
                     <div class="password">
                         <label for="password_input"><b>Password:</b></label>
                         <input id="password_input" v-model="password" type="password"
-                               placeholder="Enter your password...">
+                               placeholder="Enter your password..." autocomplete="on">
                     </div>
-                </div>
-                <button class="submit" @click="login">login</button>
+                </form>
+                <button class="submit" @click="login">Login</button>
             </div>
         </div>
         <footer>

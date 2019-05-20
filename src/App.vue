@@ -1,5 +1,5 @@
 <template>
-    <div id="ally-gg" :class="{ main: !isOnLoginPage() }">
+    <div id="ally-gg" :class="{ main: loadDashboard }">
         <Navbar v-if="loadDashboard"/>
         <TopNav v-if="loadDashboard"/>
         <router-view/>
@@ -18,13 +18,18 @@
         },
         computed: {
             loadDashboard() {
-                return !this.isOnLoginPage();
+
+                // Paths that are part of the guest website, not the main dashboard.
+                let websitePaths = [
+                    '/login',
+                    '/contact',
+                ];
+
+                // Return false if the current path is not part of the main dashboard.
+                return !websitePaths.includes(this.$route.path)
             },
         },
         methods: {
-            isOnLoginPage: function () {
-                return this.$route.path === '/login'
-            },
         },
         mounted() {
         }

@@ -85,7 +85,8 @@
                     </ul>
                 </div>
                 <div id="summoner-content-wrapper">
-                    <router-view :matches="matches" :summoner="summoner"></router-view>
+                    <router-view :matches="sortedMatches" :summoner="summoner"
+                                 :matchLoading="loading_matches" :matchesRemaining="remaining_matches"></router-view>
                 </div>
             </div>
         </transition>
@@ -95,12 +96,12 @@
 <script>
     import axios from 'axios';
     import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
-    // import $ from 'jquery';
 
     let query_getSummonerInfo =
         `
             query SummonerProfile($summonerName: String, $games: Int){
               summoner(summonerName: $summonerName) {
+                summonerId
                 summonerName
                 profileIconId
                 summonerLevel
@@ -205,6 +206,128 @@
             }
         `;
 
+    let mutation_updateSummoner =
+        `
+        mutation updateSummoner($id: String!){
+          updateSummoner(id: $id){
+            updated
+            message
+            newMatches
+            summoner {
+              summonerId
+              summonerName
+              profileIconId
+              summonerLevel
+              lastUpdated
+              rankedSolo {
+                tier
+                rank
+                rankNumber
+                lp
+                leagueName
+                wins
+                losses
+                ringValues
+              }
+              rankedFlex5 {
+                tier
+                rank
+                rankNumber
+                lp
+                leagueName
+                wins
+                losses
+                ringValues
+              }
+              rankedFlex3 {
+                tier
+                rank
+                rankNumber
+                lp
+                leagueName
+                wins
+                losses
+                ringValues
+              }
+            }
+          }
+        }
+        `;
+
+    let mutation_fetchMatch =
+        `
+        mutation FetchMatch($gameId: String!, $summonerId: String!) {
+          fetchMatch(input: {gameId: $gameId, summonerId: $summonerId}) {
+            player {
+              match {
+                gameId
+                queue
+                gameDurationTime
+                timeago
+                timestamp
+              }
+              champion {
+                key
+                name
+                champId
+              }
+              win
+              kills
+              deaths
+              assists
+              kdaAverage
+              killParticipation
+              totalMinionsKilled
+              csPmin
+              item0 {
+                itemId
+                name
+              }
+              item1 {
+                itemId
+                name
+              }
+              item2 {
+                itemId
+                name
+              }
+              item3 {
+                itemId
+                name
+              }
+              item4 {
+                itemId
+                name
+              }
+              item5 {
+                itemId
+                name
+              }
+              item6 {
+                itemId
+                name
+              }
+              spell1Id {
+                name
+                imageFull
+              }
+              spell2Id {
+                name
+                imageFull
+              }
+              perk0 {
+                name
+                icon
+              }
+              perkSubStyle
+              perk4 {
+                name
+              }
+            }
+          }
+        }
+        `;
+
     function getFontSize(viewport, summonerName) {
         if (viewport >= 768) {
             if (summonerName.length > 14) {
@@ -239,6 +362,7 @@
 
                 // Misc Data
                 nameFontSize: getFontSize(document.documentElement.clientWidth, this.$route.params.summoner),
+                remaining_matches: 0,
 
                 // Loading Flags
                 loading: true,
@@ -248,10 +372,20 @@
                 errorMessage: '',
             }
         },
+        computed: {
+            sortedMatches() {
+                return this.matches.sort(function (a, b) {
+                    let x = a['match']['timestamp'];
+                    let y = b['match']['timestamp'];
+                    return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+                });
+            },
+            loading_matches() {
+                return this.remaining_matches !== 0;
+            }
+        },
         methods: {
             getSummonerInfo() {
-                axios.defaults.xsrfCookieName = 'csrftoken';
-                axios.defaults.xsrfHeaderName = 'X-CSRFToken';
                 axios({
                     url: process.env.VUE_APP_API_URL + '/graphql',
                     method: 'post',
@@ -268,9 +402,50 @@
                     this.loading = false;
                 });
             },
-            updateSummoner() {
+            async updateSummoner() {
+                this.loading = true;
+                await axios({
+                    url: process.env.VUE_APP_API_URL + '/graphql',
+                    method: 'post',
+                    data: {
+                        query: mutation_updateSummoner,
+                        variables: {
+                            id: this.summoner.summonerId,
+                        },
+                    }
+                }).then((response) => {
+                    let data = response.data.data.updateSummoner;
+                    this.summoner = data.summoner;
+                    this.loading = false;
 
+                    if (data.newMatches !== []) {
+
+                        this.remaining_matches = data.newMatches.length;
+
+                        for (let key in data.newMatches) {
+                            this.fetchMatch(data.newMatches[key]);
+                        }
+                    }
+                })
             },
+            fetchMatch(gameId) {
+                axios({
+                    url: process.env.VUE_APP_API_URL + '/graphql',
+                    method: 'post',
+                    data: {
+                        query: mutation_fetchMatch,
+                        variables: {
+                            gameId: gameId,
+                            summonerId: this.summoner.summonerId
+                        },
+                    }
+                }).then((response) => {
+                    let data = response.data.data.fetchMatch;
+                    this.matches.push(data.player);
+                    this.remaining_matches += -1;
+                });
+            }
+            ,
             getMedalUrl(tier, rank) {
                 return require('../assets/images/ranked_medals/' + tier.toLowerCase() + '_' + rank + '.png');
             }
