@@ -1,8 +1,9 @@
 let express = require('express');
-let path = require('path');
 let serveStatic = require('serve-static');
+let history = require('connect-history-api-fallback');
 
 app = express();
+app.use(history());
 app.use(serveStatic(__dirname + "/dist"));
 
 let port = process.env.PORT || 5000;
