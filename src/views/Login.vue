@@ -26,20 +26,20 @@
                         <span>
                             Don't have an account yet?
                         </span>
-                        <router-link to="/register" class="register-button">Register</router-link>
+                        <router-link to="#" class="register-button">Register</router-link>
                     </div>
                 </div>
             </div>
             <footer>
                 <ul>
                     <li>
-                        <a href="/support">Support</a>
+                        <a href="#">Support</a>
                     </li>
                     <li>
-                        <a href="/privacy">Privacy</a>
+                        <a href="#">Privacy</a>
                     </li>
                     <li>
-                        <a href="/legal">Legal</a>
+                        <a href="#">Legal</a>
                     </li>
                 </ul>
             </footer>
