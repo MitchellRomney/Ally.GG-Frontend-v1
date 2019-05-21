@@ -1,7 +1,10 @@
 <template>
     <div class="home">
-        <h1>Welcome to Ally.GG</h1>
-        <h2>User: {{ user.username }}</h2>
+        <div class="header">
+            <h1>
+                Welcome back, <span>{{ user.username }}</span>
+            </h1>
+        </div>
     </div>
 </template>
 
@@ -24,3 +27,21 @@
         }
     }
 </script>
+
+<style scoped lang="scss">
+    .home {
+        padding: 50px;
+
+        .header {
+            text-align: center;
+            font-family: 'Panton Black', sans-serif;
+
+            h1 {
+
+                span {
+                    color: $palette-accent;
+                }
+            }
+        }
+    }
+</style>

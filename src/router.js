@@ -117,7 +117,7 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
 
-    const token = Vue.cookie.get('token');
+    let token = Vue.cookie.get('token');
     let token_expired = false;
 
     if (token) {
@@ -163,7 +163,7 @@ router.beforeEach((to, from, next) => {
                 data: {
                     query: mutation_refreshToken,
                     variables: {
-                        token: token
+                        token: Vue.cookie.get('token')
                     },
                 }
             }).then((response) => {

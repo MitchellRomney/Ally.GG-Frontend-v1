@@ -38,7 +38,7 @@
 
 <style lang="scss">
     #ally-gg {
-        font-family: 'Roboto', Helvetica, Arial, sans-serif;
+        font-family: 'Panton', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         width: 100vw;

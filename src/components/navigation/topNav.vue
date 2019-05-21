@@ -9,7 +9,7 @@
             </div>
             <div class="user">
                 <a :href="'/profiles/' + user.username"><h4>{{ user.username }}</h4></a>
-                <a href="#"><span><i class="fas fa-circle"></i>Online</span></a>
+                <a href="#"><span><font-awesome-icon icon="circle"/></i>Online</span></a>
             </div>
             <div class="acc-options">
                 <a href="#" @click="toggleMenu">
@@ -97,13 +97,12 @@
                     color: grey;
                     font-weight: 600;
                     font-size: 0.8rem;
-                }
+                    display: flex;
 
-                i {
-                    font-size: 0.8rem;
-                    color: limegreen;
-                    margin-right: 5px;
-                    opacity: 0.8;
+                    svg {
+                        color: limegreen;
+                        margin-right: 5px;
+                    }
                 }
             }
 

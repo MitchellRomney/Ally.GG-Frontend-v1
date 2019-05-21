@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import App from './App.vue'
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faHome, faUsers, faTrophy, faBell, faCaretDown} from '@fortawesome/free-solid-svg-icons'
+import {faHome, faUsers, faTrophy, faBell, faCaretDown, faCircle} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import router from './router'
 import store from './store.js'
@@ -20,6 +20,7 @@ library.add(faUsers);
 library.add(faTrophy);
 library.add(faBell);
 library.add(faCaretDown);
+library.add(faCircle);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

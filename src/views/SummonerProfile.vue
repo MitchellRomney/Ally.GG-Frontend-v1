@@ -551,7 +551,7 @@
                     }
 
                     .summonerName {
-                        font-family: Roboto-Black, sans-serif;
+                        font-family: 'Panton Black', sans-serif;
                     }
 
                     .user {

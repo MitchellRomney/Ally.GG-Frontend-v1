@@ -8,11 +8,60 @@
                     <input id="summonerSearch" aria-label="summonerSearch" type="text" v-model="search_entry"
                            @keyup.enter="summonerSearch"/>
                     <button @click="summonerSearch">Find Summoner</button>
-                    <div v-for="result in search_results">
-                        <router-link :to="{ name: 'summoner_profile', params: { summoner: result.summonerName }}">
-                            {{ result.summonerName }}
-                        </router-link>
-                    </div>
+
+                    <table class="results-table">
+                        <tr>
+                            <th scope="col">Summoner Name</th>
+                            <th scope="col">Tier</th>
+                            <th scope="col">Wins</th>
+                            <th scope="col">Losses</th>
+                            <th scope="col">League Points</th>
+                        </tr>
+                        <tr v-for="summoner in search_results" :data-href="'/summoners/' + summoner.summonerName">
+                            <td>
+                                <router-link
+                                        :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
+                                    {{ summoner.summonerName }}
+                                </router-link>
+                            </td>
+                            <td v-if="summoner.rankedSolo">
+                                <router-link
+                                        :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
+                                    {{ summoner.rankedSolo.tier }} {{ summoner.rankedSolo.rank }}
+                                </router-link>
+                            </td>
+                            <td v-else v-cloak>
+                                Unranked
+                            </td>
+                            <td v-if="summoner.rankedSolo">
+                                <router-link
+                                        :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
+                                    {{ summoner.rankedSolo.wins }}
+                                </router-link>
+                            </td>
+                            <td v-else v-cloak>
+                                -
+                            </td>
+                            <td v-if="summoner.rankedSolo">
+                                <router-link
+                                        :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
+                                    {{ summoner.rankedSolo.losses }}
+                                </router-link>
+                            </td>
+                            <td v-else v-cloak>
+                                -
+                            </td>
+                            <td v-if="summoner.rankedSolo">
+                                <router-link
+                                        :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
+                                    {{ summoner.rankedSolo.lp }}
+                                </router-link>
+                            </td>
+                            <td v-else v-cloak>
+                                -
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </transition>
@@ -38,7 +87,6 @@
               leagueName
               wins
               losses
-              ringValues
             }
           }
         }
@@ -112,14 +160,45 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: calc(100vh - 65px);
+            min-height: calc(100vh - 65px);
 
             .panel {
-                padding: 50px;
+                padding: 25px;
                 background-color: white;
                 width: 50%;
                 border: 1px solid #DFE3E8;
                 border-radius: 10px;
+                text-align: center;
+
+                .results-table {
+                    width: 100%;
+                    background-color: white;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    border: 1px solid #DFE3E8;
+                    margin-top: 25px;
+
+                    tr {
+                        border: 1px solid #dfe3e8;
+                        transition: all 0.25s ease;
+
+                        &:hover {
+                            background-color: #fbe1ea;
+                        }
+
+                        th {
+                            background-color: #ececec;
+                            padding: 15px;
+                        }
+
+                        td {
+                            a {
+                                display: block;
+                                padding: 15px;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

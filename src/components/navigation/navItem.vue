@@ -57,6 +57,7 @@
 
                 .name {
                     opacity: 1;
+                    font-weight: bold;
                 }
             }
 
