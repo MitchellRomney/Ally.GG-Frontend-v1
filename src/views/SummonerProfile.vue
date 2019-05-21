@@ -1,101 +1,110 @@
 <template>
-    <div id="summonerProfile">
+    <div id="summonerProfile" v-images-loaded:on.done="isImagesLoaded">
         <transition name="fade">
-            <pulse-loader v-if="loading"></pulse-loader>
-            <div class="content" v-else v-cloak>
-                <div class="top-wrapper">
-                    <div class="avatar-wrapper">
+            <pulse-loader v-if="!load_page"></pulse-loader>
+        </transition>
+        <div class="content">
+            <div class="top-wrapper">
+                <div class="avatar-wrapper">
+                    <div class="avatar">
+                        <img class="resp-img"
+                             :src="'https://ddragon.leagueoflegends.com/cdn/9.9.1/img/profileicon/' + summoner.profileIconId + '.png'">
+                        <span class="level">{{ summoner.summonerLevel }}</span>
+                    </div>
+                    <span class="updated">Last Updated: <span>{{ summoner.lastUpdated }}</span></span>
+                    <button v-on:click="updateSummoner">Update Summoner</button>
+                </div>
+                <div class="title">
+                    <h1 class="summonerName" :style="'font-size: ' + nameFontSize">{{ summoner.summonerName }}</h1>
+                    <div class="user" v-if="summoner.userProfile">
                         <div class="avatar">
                             <img class="resp-img"
-                                 :src="'http://ddragon.leagueoflegends.com/cdn/9.9.1/img/profileicon/' + summoner.profileIconId + '.png'">
-                            <span class="level">{{ summoner.summonerLevel }}</span>
+                                 src="../assets/images/placeholder.png"
+                                 :alt="summoner.userProfile.user.username">
                         </div>
-                        <span class="updated">Last Updated: <span>{{ summoner.lastUpdated }}</span></span>
-                        <button v-on:click="updateSummoner">Update Summoner</button>
+                        <router-link :to="{ name: 'user_profile', params: { user: summoner.userProfile.user }}">
+                            {{ summoner.userProfile.user.username }}
+                        </router-link>
                     </div>
-                    <div class="title">
-                        <h1 class="summonerName" :style="'font-size: ' + nameFontSize">{{ summoner.summonerName }}</h1>
-                        <span class="updated">Last Updated: <span>{{ summoner.last_updated }}</span></span>
-                        <button v-on:click="updateSummoner">Update Summoner</button>
-                    </div>
-                    <div class="ranked-stats">
-                        <div class="ranked-solo" v-if="summoner.rankedSolo" v-cloak>
-                            <div class="medal">
-                                <img class="resp-img"
-                                     :src="getMedalUrl(summoner.rankedSolo.tier, summoner.rankedSolo.rankNumber)">
-                            </div>
-                            <div class="text">
-                                <h5 class="faded">Ranked Solo</h5>
-                                <h2 class="rank">
-                                    {{ summoner.rankedSolo.tier }} {{ summoner.rankedSolo.rank }}
-                                </h2>
-                                <h5 class="winrate">
-                                    {{ summoner.rankedSolo.lp }}LP |
-                                    <span> {{ summoner.rankedSolo.wins }}W / {{ summoner.rankedSolo.losses }}L</span>
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="ranked-solo" v-if="summoner.rankedFlex3" v-cloak>
-                            <div class="medal">
-                                <img class="resp-img"
-                                     :src="getMedalUrl(summoner.rankedFlex3.tier, summoner.rankedFlex3.rankNumber)">
-                            </div>
-                            <div class="text">
-                                <h5 class="faded">Flex 3v3</h5>
-                                <h2 class="rank">
-                                    {{ summoner.rankedFlex3.tier }} {{ summoner.rankedFlex3.rank }}
-                                </h2>
-                                <h5 class="winrate">
-                                    {{ summoner.rankedFlex3.lp }}LP |
-                                    <span> {{ summoner.rankedFlex3.wins }}W / {{ summoner.rankedFlex3.losses }}L</span>
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="ranked-solo" v-if="summoner.rankedFlex5" v-cloak>
-                            <div class="medal">
-                                <img class="resp-img"
-                                     :src="getMedalUrl(summoner.rankedFlex5.tier, summoner.rankedFlex5.rankNumber)">
-                            </div>
-                            <div class="text">
-                                <h5 class="faded">Flex 5v5</h5>
-                                <h2 class="rank">
-                                    {{ summoner.rankedFlex5.tier }} {{ summoner.rankedFlex5.rank }}
-                                </h2>
-                                <h5 class="winrate">
-                                    {{ summoner.rankedFlex5.lp }}LP |
-                                    <span> {{ summoner.rankedFlex5.wins }}W / {{ summoner.rankedFlex5.losses }}L</span>
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-                    <ul id="summoner-menu">
-                        <router-link to="general">
-                            <li class="general">General</li>
-                        </router-link>
-                        <router-link to="matches">
-                            <li class="matches">Matches</li>
-                        </router-link>
-                        <router-link to="champions">
-                            <li class="champions">Champions</li>
-                        </router-link>
-                        <router-link to="achievements">
-                            <li class="achievements">Achievements</li>
-                        </router-link>
-                        <span class="selector"></span>
-                    </ul>
                 </div>
-                <div id="summoner-content-wrapper">
-                    <router-view :matches="sortedMatches" :summoner="summoner"
-                                 :matchLoading="loading_matches" :matchesRemaining="remaining_matches"></router-view>
+                <div class="ranked-stats">
+                    <div class="ranked-solo" v-if="summoner.rankedSolo" v-cloak>
+                        <div class="medal">
+                            <img class="resp-img"
+                                 :src="getMedalUrl(summoner.rankedSolo.tier, summoner.rankedSolo.rankNumber)">
+                        </div>
+                        <div class="text">
+                            <h5 class="faded">Ranked Solo</h5>
+                            <h2 class="rank">
+                                {{ summoner.rankedSolo.tier }} {{ summoner.rankedSolo.rank }}
+                            </h2>
+                            <h5 class="winrate">
+                                {{ summoner.rankedSolo.lp }}LP |
+                                <span> {{ summoner.rankedSolo.wins }}W / {{ summoner.rankedSolo.losses }}L</span>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="ranked-solo" v-if="summoner.rankedFlex3" v-cloak>
+                        <div class="medal">
+                            <img class="resp-img"
+                                 :src="getMedalUrl(summoner.rankedFlex3.tier, summoner.rankedFlex3.rankNumber)">
+                        </div>
+                        <div class="text">
+                            <h5 class="faded">Flex 3v3</h5>
+                            <h2 class="rank">
+                                {{ summoner.rankedFlex3.tier }} {{ summoner.rankedFlex3.rank }}
+                            </h2>
+                            <h5 class="winrate">
+                                {{ summoner.rankedFlex3.lp }}LP |
+                                <span> {{ summoner.rankedFlex3.wins }}W / {{ summoner.rankedFlex3.losses }}L</span>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="ranked-solo" v-if="summoner.rankedFlex5" v-cloak>
+                        <div class="medal">
+                            <img class="resp-img"
+                                 :src="getMedalUrl(summoner.rankedFlex5.tier, summoner.rankedFlex5.rankNumber)">
+                        </div>
+                        <div class="text">
+                            <h5 class="faded">Flex 5v5</h5>
+                            <h2 class="rank">
+                                {{ summoner.rankedFlex5.tier }} {{ summoner.rankedFlex5.rank }}
+                            </h2>
+                            <h5 class="winrate">
+                                {{ summoner.rankedFlex5.lp }}LP |
+                                <span> {{ summoner.rankedFlex5.wins }}W / {{ summoner.rankedFlex5.losses }}L</span>
+                            </h5>
+                        </div>
+                    </div>
                 </div>
+                <ul id="summoner-menu">
+                    <router-link to="general">
+                        <li class="general">General</li>
+                    </router-link>
+                    <router-link to="matches">
+                        <li class="matches">Matches</li>
+                    </router-link>
+                    <router-link to="champions">
+                        <li class="champions">Champions</li>
+                    </router-link>
+                    <router-link to="achievements">
+                        <li class="achievements">Achievements</li>
+                    </router-link>
+                    <span class="selector"></span>
+                </ul>
             </div>
-        </transition>
+            <div id="summoner-content-wrapper">
+                <router-view :matches="sortedMatches" :summoner="summoner"
+                             :matchLoading="loading_matches" :matchesRemaining="remaining_matches"></router-view>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
     import axios from 'axios';
     import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
+    import imagesLoaded from 'vue-images-loaded'
 
     let query_getSummonerInfo =
         `
@@ -106,6 +115,11 @@
                 profileIconId
                 summonerLevel
                 lastUpdated
+                userProfile {
+                    user {
+                        username
+                    }
+                }
                 rankedSolo {
                   tier
                   rank
@@ -351,6 +365,9 @@
     export default {
         name: 'summoner_profile',
         title: 'Summoner - Ally.GG',
+        directives: {
+            imagesLoaded
+        },
         components: {
             PulseLoader
         },
@@ -364,8 +381,9 @@
                 nameFontSize: getFontSize(document.documentElement.clientWidth, this.$route.params.summoner),
                 remaining_matches: 0,
 
-                // Loading Flags
-                loading: true,
+                // Loading Flags]
+                imagesLoaded: false,
+                summonerLoaded: false,
 
                 // Error Handling
                 isError: false,
@@ -382,6 +400,9 @@
             },
             loading_matches() {
                 return this.remaining_matches !== 0;
+            },
+            load_page() {
+                return this.imagesLoaded && this.summonerLoaded;
             }
         },
         methods: {
@@ -399,11 +420,11 @@
                 }).then((summonerProfileInfo) => {
                     this.summoner = summonerProfileInfo.data.data.summoner;
                     this.matches = summonerProfileInfo.data.data.summonerPlayers;
-                    this.loading = false;
+                    this.summonerLoaded = true;
                 });
             },
             async updateSummoner() {
-                this.loading = true;
+                this.summonerLoaded = false;
                 await axios({
                     url: process.env.VUE_APP_API_URL + '/graphql',
                     method: 'post',
@@ -416,7 +437,7 @@
                 }).then((response) => {
                     let data = response.data.data.updateSummoner;
                     this.summoner = data.summoner;
-                    this.loading = false;
+                    this.summonerLoaded = true;
 
                     if (data.newMatches !== []) {
 
@@ -444,11 +465,13 @@
                     this.matches.push(data.player);
                     this.remaining_matches += -1;
                 });
-            }
-            ,
+            },
             getMedalUrl(tier, rank) {
                 return require('../assets/images/ranked_medals/' + tier.toLowerCase() + '_' + rank + '.png');
-            }
+            },
+            isImagesLoaded(instance) {
+                this.imagesLoaded = true;
+            },
         },
         mounted() {
             this.getSummonerInfo();
@@ -497,6 +520,7 @@
 
                         img {
                             border-radius: 10px;
+                            height: 100%;
                         }
 
                         .level {

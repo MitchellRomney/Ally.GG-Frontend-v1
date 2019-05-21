@@ -59,4 +59,5 @@ input:focus, textarea:focus, select:focus {
   align-items: center;
   justify-content: center;
   background-color: $palette-secondary;
+  z-index: 1000;
 }

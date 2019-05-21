@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import UserProfile from './views/UserProfile'
 import Login from './views/Login.vue'
 import Leaderboard from './views/Leaderboard.vue'
 import Summoners from './views/Summoners.vue'
@@ -68,6 +69,14 @@ let router = new Router({
             path: '/login',
             name: 'login',
             component: Login,
+        },
+        {
+            path: '/profiles/:user',
+            name: 'user_profile',
+            meta: {
+                requiresAuth: true
+            },
+            component: UserProfile
         },
         {
             path: '/leaderboard',
