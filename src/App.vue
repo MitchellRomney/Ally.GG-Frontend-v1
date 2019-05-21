@@ -51,7 +51,7 @@
             @media #{$bp-lg}{
                 display: grid;
                 grid-template: 65px auto / 275px auto;
-                grid-template-areas: "main main" "main main";
+                grid-template-areas: "nav tnav" "nav main";
             }
         }
     }
