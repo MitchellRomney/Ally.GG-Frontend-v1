@@ -28,6 +28,10 @@
         border-right: 1px solid #DFE3E8;
         text-align: left;
         background-color: white;
+        display: none;
+        @media #{$bp-lg}{
+            display: block;
+        }
 
         .logo-wrapper {
             height: 65px;

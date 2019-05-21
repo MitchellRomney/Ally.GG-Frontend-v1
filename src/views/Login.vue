@@ -48,9 +48,7 @@
             <div class="image">
                 <video autoplay muted loop id="neeko-hero">
                     <source src="../assets/images/neeko-hero-loop.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
                 </video>
-                <!-- <img src="https://cdna.artstation.com/p/assets/images/images/014/192/376/large/jennifer-wuestling-neeko.jpg" alt="Neeko Hero Image" /> -->
             </div>
         </div>
     </div>
@@ -149,8 +147,11 @@
         max-height: 100vh;
         display: grid;
         grid-template: auto / 40vw 60vw;
-        grid-template-areas: 'content hero';
+        grid-template-areas: 'content content';
         overflow: hidden;
+        @media #{$bp-lg}{
+            grid-template-areas: 'content hero';
+        }
 
         .content {
             grid-area: content;
@@ -161,6 +162,7 @@
             grid-template: auto 50px / auto;
             grid-template-areas: 'content' 'footer';
             padding: 50px;
+            height: 100vh;
 
             #form {
                 display: flex;
@@ -172,7 +174,10 @@
 
                     .logo {
                         img {
-                            width: 60%;
+                            width: 100%;
+                            @media #{$bp-lg}{
+                                width: 60%;
+                            }
                         }
                     }
 
@@ -181,9 +186,12 @@
                     }
 
                     form {
-                        width: 60%;
+                        width: 100%;
                         margin: auto;
                         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                        @media #{$bp-lg}{
+                            width: 60%;
+                        }
 
                         .username, .password {
                             display: flex;
@@ -232,7 +240,7 @@
                     }
 
                     .submit {
-                        width: 60%;
+                        width: 100%;
                         height: 50px;
                         background-color: $palette-accent;
                         color: white;
@@ -242,6 +250,9 @@
                         margin-top: 20px;
                         border-radius: 5px;
                         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                        @media #{$bp-lg}{
+                            width: 60%;
+                        }
                     }
                 }
 
@@ -256,7 +267,7 @@
                     }
 
                     .register-button {
-                        width: 60%;
+                        width: 100%;
                         height: 50px;
                         background-color: white;
                         color: $palette-accent;
@@ -269,6 +280,9 @@
                         align-items: center;
                         display: flex;
                         justify-content: center;
+                        @media #{$bp-lg}{
+                            width: 60%;
+                        }
                     }
                 }
             }

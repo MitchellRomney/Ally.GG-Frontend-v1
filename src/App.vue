@@ -29,8 +29,7 @@
                 return !websitePaths.includes(this.$route.path)
             },
         },
-        methods: {
-        },
+        methods: {},
         mounted() {
         }
     }
@@ -49,9 +48,11 @@
         background-color: $palette-secondary;
 
         &.main {
-            display: grid;
-            grid-template: 65px auto / 275px auto;
-            grid-template-areas: "nav tnav" "nav main";
+            @media #{$bp-lg}{
+                display: grid;
+                grid-template: 65px auto / 275px auto;
+                grid-template-areas: "main main" "main main";
+            }
         }
     }
 </style>

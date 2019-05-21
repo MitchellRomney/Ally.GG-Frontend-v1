@@ -55,9 +55,12 @@
         background-color: white;
         grid-area: tnav;
         border-bottom: 1px solid #DFE3E8;
-        display: flex;
         justify-content: flex-end;
         padding: 0 40px;
+        display: none;
+        @media #{$bp-lg}{
+            display: flex;
+        }
 
         .logo {
             grid-area: logo;
