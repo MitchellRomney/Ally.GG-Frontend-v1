@@ -68,7 +68,7 @@
                 {{ summoner.rankedSolo.leagueName }}
             </div>
         </div>
-        <RecentMatches :matches="matches"></RecentMatches>
+        <RecentMatches :matches="matches" :matchLoading="matchLoading" :matchesRemaining="matchesRemaining"></RecentMatches>
         <!-- <div class="latest-matches-panel">
             <h2>Latest Matches</h2>
             <transition name="fade">
