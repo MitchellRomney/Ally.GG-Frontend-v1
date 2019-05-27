@@ -140,6 +140,7 @@
 <style scoped lang="scss">
     #content-matches {
 
+
         .latest-matches {
             height: 100%;
             display: grid;

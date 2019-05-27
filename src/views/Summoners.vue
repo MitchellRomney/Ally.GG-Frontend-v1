@@ -153,7 +153,6 @@
     }
 
     #summoners {
-        grid-area: main;
         position: relative;
 
         .content {

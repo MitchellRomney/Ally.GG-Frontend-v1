@@ -35,23 +35,22 @@
             display: flex;
             align-items: center;
             transition: all 0.22s ease;
+            flex-direction: column;
+            padding: 20px 0;
 
             &:hover {
-                background-color: #F6F9FD;
-
                 .icon {
-                    border-left: 5px solid $palette-accent;
-                    color: $palette-accent;
+                    opacity: 1;
+                }
+
+                .name {
                     opacity: 1;
                 }
             }
 
             &.router-link-active {
-                background-color: #F6F9FD;
 
                 .icon {
-                    border-left: 5px solid $palette-accent;
-                    color: $palette-accent;
                     opacity: 1;
                 }
 
@@ -62,11 +61,10 @@
             }
 
             .icon {
-                padding: 15px;
                 border-radius: 5px;
-                border-left: 5px solid white;
                 opacity: 0.6;
                 transition: all 0.22s ease;
+                font-size: 1.5rem;
             }
 
             .name {

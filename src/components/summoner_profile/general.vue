@@ -68,7 +68,8 @@
                 {{ summoner.rankedSolo.leagueName }}
             </div>
         </div>
-        <div class="latest-matches-panel">
+        <RecentMatches :matches="matches"></RecentMatches>
+        <!-- <div class="latest-matches-panel">
             <h2>Latest Matches</h2>
             <transition name="fade">
                 <div class="loading" v-if="matchLoading">
@@ -159,18 +160,20 @@
                     </div>
                 </div>
             </transition>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script>
     import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
+    import RecentMatches from './recent_matches';
 
     export default {
         name: 'general',
         title: 'General - Ally.GG',
         components: {
             PulseLoader,
+            RecentMatches
         },
         props: {
             summoner: Object,
@@ -207,11 +210,12 @@
 
 <style scoped lang="scss">
     .content-general {
+        margin: 30px 0;
         display: grid;
         grid-gap: 20px;
-        grid-template: 1fr 1fr / repeat(3, 1fr);
+        grid-template: 1fr 1fr / 0.5fr repeat(12, 1fr) 0.5fr;
         min-height: 100vh;
-        grid-template-areas: "matches matches ranked" ". . .";
+        grid-template-areas: ". matches matches matches matches matches matches matches matches matches ranked ranked ranked ." ". pan1 pan1 pan1 pan2 pan2 pan2 pan3 pan3 pan3 pan4 pan4 pan4 .";
 
         .ranked-panel {
             grid-area: ranked;

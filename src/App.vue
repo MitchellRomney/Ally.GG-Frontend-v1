@@ -2,7 +2,9 @@
     <div id="ally-gg" :class="{ main: loadDashboard }">
         <Navbar v-if="loadDashboard"/>
         <TopNav v-if="loadDashboard"/>
-        <router-view/>
+        <div id="content">
+            <router-view/>
+        </div>
     </div>
 </template>
 
@@ -50,9 +52,13 @@
         &.main {
             @media #{$bp-lg}{
                 display: grid;
-                grid-template: 65px auto / 275px auto;
+                grid-template: 65px auto / 130px auto;
                 grid-template-areas: "nav tnav" "nav main";
             }
+        }
+
+        #content {
+            grid-area: main;
         }
     }
 </style>

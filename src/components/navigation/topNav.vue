@@ -9,7 +9,8 @@
             </div>
             <div class="user">
                 <a :href="'/profiles/' + user.username"><h4>{{ user.username }}</h4></a>
-                <a href="#"><span><font-awesome-icon icon="circle"/></i>Online</span></a>
+                <a href="#"><span><font-awesome-icon icon="circle"/>
+                    </i>Online</span></a>
             </div>
             <div class="acc-options">
                 <a href="#" @click="toggleMenu">
@@ -54,10 +55,12 @@
     #top-nav {
         background-color: white;
         grid-area: tnav;
-        border-bottom: 1px solid #DFE3E8;
         justify-content: flex-end;
         padding: 0 40px;
         display: none;
+        height: 65px;
+        width: 100%;
+
         @media #{$bp-lg}{
             display: flex;
         }
