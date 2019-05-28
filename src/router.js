@@ -99,7 +99,7 @@ let router = new Router({
             redirect: 'summoners/:summoner/general',
             name: 'summoner_profile',
             meta: {
-                requiresAuth: true
+                requiresAuth: true,
             },
             component: SummonerProfile,
             children: [

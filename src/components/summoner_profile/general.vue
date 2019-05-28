@@ -165,14 +165,11 @@
 </template>
 
 <script>
-    import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
     import RecentMatches from './recent_matches';
 
     export default {
         name: 'general',
-        title: 'General - Ally.GG',
         components: {
-            PulseLoader,
             RecentMatches
         },
         props: {

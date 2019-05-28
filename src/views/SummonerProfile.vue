@@ -8,7 +8,7 @@
                 <div class="avatar-wrapper">
                     <div class="avatar">
                         <img class="resp-img"
-                             :src="'https://ddragon.leagueoflegends.com/cdn/9.9.1/img/profileicon/' + summoner.profileIconId + '.png'">
+                             :src="'https://ddragon.leagueoflegends.com/cdn/9.10.1/img/profileicon/' + summoner.profileIconId + '.png'">
                         <span class="level">{{ summoner.summonerLevel }}</span>
                     </div>
                     <span class="updated">Last Updated: <span>{{ summoner.lastUpdated }}</span></span>
@@ -203,11 +203,19 @@
                   name
                   champId
                 }
+                laneOpponent {
+                  champion {
+                    key
+                    name
+                    champId
+                  }
+                }
                 win
                 kills
                 deaths
                 assists
                 kdaAverage
+                champLevel
                 killParticipation
                 totalMinionsKilled
                 csPmin
@@ -324,11 +332,19 @@
                 name
                 champId
               }
+              laneOpponent {
+                champion {
+                  key
+                  name
+                  champId
+                }
+              }
               win
               kills
               deaths
               assists
               kdaAverage
+              champLevel
               killParticipation
               totalMinionsKilled
               csPmin
@@ -403,7 +419,6 @@
 
     export default {
         name: 'summoner_profile',
-        title: 'Summoner - Ally.GG',
         directives: {
             imagesLoaded
         },

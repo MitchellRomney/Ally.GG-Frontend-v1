@@ -30,9 +30,83 @@
                         </div>
                     </div>
                     <div class="head">
-                        <h3>{{ match.champion.name }}</h3>
+                        <h3 class="champion">{{ match.champion.name }}</h3>
+                        <div class="vs" v-if="match.laneOpponent">
+                            vs.
+                            <img class="resp-img" v-for="opponent in match.laneOpponent"
+                                 :src="getChampionTileUrl(opponent.champion)"
+                                 :alt="opponent.champion.name"/>
+                        </div>
+                        <div class="result">
+                            <h3 class="win" v-if="match.win">Win</h3>
+                            <h3 class="loss" v-if="!match.win">Loss</h3>
+                            <h4>{{ match.match.gameDurationTime }}</h4>
+                        </div>
                     </div>
-                    <div class="stats"></div>
+                    <div class="stats">
+                        <div class="items">
+                            <div class="trinket">
+                                <img v-if="match.item6.itemId !== 0"
+                                     :src="getItemUrl(match.item6.itemId)"
+                                     :alt="match.item6.name">
+                            </div>
+                            <div class="item-1">
+                                <img v-if="match.item0.itemId !== 0"
+                                     :src="getItemUrl(match.item0.itemId)"
+                                     :alt="match.item0.name"/>
+                            </div>
+                            <div class="item-2">
+                                <img v-if="match.item1.itemId !== 0"
+                                     :src="getItemUrl(match.item1.itemId)"
+                                     :alt="match.item1.name"/>
+                            </div>
+                            <div class="item-3">
+                                <img v-if="match.item2.itemId !== 0"
+                                     :src="getItemUrl(match.item2.itemId)"
+                                     :alt="match.item2.name"/>
+                            </div>
+                            <div class="item-4">
+                                <img v-if="match.item3.itemId !== 0"
+                                     :src="getItemUrl(match.item3.itemId)"
+                                     :alt="match.item3.name"/>
+                            </div>
+                            <div class="item-5">
+                                <img v-if="match.item4.itemId !== 0"
+                                     :src="getItemUrl(match.item4.itemId)"
+                                     :alt="match.item4.name"/>
+                            </div>
+                            <div class="item-6">
+                                <img v-if="match.item5.itemId !== 0"
+                                     :src="getItemUrl(match.item5.itemId)"
+                                     :alt="match.item5.name"/>
+                            </div>
+                            <div class="summoner-1">
+                                <img :src="getSSpellUrl(match.spell1Id)"
+                                     :alt="match.spell1Id.name"/>
+                            </div>
+                            <div class="summoner-2">
+                                <img :src="getSSpellUrl(match.spell2Id)"
+                                     :alt="match.spell2Id.name"/>
+                            </div>
+                            <div class="rune-primary">
+                                <img :src="getPrimaryRuneUrl(match.perk0)"
+                                     :alt="match.perk0.name"/>
+                            </div>
+                            <div class="rune-secondary">
+                                <img :src="getSecondaryStyleUrl(match.perkSubStyle)"
+                                     :alt="match.perk4.name"/>
+                            </div>
+                        </div>
+                        <div class="player-info">
+                            <span class="level">Level {{ match.champLevel }}</span>
+                            <span class="kda">{{ match.kills }}/{{ match.deaths }}/{{ match.assists }}</span>
+                            <span class="average">{{ match.kdaAverage }} KDA</span>
+                        </div>
+                        <div class="sub-info">
+                            <span class="farm">{{ match.totalMinionsKilled }} ({{ match.csPmin }}) CS</span>
+                            <span class="kill_p">Kill Participation<br><span>{{ match.killParticipation }}</span></span>
+                        </div>
+                    </div>
                     <div class="players"></div>
                 </div>
             </div>
@@ -71,15 +145,15 @@
                     this.matchIndex += 1;
                 }
             },
-            getMedalUrl(tier, rank) {
-                return require('../../assets/images/ranked_medals/' + tier.toLowerCase() + '_' + rank + '.png');
-            },
             getChampionSplashUrl(champion) {
-                try {
+                if (champion.champId === 'Fiddlesticks') {
+                    return require('../../assets/images/champion-loading/FiddleSticks_0.jpg');
+                } else {
                     return require('../../assets/images/champion-loading/' + champion.champId + '_0.jpg');
-                } catch {
-                    return null;
                 }
+            },
+            getChampionTileUrl(champion) {
+                return require('../../assets/images/champion-tiles/' + champion.champId + '_0.jpg');
             },
             getItemUrl(itemId) {
                 return require('../../assets/images/items/' + itemId + '.png');
@@ -164,7 +238,7 @@
                 position: absolute;
                 width: 75%;
                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-                grid-template: 1fr 1fr 2fr / 1fr 4fr;
+                grid-template: 60px 1fr 2fr / 1fr 4fr;
                 grid-template-areas: 'splash head' 'splash stats' 'splash players';
 
                 &.subPreviousMatch {
@@ -216,17 +290,158 @@
 
                 .head {
                     grid-area: head;
-                    padding: 10px;
+                    padding: 0 10px;
+                    display: flex;
+                    align-items: center;
 
-                    h3 {
+                    .champion {
                         font-family: 'Panton Black', sans-serif;
                         font-size: 2.5rem;
+                        height: 50px;
+                    }
+
+                    .vs {
+                        display: flex;
+                        padding: 10px;
+                        align-items: center;
+
+                        img {
+                            width: 35px;
+                            height: 35px;
+                            border-radius: 10px;
+                            margin-left: 10px;
+                        }
+                    }
+
+                    .result {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
                     }
                 }
 
                 .stats {
                     grid-area: stats;
                     padding: 10px;
+                    display: grid;
+                    grid-template: 1fr / 1fr 1fr 1fr;
+
+                    .items {
+                        display: grid;
+                        grid-template: 1fr 1fr / repeat(6, 1fr);
+                        grid-template-areas: "trinket item1 item2 item3 summoner1 rune-primary" "trinket item4 item5 item6 summoner2 rune-secondary";
+                        align-items: center;
+                        grid-gap: 2px;
+
+                        img {
+                            width: 30px;
+                            border-radius: 5px;
+                        }
+
+                        .trinket, .item-1, .item-2, .item-3, .item-4, .item-5, .item-6, .summoner-1, .summoner-2 {
+                            height: 30px;
+                            width: 30px;
+                            background-color: lightgrey;
+                            border-radius: 4px;
+                        }
+
+                        .trinket {
+                            grid-area: trinket;
+                            margin-right: 4px;
+                        }
+
+                        .item-1 {
+                            grid-area: item1;
+                            align-self: end;
+                        }
+
+                        .item-2 {
+                            grid-area: item2;
+                            align-self: end;
+                        }
+
+                        .item-3 {
+                            grid-area: item3;
+                            align-self: end;
+                        }
+
+                        .item-4 {
+                            grid-area: item4;
+                            align-self: start;
+                        }
+
+                        .item-5 {
+                            grid-area: item5;
+                            align-self: start;
+                        }
+
+                        .item-6 {
+                            grid-area: item6;
+                            align-self: start;
+                        }
+
+                        .summoner-1 {
+                            grid-area: summoner1;
+                            align-self: end;
+                            margin-left: 4px;
+                        }
+
+                        .summoner-2 {
+                            grid-area: summoner2;
+                            align-self: start;
+                            margin-left: 4px;
+
+                        }
+
+                        .rune-primary {
+                            grid-area: rune-primary;
+                            align-self: end;
+                            margin: 0 4px;
+                        }
+
+                        .rune-secondary {
+                            grid-area: rune-secondary;
+                            align-self: start;
+                            margin: 0 4px;
+                        }
+                    }
+
+                    .player-info {
+                        display: flex;
+                        text-align: center;
+                        flex-direction: column;
+                        align-self: center;
+
+                        .kda {
+                            color: $palette-primary;
+                            font-weight: bold;
+                            font-size: 1.7rem;
+                        }
+
+                        .average {
+                            color: grey;
+                        }
+                    }
+
+                    .sub-info {
+                        display: flex;
+                        text-align: center;
+                        flex-direction: column;
+                        align-self: center;
+
+                        .farm {
+                            font-size: 1.1rem;
+                        }
+
+                        .kill_p {
+                            font-size: 0.9rem;
+
+                            span {
+                                font-size: 1.2rem;
+                                font-weight: bold;
+                            }
+                        }
+                    }
                 }
 
                 .players {
@@ -234,6 +449,7 @@
                     padding: 10px;
                 }
             }
+
         }
     }
 </style>

@@ -17,7 +17,7 @@
                             <th scope="col">Losses</th>
                             <th scope="col">League Points</th>
                         </tr>
-                        <tr v-for="summoner in search_results" :data-href="'/summoners/' + summoner.summonerName">
+                        <tr v-for="summoner in search_results" :data-href="'/summoners/' + summoner.summonerName" :key="summoner.summonerName"> 
                             <td>
                                 <router-link
                                         :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
