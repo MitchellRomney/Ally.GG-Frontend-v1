@@ -40,7 +40,7 @@
                         <div class="result">
                             <h3 class="win" v-if="match.win">Win</h3>
                             <h3 class="loss" v-if="!match.win">Loss</h3>
-                            <h4>{{ match.match.gameDurationTime }}</h4>
+                            <h4 class="time">{{ match.match.gameDurationTime }}</h4>
                         </div>
                     </div>
                     <div class="stats">
@@ -317,6 +317,21 @@
                         display: flex;
                         flex-direction: column;
                         align-items: center;
+                        margin: 0 10px;
+
+                        .win {
+                            color: #2D9CDB;
+                            font-weight: bold;
+                        }
+
+                        .loss {
+                            color: #EB5757;
+                            font-weight: bold;
+                        }
+
+                        .time {
+                            font-weight: normal;
+                        }
                     }
                 }
 

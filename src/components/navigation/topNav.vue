@@ -1,5 +1,20 @@
 <template>
     <div id="top-nav">
+        <div class="search">
+            <input @keyup.enter="goSummoner()"
+                   class="search-input"
+                   type="text"
+                   v-model="search_entry"
+                   placeholder="Find a Summoner..."
+            >
+            <ul class="search-results" v-if="search_results && search_results.length > 0">
+                <li v-for="summoner in search_results.slice(0,6)" :key="summoner.id">
+                    <router-link :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
+                        <span v-on:click="clearSearch">{{ summoner.summonerName }}</span>
+                    </router-link>
+                </li>
+            </ul>
+        </div>
         <div class="profile">
             <div class="notifications">
                 <font-awesome-icon icon="bell"/>
@@ -8,9 +23,12 @@
                 <img class="resp-img" src="../../assets/images/placeholder.png" :alt="user.username">
             </div>
             <div class="user">
-                <a :href="'/profiles/' + user.username"><h4>{{ user.username }}</h4></a>
-                <a href="#"><span><font-awesome-icon icon="circle"/>
-                    </i>Online</span></a>
+                <a :href="'/profiles/' + user.username">
+                    <h4>{{ user.username }}</h4>
+                </a>
+                <a href="#">
+                    <span><font-awesome-icon icon="circle"/>Online</span>
+                </a>
             </div>
             <div class="acc-options">
                 <a href="#" @click="toggleMenu">
@@ -25,12 +43,58 @@
 </template>
 
 <script>
+    import axios from 'axios';
+    import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
+
+    let query_summonerSearch =
+        `
+        query SummonerSearch($entry: String) {
+          summonerSearch(entry: $entry) {
+            summonerId
+            summonerName
+            summonerLevel
+            rankedSolo {
+              tier
+              rank
+              rankNumber
+              lp
+              leagueName
+              wins
+              losses
+            }
+          }
+        }
+        `;
+
     export default {
         name: 'TopNav',
-        components: {},
+        components: {
+            PulseLoader
+        },
         data() {
             return {
                 open_menu: false,
+
+                // Search
+                search_entry: null,
+                search_results: [],
+                search_loading: false,
+            }
+        },
+        watch: {
+            search_entry(after, before) {
+                if (after === null) {
+                    console.log(this.search_entry);
+                    console.log(after);
+                    this.search_entry = [];
+                } else {
+                    this.search_loading = true;
+                    setTimeout(() => {
+                        if (after === this.search_entry) {
+                            this.fetchSearch();
+                        }
+                    }, 1000);
+                }
             }
         },
         methods: {
@@ -41,6 +105,27 @@
                 this.$cookie.delete('token');
                 this.$cookie.delete('user');
                 this.$router.go();
+            },
+            fetchSearch() {
+                axios({
+                    method: "POST",
+                    url: process.env.VUE_APP_API_URL + '/graphql',
+                    data: {
+                        query: query_summonerSearch,
+                        variables: {
+                            entry: this.search_entry
+                        },
+                    }
+                }).then((response) => {
+                    this.search_results = response.data.data.summonerSearch;
+                    this.search_loading = false;
+                });
+            },
+            clearSearch() {
+                this.search_entry = null;
+            },
+            goSummoner() {
+                this.$router.push({ name: 'summoner_profile', params: { summoner: this.search_entry } });
             }
         },
         computed: {
@@ -73,6 +158,42 @@
             img {
                 align-self: center;
                 margin-left: 0;
+            }
+        }
+
+        .search {
+            display: flex;
+            align-items: center;
+            width: 250px;
+            margin: 0 20px;
+            position: relative;
+
+            .search-input {
+                height: 30px;
+                width: 100%;
+                border-radius: 10px;
+                border: 1px solid #DFE3E8;
+                padding: 5px;
+
+                &:focus {
+                    + .search-results {
+                        display: block;
+                    }
+                }
+            }
+
+            .search-results {
+                position: absolute;
+                top: 100%;
+                z-index: 500;
+                text-align: right;
+                width: 100%;
+                border: 1px solid #DFE3E8;
+                display: none;
+
+                &:hover {
+                    display: block;
+                }
             }
         }
 

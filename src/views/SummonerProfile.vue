@@ -18,10 +18,10 @@
                     <h1 class="summonerName" :style="'font-size: ' + nameFontSize">{{ summoner.summonerName }}</h1>
                     <div class="badges">
                         <div class="badge premium">
-                            <img class="resp-img" src="../assets/images/badges/premium.png" alt="Premium" />
+                            <img class="resp-img" src="../assets/images/badges/premium.png" alt="Premium"/>
                         </div>
                         <div class="badge verified">
-                            <img class="resp-img" src="../assets/images/badges/verified.png" alt="Verified" />
+                            <img class="resp-img" src="../assets/images/badges/verified.png" alt="Verified"/>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                     </div>
                     <div class="unranked" v-else v-cloak>
                         <div class="medal">
-                            <img class="resp-img" src="../assets/images/unranked.png" />
+                            <img class="resp-img" src="../assets/images/unranked.png"/>
                         </div>
                         <div class="text">
                             <h5 class="faded">Ranked Solo</h5>
@@ -79,7 +79,7 @@
                     </div>
                     <div class="unranked" v-else v-cloak>
                         <div class="medal">
-                            <img class="resp-img" src="../assets/images/unranked.png" />
+                            <img class="resp-img" src="../assets/images/unranked.png"/>
                         </div>
                         <div class="text">
                             <h5 class="faded">Flex 3v3</h5>
@@ -106,7 +106,7 @@
                     </div>
                     <div class="unranked" v-else v-cloak>
                         <div class="medal">
-                            <img class="resp-img" src="../assets/images/unranked.png" />
+                            <img class="resp-img" src="../assets/images/unranked.png"/>
                         </div>
                         <div class="text">
                             <h5 class="faded">Flex 5v5</h5>
@@ -444,6 +444,12 @@
                 errorMessage: '',
             }
         },
+        watch: {
+            $route(before, after) {
+                this.summonerLoaded = false;
+                this.getSummonerInfo();
+            }
+        },
         computed: {
             sortedMatches() {
                 return this.matches.sort(function (a, b) {
@@ -461,6 +467,9 @@
         },
         methods: {
             getSummonerInfo() {
+                /**
+                 * @param data.summonerPlayers   List of recent Player objects for a Summoner.
+                 */
                 axios({
                     url: process.env.VUE_APP_API_URL + '/graphql',
                     method: 'post',
@@ -478,6 +487,9 @@
                 });
             },
             async updateSummoner() {
+                /**
+                 * @param data.newMatches   List of new matches not yet in the database.
+                 */
                 this.summonerLoaded = false;
                 await axios({
                     url: process.env.VUE_APP_API_URL + '/graphql',
@@ -504,6 +516,9 @@
                 })
             },
             fetchMatch(gameId) {
+                /**
+                 * @param data.player   Player object information from a specific match.
+                 */
                 axios({
                     url: process.env.VUE_APP_API_URL + '/graphql',
                     method: 'post',
@@ -523,7 +538,7 @@
             getMedalUrl(tier, rank) {
                 return require('../assets/images/ranked_medals/' + tier.toLowerCase() + '_' + rank + '.png');
             },
-            isImagesLoaded(instance) {
+            isImagesLoaded() {
                 this.imagesLoaded = true;
             },
         },
