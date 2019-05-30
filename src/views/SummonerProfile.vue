@@ -432,7 +432,6 @@
                 matches: [],
 
                 // Misc Data
-                nameFontSize: getFontSize(document.documentElement.clientWidth, this.$route.params.summoner),
                 remaining_matches: 0,
 
                 // Loading Flags]
@@ -446,8 +445,11 @@
         },
         watch: {
             $route(before, after) {
-                this.summonerLoaded = false;
-                this.getSummonerInfo();
+                // Check if they've loaded a new Summoner.
+                if (before.params.summoner !== after.params.summoner) {
+                    this.summonerLoaded = false;
+                    this.getSummonerInfo();
+                }
             }
         },
         computed: {
@@ -463,6 +465,33 @@
             },
             load_page() {
                 return this.imagesLoaded && this.summonerLoaded;
+            },
+            nameFontSize() {
+                // Get Summoner name from route.
+                let summonerName = this.$route.params.summoner;
+
+                // If the Summoner data is loaded, use that instead (if a user changes name on update, this is important)
+                if (this.summoner.summonerName) {
+                    summonerName = this.summoner.summonerName;
+                }
+
+                if (document.documentElement.clientWidth >= 768) {  // If window is past mobile/tablet breakpoint.
+                    if (summonerName.length > 14) {
+                        return '5rem';
+                    } else if (summonerName.length > 10) {
+                        return '6rem';
+                    } else {
+                        return '7rem';
+                    }
+                } else {
+                    if (summonerName.length > 14) {
+                        return '1.5rem';
+                    } else if (summonerName.length > 10) {
+                        return '2.5rem';
+                    } else {
+                        return '3.5rem';
+                    }
+                }
             }
         },
         methods: {
@@ -512,6 +541,11 @@
                         for (let key in data.newMatches) {
                             this.fetchMatch(data.newMatches[key]);
                         }
+                    }
+
+                    // If Summoner has updated with a name change, change URL path.
+                    if (this.summoner.summonerName !== this.$route.params.summoner){
+                        this.$router.replace('/summoners/' + this.summoner.summonerName);
                     }
                 })
             },
