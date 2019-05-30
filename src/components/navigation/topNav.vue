@@ -7,13 +7,28 @@
                    v-model="search_entry"
                    placeholder="Find a Summoner..."
             >
-            <ul class="search-results" v-if="search_results && search_results.length > 0">
-                <li v-for="summoner in search_results.slice(0,6)" :key="summoner.id">
-                    <router-link :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
-                        <span v-on:click="clearSearch">{{ summoner.summonerName }}</span>
-                    </router-link>
-                </li>
-            </ul>
+            <div class="server-select">
+                <div class="selected-server">{{ search_server }}</div>
+                <div class="server-dropdown">
+                    <div class="server" v-for="server in search_server_options" v-if="server !== search_server">
+                        {{ server }}
+                    </div>
+                </div>
+            </div>
+            <div class="search-results" v-if="search_results && search_results.length > 0 || search_loading">
+                <pulse-loader v-if="search_loading"></pulse-loader>
+                <ul class="results" v-else>
+                    <li class="header">Summoners</li>
+                    <li class="result" v-for="summoner in search_results.slice(0,10)" :key="summoner.id">
+                        <router-link :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
+                            <img class="resp-img"
+                                 :src="'https://ddragon.leagueoflegends.com/cdn/9.10.1/img/profileicon/' + summoner.profileIconId + '.png'">
+                            <span v-on:click="clearSearch">{{ summoner.summonerName }}</span>
+                            <span class="level">Level {{ summoner.summonerLevel }}</span>
+                        </router-link>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="profile">
             <div class="notifications">
@@ -53,15 +68,7 @@
             summonerId
             summonerName
             summonerLevel
-            rankedSolo {
-              tier
-              rank
-              rankNumber
-              lp
-              leagueName
-              wins
-              losses
-            }
+            profileIconId
           }
         }
         `;
@@ -79,6 +86,8 @@
                 search_entry: null,
                 search_results: [],
                 search_loading: false,
+                search_server: 'OCE',
+                search_server_options: ['OCE', 'NA', 'KR', 'EUW']
             }
         },
         watch: {
@@ -123,9 +132,12 @@
             },
             clearSearch() {
                 this.search_entry = null;
+                this.search_results = null;
             },
             goSummoner() {
-                this.$router.push({ name: 'summoner_profile', params: { summoner: this.search_entry } });
+                this.$router.push({name: 'summoner_profile', params: {summoner: this.search_entry}});
+                this.search_entry = null;
+                this.search_results = null;
             }
         },
         computed: {
@@ -169,30 +181,141 @@
             position: relative;
 
             .search-input {
-                height: 30px;
+                height: 35px;
                 width: 100%;
-                border-radius: 10px;
+                border-radius: 5px 0 0 5px;
                 border: 1px solid #DFE3E8;
-                padding: 5px;
+                border-right: none;
+                padding: 5px 10px;
 
                 &:focus {
+                    + .server-select + .search-results {
+                        display: block;
+                    }
+                }
+
+                &:active {
                     + .search-results {
                         display: block;
                     }
                 }
             }
 
+            .server-select {
+                border: 1px solid #DFE3E8;
+                border-left: none;
+                border-radius: 0 5px 5px 0;
+                height: 35px;
+                display: flex;
+                align-items: center;
+                background-color: $palette-accent;
+                color: white;
+                cursor: pointer;
+                position: relative;
+
+                .selected-server {
+                    font-weight: bold;
+                    padding: 5px 10px;
+                }
+
+                &:focus {
+                    .server-dropdown {
+                        display: block;
+                    }
+                }
+
+                &:hover {
+                    .server-dropdown {
+                        display: block;
+                    }
+                }
+
+                &:active {
+                    .server-dropdown {
+                        display: block;
+                    }
+                }
+
+                .server-dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    width: 100%;
+                    border: 1px solid #DFE3E8;
+                    color: $palette-primary;
+                    z-index: 100;
+                    text-align: center;
+                }
+            }
+
             .search-results {
                 position: absolute;
-                top: 100%;
+                top: 90%;
                 z-index: 500;
-                text-align: right;
                 width: 100%;
                 border: 1px solid #DFE3E8;
                 display: none;
+                padding: 10px;
+                min-height: 100px;
+                max-height: 300px;
+                overflow-y: scroll;
+                flex-direction: column;
+                border-radius: 5px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+
 
                 &:hover {
-                    display: block;
+                    display: flex;
+                }
+
+                .v-spinner {
+                    height: 100%
+                }
+
+                .results {
+                    .header {
+                        font-weight: bold;
+                        width: 100%;
+                        padding: 5px;
+                        font-size: 0.6rem;
+                        opacity: 0.5;
+                    }
+
+                    .result {
+                        transition: all 0.5s ease;
+                        border-radius: 5px;
+                        width: 100%;
+                        padding: 5px;
+                        margin: 2px 0;
+                        font-weight: bold;
+
+                        a {
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            font-size: 0.8rem;
+
+                            img {
+                                height: 25px;
+                                border-radius: 50%;
+                                margin: 0 5px 0 0;
+                            }
+
+                            .level {
+                                margin-left: auto;
+                                opacity: 0.6;
+                                font-size: 0.6rem;
+                            }
+                        }
+
+                        &:hover {
+                            background-color: $palette-accent;
+
+                            a {
+                                color: white;
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -5,7 +5,7 @@
             <div id="form" v-else v-cloak>
                 <div class="wrapper">
                     <div class="logo">
-                        <img class="resp-img" alt="Ally.GG Logo" src="../assets/logo.png">
+                        <img class="resp-img" alt="Ally.GG Logo" src="../assets/images/logo.png">
                     </div>
                     <h3 class="byline">Login to your account</h3>
                     <form @submit.prevent="login" class="form">
