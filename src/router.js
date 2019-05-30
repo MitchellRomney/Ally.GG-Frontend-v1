@@ -137,10 +137,6 @@ router.beforeEach((to, from, next) => {
         let token_creation = new Date(token_payload.origIat * 1000);
         let token_expiry = new Date(token_payload.exp * 1000);
 
-        console.log(token_payload);
-        console.log(token_creation);
-        console.log(token_expiry);
-
         if (token_creation.addDays(7) < Date.now()) {
             next({
                 path: '/login',
