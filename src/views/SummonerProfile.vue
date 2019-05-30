@@ -7,7 +7,7 @@
             <div class="top-wrapper">
                 <div class="avatar-wrapper">
                     <div class="avatar">
-                        <img class="resp-img"
+                        <img class="resp-img" v-if="summoner.profileIconId"
                              :src="'https://ddragon.leagueoflegends.com/cdn/9.10.1/img/profileicon/' + summoner.profileIconId + '.png'">
                         <span class="level">{{ summoner.summonerLevel }}</span>
                     </div>
@@ -147,124 +147,164 @@
 
     let query_getSummonerInfo =
         `
-            query SummonerProfile($summonerName: String, $games: Int){
-              summoner(summonerName: $summonerName) {
-                summonerId
-                summonerName
-                profileIconId
-                summonerLevel
-                lastUpdated
-                userProfile {
-                    user {
-                        username
-                    }
-                }
-                rankedSolo {
-                  tier
-                  rank
-                  rankNumber
-                  lp
-                  leagueName
-                  wins
-                  losses
-                  ringValues
-                }
-                rankedFlex5 {
-                  tier
-                  rank
-                  rankNumber
-                  lp
-                  leagueName
-                  wins
-                  losses
-                  ringValues
-                }
-                rankedFlex3 {
-                  tier
-                  rank
-                  rankNumber
-                  lp
-                  leagueName
-                  wins
-                  losses
-                  ringValues
-                }
+        query SummonerProfile($summonerName: String, $games: Int) {
+          summoner(summonerName: $summonerName) {
+            summonerId
+            summonerName
+            profileIconId
+            summonerLevel
+            lastUpdated
+            userProfile {
+              user {
+                username
               }
-              summonerPlayers(summonerName: $summonerName, games: $games){
-                match {
-                  gameId
-                  queue
-                  gameDurationTime
-                  timeago
-                  timestamp
+            }
+            rankedSolo {
+              tier
+              rank
+              rankNumber
+              lp
+              leagueName
+              wins
+              losses
+              ringValues
+            }
+            rankedFlex5 {
+              tier
+              rank
+              rankNumber
+              lp
+              leagueName
+              wins
+              losses
+              ringValues
+            }
+            rankedFlex3 {
+              tier
+              rank
+              rankNumber
+              lp
+              leagueName
+              wins
+              losses
+              ringValues
+            }
+          }
+          summonerPlayers(summonerName: $summonerName, games: $games) {
+            match {
+              gameId
+              queue
+              gameDurationTime
+              timeago
+              timestamp
+              players {
+                participantId
+                team {
+                  teamId
                 }
-                champion {
-                  key
-                  name
-                  champId
-                }
-                laneOpponent {
-                  champion {
-                    key
-                    name
-                    champId
+                summoner {
+                  summonerName
+                  rankedSolo {
+                    tier
+                    rank
+                    rankNumber
+                    lp
+                    leagueName
+                    wins
+                    losses
+                    ringValues
                   }
-                }
-                win
-                kills
-                deaths
-                assists
-                kdaAverage
-                champLevel
-                killParticipation
-                totalMinionsKilled
-                csPmin
-                item0 {
-                  itemId
-                  name
-                }
-                item1 {
-                  itemId
-                  name
-                }
-                item2 {
-                  itemId
-                  name
-                }
-                item3 {
-                  itemId
-                  name
-                }
-                item4 {
-                  itemId
-                  name
-                }
-                item5 {
-                  itemId
-                  name
-                }
-                item6 {
-                  itemId
-                  name
-                }
-                spell1Id {
-                  name
-                  imageFull
-                }
-                spell2Id {
-                  name
-                  imageFull
-                }
-                perk0 {
-                  name
-                  icon
-                }
-                perkSubStyle
-                perk4 {
-                  name
+                  rankedFlex5 {
+                    tier
+                    rank
+                    rankNumber
+                    lp
+                    leagueName
+                    wins
+                    losses
+                    ringValues
+                  }
+                  rankedFlex3 {
+                    tier
+                    rank
+                    rankNumber
+                    lp
+                    leagueName
+                    wins
+                    losses
+                    ringValues
+                  }
                 }
               }
             }
+            champion {
+              key
+              name
+              champId
+            }
+            lane
+            laneOpponent {
+              champion {
+                key
+                name
+                champId
+              }
+            }
+            win
+            kills
+            deaths
+            assists
+            kdaAverage
+            champLevel
+            killParticipation
+            totalMinionsKilled
+            csPmin
+            item0 {
+              itemId
+              name
+            }
+            item1 {
+              itemId
+              name
+            }
+            item2 {
+              itemId
+              name
+            }
+            item3 {
+              itemId
+              name
+            }
+            item4 {
+              itemId
+              name
+            }
+            item5 {
+              itemId
+              name
+            }
+            item6 {
+              itemId
+              name
+            }
+            spell1Id {
+              name
+              imageFull
+            }
+            spell2Id {
+              name
+              imageFull
+            }
+            perk0 {
+              name
+              icon
+            }
+            perkSubStyle
+            perk4 {
+              name
+            }
+          }
+        }
         `;
 
     let mutation_updateSummoner =
@@ -326,12 +366,51 @@
                 gameDurationTime
                 timeago
                 timestamp
+                players {
+                participantId
+                team {
+                  teamId
+                }
+                summoner {
+                  summonerName
+                  rankedSolo {
+                    tier
+                    rank
+                    rankNumber
+                    lp
+                    leagueName
+                    wins
+                    losses
+                    ringValues
+                  }
+                  rankedFlex5 {
+                    tier
+                    rank
+                    rankNumber
+                    lp
+                    leagueName
+                    wins
+                    losses
+                    ringValues
+                  }
+                  rankedFlex3 {
+                    tier
+                    rank
+                    rankNumber
+                    lp
+                    leagueName
+                    wins
+                    losses
+                    ringValues
+                  }
+                }
               }
               champion {
                 key
                 name
                 champId
               }
+              lane
               laneOpponent {
                 champion {
                   key
@@ -396,26 +475,6 @@
           }
         }
         `;
-
-    function getFontSize(viewport, summonerName) {
-        if (viewport >= 768) {
-            if (summonerName.length > 14) {
-                return '5rem';
-            } else if (summonerName.length > 10) {
-                return '6rem';
-            } else {
-                return '7rem';
-            }
-        } else {
-            if (summonerName.length > 14) {
-                return '1.5rem';
-            } else if (summonerName.length > 10) {
-                return '2.5rem';
-            } else {
-                return '3.5rem';
-            }
-        }
-    }
 
     export default {
         name: 'summoner_profile',
@@ -546,6 +605,7 @@
                     // If Summoner has updated with a name change, change URL path.
                     if (this.summoner.summonerName !== this.$route.params.summoner){
                         this.$router.replace('/summoners/' + this.summoner.summonerName);
+                        this.summonerLoaded = true;
                     }
                 })
             },
@@ -597,6 +657,7 @@
                 background-color: white;
                 width: 100%;
                 grid-gap: 10px 15px;
+                border-bottom: 3px solid #f4f4f4;
                 grid-template: 100px / 0.25fr 1.75fr repeat(11, 1fr) 0.25fr;
                 grid-template-areas: ". avatar title title title title title title title title options options options ." ". avatar ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ." ". menu menu menu menu menu menu menu menu menu menu menu menu .";
 
@@ -801,6 +862,10 @@
                         }
                     }
                 }
+            }
+
+            #summoner-content-wrapper {
+                background-color: #F6F7FB;
             }
         }
     }

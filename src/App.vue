@@ -48,6 +48,9 @@
         color: $palette-primary;
         min-height: 100vh;
         background-color: $palette-secondary;
+        display: grid;
+        grid-template: 65px auto / auto;
+        grid-template-areas: "tnav" "main";
 
         &.main {
             @media #{$bp-lg}{

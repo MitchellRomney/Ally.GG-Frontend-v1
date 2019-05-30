@@ -207,7 +207,7 @@
 
 <style scoped lang="scss">
     .content-general {
-        margin: 30px 0;
+        padding: 30px 0;
         display: grid;
         grid-gap: 20px;
         grid-template: 1fr 1fr / 0.5fr repeat(12, 1fr) 0.5fr;

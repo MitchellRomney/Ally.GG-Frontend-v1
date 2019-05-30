@@ -93,8 +93,6 @@
         watch: {
             search_entry(after, before) {
                 if (after === null) {
-                    console.log(this.search_entry);
-                    console.log(after);
                     this.search_entry = [];
                 } else {
                     this.search_loading = true;
@@ -154,24 +152,9 @@
         grid-area: tnav;
         justify-content: flex-end;
         padding: 0 40px;
-        display: none;
+        display: flex;
         height: 65px;
         width: 100%;
-
-        @media #{$bp-lg}{
-            display: flex;
-        }
-
-        .logo {
-            grid-area: logo;
-            display: flex;
-            padding: 25px;
-
-            img {
-                align-self: center;
-                margin-left: 0;
-            }
-        }
 
         .search {
             display: flex;
@@ -262,6 +245,7 @@
                 flex-direction: column;
                 border-radius: 5px;
                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+                background-color: white;
 
 
                 &:hover {
@@ -330,6 +314,11 @@
                 opacity: 0.4;
                 margin-right: 20px;
                 font-size: 1.2rem;
+                display: none;
+
+                @media #{$bp-lg}{
+                    display: block;
+                }
             }
 
             .avatar {
@@ -342,6 +331,11 @@
 
             .user {
                 margin-right: 15px;
+                display: none;
+
+                @media #{$bp-lg}{
+                    display: block;
+                }
 
                 span {
                     color: grey;
@@ -358,6 +352,11 @@
 
             .acc-options {
                 position: relative;
+                display: none;
+
+                @media #{$bp-lg}{
+                    display: block;
+                }
 
                 a {
                     color: $palette-primary;

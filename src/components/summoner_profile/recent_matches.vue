@@ -42,6 +42,14 @@
                             <h3 class="loss" v-if="!match.win">Loss</h3>
                             <h4 class="time">{{ match.match.gameDurationTime }}</h4>
                         </div>
+                        <div class="match-info">
+                            <img v-if="match.lane !== 'NONE'" class="resp-img role" :src="getRoleIconUrl(match.lane)"
+                                 :alt="match.lane"/>
+                            <div class="info">
+                                <span class="queue">{{ match.match.queue }}</span>
+                                <span class="timeago">{{ match.match.timeago }}</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="stats">
                         <div class="items">
@@ -107,7 +115,18 @@
                             <span class="kill_p">Kill Participation<br><span>{{ match.killParticipation }}</span></span>
                         </div>
                     </div>
-                    <div class="players"></div>
+                    <div class="players">
+                        <div class="blue-team">
+                            <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 100">
+                                {{ player.summoner.summonerName }}
+                            </div>
+                        </div>
+                        <div class="red-team">
+                            <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 200">
+                                {{ player.summoner.summonerName }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </transition>
@@ -166,6 +185,9 @@
             },
             getSecondaryStyleUrl(style) {
                 return require('../../assets/images/perk-images/Styles/' + style + '.png');
+            },
+            getRoleIconUrl(role) {
+                return require('../../assets/images/lanes/' + role.toLowerCase() + '_icon.png');
             }
         }
     }
@@ -333,6 +355,29 @@
                             font-weight: normal;
                         }
                     }
+
+                    .match-info {
+                        margin-left: auto;
+                        display: flex;
+                        flex-direction: row-reverse;
+                        align-items: center;
+                        font-size: 0.8rem;
+                        opacity: 0.6;
+
+                        .role {
+                            height: 40px;
+                        }
+
+                        .info {
+                            display: flex;
+                            flex-direction: column;
+                            text-align: right;
+
+                            .queue {
+                                font-weight: bold;
+                            }
+                        }
+                    }
                 }
 
                 .stats {
@@ -340,6 +385,7 @@
                     padding: 10px;
                     display: grid;
                     grid-template: 1fr / 1fr 1fr 1fr;
+                    border-bottom: 1px solid #f4f4f4;
 
                     .items {
                         display: grid;
@@ -462,9 +508,27 @@
                 .players {
                     grid-area: players;
                     padding: 10px;
+                    display: grid;
+                    grid-template: auto / 1fr 1fr;
+                    grid-gap: 20px;
+
+                    .blue-team, .red-team {
+                        display: flex;
+                        flex-wrap: wrap;
+                        align-content: space-around;
+
+                        .player {
+                            width: 100%;
+                        }
+                    }
+
+                    .blue-team {
+                        text-align: right;
+                    }
                 }
             }
 
         }
+
     }
 </style>
