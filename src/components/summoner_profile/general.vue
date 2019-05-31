@@ -111,9 +111,8 @@
         padding: 30px 0;
         display: grid;
         grid-gap: 20px;
-        grid-template: 1fr 1fr / 0.5fr repeat(12, 1fr) 0.5fr;
-        min-height: 100vh;
-        grid-template-areas: ". matches matches matches matches matches matches matches matches matches ranked ranked ranked ." ". pan1 pan1 pan1 pan2 pan2 pan2 pan3 pan3 pan3 pan4 pan4 pan4 .";
+        grid-template: 1fr / 0.5fr repeat(12, 1fr) 0.5fr;
+        grid-template-areas: ". matches matches matches matches matches matches matches matches matches ranked ranked ranked .";
 
         .ranked-panel {
             grid-area: ranked;

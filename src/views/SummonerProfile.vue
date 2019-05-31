@@ -3,7 +3,7 @@
         <transition name="fade">
             <logo-bounce v-if="!load_page"></logo-bounce>
         </transition>
-        <div class="content">
+        <div class="content" :class="{ loaded : load_page }">
             <div class="top-wrapper">
                 <div class="avatar-wrapper">
                     <div class="avatar">
@@ -136,6 +136,9 @@
                 <router-view :matches="sortedMatches" :summoner="summoner"
                              :matchLoading="loading_matches" :matchesRemaining="remaining_matches"></router-view>
             </div>
+            <footer>
+                Footer
+            </footer>
         </div>
     </div>
 </template>
@@ -589,7 +592,7 @@
                     }
 
                     // If Summoner has updated with a name change, change URL path.
-                    if (this.summoner.summonerName !== this.$route.params.summoner){
+                    if (this.summoner.summonerName !== this.$route.params.summoner) {
                         this.$router.replace('/summoners/' + this.summoner.summonerName);
                         this.summonerLoaded = true;
                     }
@@ -636,7 +639,12 @@
         position: relative;
 
         .content {
-            min-height: calc(100vh - 65px);
+            height: calc(100vh - 65px);
+            overflow: hidden;
+
+            &.loaded {
+                height: 100%;
+            }
 
             .top-wrapper {
                 padding-top: 20px;
@@ -853,6 +861,16 @@
 
             #summoner-content-wrapper {
                 background-color: #F6F7FB;
+            }
+
+            footer {
+                height: 100px;
+                background-color: #F6F7FB;
+                border-top: 3px solid #f4f4f4;
+                display: flex;
+                flex-direction: row-reverse;
+                padding: 20px;
+                align-items: center;
             }
         }
     }

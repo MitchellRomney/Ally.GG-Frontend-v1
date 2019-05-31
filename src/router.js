@@ -94,7 +94,10 @@ let router = new Router({
                 }
             ]
         },
-    ]
+    ],
+    scrollBehavior(to, from, savedPosition) {
+        return {x: 0, y: 0}
+    }
 });
 
 router.beforeEach((to, from, next) => {
@@ -118,7 +121,7 @@ router.beforeEach((to, from, next) => {
 
     // Check if page requires login.
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        
+
         // If user doesn't have a token (ie. Not authenticated), send to login.
         if (!token) {
             next({

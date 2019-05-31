@@ -75,6 +75,9 @@
               dateJoined
               Profiles {
                 id
+                Summoners {
+                  summonerName
+                }
                 dateModified
                 dateCreated
               }
@@ -128,7 +131,7 @@
                     this.$cookie.set('userId', user.id);
 
                     // Put the user information in the current state.
-                    this.$store.state.user = user;
+                    this.$store.commit('setUser', user);
 
                     // Redirect to home.
                     this.$router.push('/');
@@ -139,10 +142,6 @@
 </script>
 
 <style scoped lang="scss">
-    .v-spinner {
-        background-color: white;
-    }
-
     #login {
         max-height: 100vh;
         display: grid;

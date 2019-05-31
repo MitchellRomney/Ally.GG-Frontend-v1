@@ -111,6 +111,8 @@
                         this.userLoaded = true;
                         this.$store.commit('setUser', response.data.data.user);
                     });
+                } else {
+                    this.userLoaded = true;
                 }
             },
             goNext() {
