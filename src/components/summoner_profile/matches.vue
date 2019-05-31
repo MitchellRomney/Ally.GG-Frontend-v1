@@ -3,7 +3,7 @@
         <h1>Matches</h1>
         <transition name="fade">
             <div class="loading" v-if="matchLoading">
-                <pulse-loader class="match_loader"></pulse-loader>
+                <pulse-loader class="match_loader" :color="'#FF0081'"></pulse-loader>
                 {{ matchesRemaining }} matches remaining...
             </div>
             <div class="latest-matches" v-else v-cloak>

@@ -25,6 +25,7 @@
                 let websitePaths = [
                     '/login',
                     '/contact',
+                    '/loading'
                 ];
 
                 // Return false if the current path is not part of the main dashboard.
@@ -48,11 +49,16 @@
         color: $palette-primary;
         min-height: 100vh;
         background-color: $palette-secondary;
-        display: grid;
-        grid-template: 65px auto / auto;
-        grid-template-areas: "tnav" "main";
 
         &.main {
+            display: grid;
+            grid-template: 65px auto / auto;
+            grid-template-areas: "tnav" "main";
+
+             #logo_bounce {
+                 max-height: calc(100vh - 65px)
+             }
+
             @media #{$bp-lg}{
                 display: grid;
                 grid-template: 65px auto / 130px auto;

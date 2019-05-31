@@ -1,7 +1,7 @@
 <template>
     <div id="summonerProfile" v-images-loaded:on.done="isImagesLoaded">
         <transition name="fade">
-            <pulse-loader v-if="!load_page"></pulse-loader>
+            <logo-bounce v-if="!load_page"></logo-bounce>
         </transition>
         <div class="content">
             <div class="top-wrapper">
@@ -360,51 +360,6 @@
         mutation FetchMatch($gameId: String!, $summonerId: String!) {
           fetchMatch(input: {gameId: $gameId, summonerId: $summonerId}) {
             player {
-              match {
-                gameId
-                queue
-                gameDurationTime
-                timeago
-                timestamp
-                players {
-                participantId
-                team {
-                  teamId
-                }
-                summoner {
-                  summonerName
-                  rankedSolo {
-                    tier
-                    rank
-                    rankNumber
-                    lp
-                    leagueName
-                    wins
-                    losses
-                    ringValues
-                  }
-                  rankedFlex5 {
-                    tier
-                    rank
-                    rankNumber
-                    lp
-                    leagueName
-                    wins
-                    losses
-                    ringValues
-                  }
-                  rankedFlex3 {
-                    tier
-                    rank
-                    rankNumber
-                    lp
-                    leagueName
-                    wins
-                    losses
-                    ringValues
-                  }
-                }
-              }
               champion {
                 key
                 name
@@ -470,6 +425,37 @@
               perkSubStyle
               perk4 {
                 name
+              }
+              match {
+                gameId
+                queue
+                gameDurationTime
+                timeago
+                timestamp
+                players {
+                  participantId
+                  team {
+                    teamId
+                  }
+                  summoner {
+                    summonerName
+                    rankedSolo {
+                      tier
+                      rank
+                      rankNumber
+                    }
+                    rankedFlex5 {
+                      tier
+                      rank
+                      rankNumber
+                    }
+                    rankedFlex3 {
+                      tier
+                      rank
+                      rankNumber
+                    }
+                  }
+                }
               }
             }
           }
@@ -624,6 +610,7 @@
                         },
                     }
                 }).then((response) => {
+                    console.log(response);
                     let data = response.data.data.fetchMatch;
                     this.matches.push(data.player);
                     this.remaining_matches += -1;
@@ -659,7 +646,7 @@
                 grid-gap: 10px 15px;
                 border-bottom: 3px solid #f4f4f4;
                 grid-template: 100px / 0.25fr 1.75fr repeat(11, 1fr) 0.25fr;
-                grid-template-areas: ". avatar title title title title title title title title options options options ." ". avatar ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ." ". menu menu menu menu menu menu menu menu menu menu menu menu .";
+                grid-template-areas: ". avatar title title title title title title title title title options options ." ". avatar ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ." ". menu menu menu menu menu menu menu menu menu menu menu menu .";
 
                 .avatar-wrapper {
                     grid-area: avatar;

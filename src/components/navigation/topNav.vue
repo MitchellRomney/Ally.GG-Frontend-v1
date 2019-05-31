@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="search-results" v-if="search_results && search_results.length > 0 || search_loading">
-                <pulse-loader v-if="search_loading"></pulse-loader>
+                <pulse-loader v-if="search_loading" :color="'#FF0081'"></pulse-loader>
                 <ul class="results" v-else>
                     <li class="header">Summoners</li>
                     <li class="result" v-for="summoner in search_results.slice(0,10)" :key="summoner.id">
@@ -30,7 +30,7 @@
                 </ul>
             </div>
         </div>
-        <div class="profile">
+        <div class="profile" v-if="user.username">
             <div class="notifications">
                 <font-awesome-icon icon="bell"/>
             </div>
@@ -38,9 +38,9 @@
                 <img class="resp-img" src="../../assets/images/placeholder.png" :alt="user.username">
             </div>
             <div class="user">
-                <a :href="'/profiles/' + user.username">
+                <router-link :to="{ name: 'user_profile', params: { user: user.username }}">
                     <h4>{{ user.username }}</h4>
-                </a>
+                </router-link>
                 <a href="#">
                     <span><font-awesome-icon icon="circle"/>Online</span>
                 </a>

@@ -12,6 +12,7 @@ import store from './store.js'
 import titleMixin from './mixins/titleMixin'
 import VueCookie from 'vue-cookie'
 import Axios from 'axios'
+import LogoBounce from './components/loading/logoBounce'
 
 Vue.use(VueCookie);
 Vue.use(Vuex);
@@ -35,6 +36,7 @@ library.add(
 );
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component('logo-bounce', LogoBounce);
 
 Vue.config.productionTip = false;
 

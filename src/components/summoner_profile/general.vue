@@ -69,98 +69,6 @@
             </div>
         </div>
         <RecentMatches :matches="matches" :matchLoading="matchLoading" :matchesRemaining="matchesRemaining"></RecentMatches>
-        <!-- <div class="latest-matches-panel">
-            <h2>Latest Matches</h2>
-            <transition name="fade">
-                <div class="loading" v-if="matchLoading">
-                    <pulse-loader class="match_loader"></pulse-loader>
-                    {{ matchesRemaining }} matches remaining...
-                </div>
-                <div class="latest-matches" v-else v-cloak>
-                    <div class="match"
-                         :class="{ win : player.win == 'W' }"
-                         :id="'match-' + player.match.gameId"
-                         :key="player.match.gameId"
-                         v-for="player in matches.slice(0,3)">
-                        <div class="champion-splash"
-                             :style="{ 'background-image': 'url(' + getChampionSplashUrl(player.champion) + ')' }">
-                            <div class="triangle"></div>
-                            <div class="result-wrapper">
-                                <span class="result">{{ player.win }}</span>
-                            </div>
-                        </div>
-                        <div class="main-info">
-                            <span class="champion">{{ player.champion.name }}</span>
-                            <span class="duration">{{ player.match.gameDurationTime }}</span>
-                            <span class="timeAgo">{{ player.match.timeago }}</span>
-                            <span class="queue">{{ player.match.queue }}</span>
-                        </div>
-                        <div class="player-info">
-                            <span class="level">Level {{ player.champLevel }}</span>
-                            <span class="kda">{{ player.kills }}/{{ player.deaths }}/{{ player.assists }}</span>
-                            <span class="average">{{ player.kda_average }} KDA</span>
-                        </div>
-                        <div class="sub-info">
-                            <span class="farm">{{ player.totalMinionsKilled }} ({{ player.csPmin }}) CS</span>
-                            <span class="kill_p">Kill Participation<br><span>{{ player.killParticipation }}</span></span>
-                        </div>
-                        <div class="items">
-                            <div class="trinket" data-tippy-content="hello">
-                                <img v-if="player.item6.itemId != 0"
-                                     :src="getItemUrl(player.item6.itemId)"
-                                     :alt="player.item6.name">
-                            </div>
-                            <div class="item-1">
-                                <img v-if="player.item0.itemId != 0"
-                                     :src="getItemUrl(player.item0.itemId)"
-                                     :alt="player.item0.name"/>
-                            </div>
-                            <div class="item-2">
-                                <img v-if="player.item1.itemId != 0"
-                                     :src="getItemUrl(player.item1.itemId)"
-                                     :alt="player.item1.name"/>
-                            </div>
-                            <div class="item-3">
-                                <img v-if="player.item2.itemId != 0"
-                                     :src="getItemUrl(player.item2.itemId)"
-                                     :alt="player.item2.name"/>
-                            </div>
-                            <div class="item-4">
-                                <img v-if="player.item3.itemId != 0"
-                                     :src="getItemUrl(player.item3.itemId)"
-                                     :alt="player.item3.name"/>
-                            </div>
-                            <div class="item-5">
-                                <img v-if="player.item4.itemId != 0"
-                                     :src="getItemUrl(player.item4.itemId)"
-                                     :alt="player.item4.name"/>
-                            </div>
-                            <div class="item-6">
-                                <img v-if="player.item5.itemId != 0"
-                                     :src="getItemUrl(player.item5.itemId)"
-                                     :alt="player.item5.name"/>
-                            </div>
-                            <div class="summoner-1">
-                                <img :src="getSSpellUrl(player.spell1Id)"
-                                     :alt="player.spell1Id.name"/>
-                            </div>
-                            <div class="summoner-2">
-                                <img :src="getSSpellUrl(player.spell2Id)"
-                                     :alt="player.spell2Id.name"/>
-                            </div>
-                            <div class="rune-primary">
-                                <img :src="getPrimaryRuneUrl(player.perk0)"
-                                     :alt="player.perk0.name"/>
-                            </div>
-                            <div class="rune-secondary">
-                                <img :src="getSecondaryStyleUrl(player.perkSubStyle)"
-                                     :alt="player.perk4.name"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </transition>
-        </div> -->
     </div>
 </template>
 
@@ -181,13 +89,6 @@
         methods: {
             getMedalUrl(tier, rank) {
                 return require('../../assets/images/ranked_medals/' + tier.toLowerCase() + '_' + rank + '.png');
-            },
-            getChampionSplashUrl(champion) {
-                try {
-                    return require('../../assets/images/history_splash/' + champion.champId + '_0.png');
-                } catch {
-                    return null;
-                }
             },
             getItemUrl(itemId) {
                 return require('../../assets/images/items/' + itemId + '.png');

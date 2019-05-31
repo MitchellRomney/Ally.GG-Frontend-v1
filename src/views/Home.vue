@@ -15,14 +15,13 @@
         components: {},
         computed: {
             user() {
-              return this.$store.state.user
+                return this.$store.state.user
             },
             token() {
                 return this.$store.state.token
             }
         },
-        methods: {
-        },
+        methods: {},
         mounted() {
         }
     }
@@ -41,6 +40,18 @@
                 span {
                     color: $palette-accent;
                 }
+            }
+        }
+
+        .loading-test {
+            margin-top: 200px;
+
+            img {
+                height: 100px;
+                animation-direction: normal;
+                animation-play-state: running;
+                animation-duration: 1s;
+                transform-origin: 50px 50px;
             }
         }
     }

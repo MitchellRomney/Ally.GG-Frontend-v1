@@ -5,7 +5,7 @@
         </div>
         <transition name="fade">
             <div class="loading" v-if="matchLoading">
-                <pulse-loader class="match_loader"></pulse-loader>
+                <pulse-loader class="match_loader" :color="'#FF0081'"></pulse-loader>
                 {{ matchesRemaining }} matches remaining...
             </div>
             <div class="match-carousel" v-else v-cloak>

@@ -1,7 +1,7 @@
 <template>
     <div id="login">
         <div class="content">
-            <pulse-loader v-if="loading"></pulse-loader>
+            <logo-bounce v-if="loading"></logo-bounce>
             <div id="form" v-else v-cloak>
                 <div class="wrapper">
                     <div class="logo">
