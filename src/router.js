@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import UserProfile from './views/UserProfile'
 import Login from './views/Login.vue'
+import Admin from './views/Admin.vue'
 import Loading from './views/Loading.vue'
 import Leaderboard from './views/Leaderboard.vue'
 import Summoners from './views/Summoners.vue'
@@ -42,6 +43,15 @@ let router = new Router({
             path: '/loading',
             name: 'loading',
             component: Loading,
+        },
+        {
+            path: '/admin',
+            name: 'admin',
+            component: Admin,
+            meta: {
+                requiresAuth: true,
+                admin: true,
+            }
         },
         {
             path: '/profiles/:user',
@@ -134,6 +144,28 @@ router.beforeEach((to, from, next) => {
                 query: {
                     nextUrl: to.fullPath
                 }
+            })
+        }
+    }
+
+    if (to.matched.some(record => record.meta.admin)) {
+
+        // If user doesn't have a token (ie. Not authenticated), send to login.
+        if (!token) {
+            next({
+                path: '/login',
+            })
+
+        } else if (!Store.state.stateLoaded) {
+            next({
+                path: '/loading',
+                query: {
+                    nextUrl: to.fullPath
+                }
+            })
+        } else if (!Store.state.user.isSuperuser) {
+            next({
+                path: '/'
             })
         }
     }

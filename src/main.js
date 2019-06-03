@@ -8,7 +8,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import router from './router'
-import store from './store.js'
 import titleMixin from './mixins/titleMixin'
 import VueCookie from 'vue-cookie'
 import Axios from 'axios'
@@ -16,6 +15,8 @@ import LogoBounce from './components/loading/logoBounce'
 
 Vue.use(VueCookie);
 Vue.use(Vuex);
+
+import store from './store.js'
 
 Vue.mixin(titleMixin);
 

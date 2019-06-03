@@ -50,6 +50,7 @@
                     <font-awesome-icon icon="caret-down"/>
                 </a>
                 <ul v-if="open_menu" class="options-dropdown">
+                    <li><router-link to="/admin">Admin Panel</router-link></li>
                     <li><a @click="logout">Logout</a></li>
                 </ul>
             </div>
@@ -373,6 +374,7 @@
                     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
                     transition: all 0.3s ease-in-out 0s, visibility 0s linear 0.3s, z-index 0s linear 0.01s;
                     text-align: center;
+                    z-index: 2000;
 
                     li {
                         cursor: pointer;
