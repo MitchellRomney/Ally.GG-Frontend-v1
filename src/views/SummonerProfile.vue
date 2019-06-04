@@ -4,7 +4,7 @@
             <logo-bounce v-if="!load_page"></logo-bounce>
         </transition>
         <div class="content" :class="{ loaded : load_page }">
-            <div class="top-wrapper">
+            <div class="top-wrapper container">
                 <div class="avatar-wrapper">
                     <div class="avatar">
                         <img class="resp-img" v-if="summoner.profileIconId"
@@ -525,19 +525,19 @@
 
                 if (document.documentElement.clientWidth >= 768) {  // If window is past mobile/tablet breakpoint.
                     if (summonerName.length > 14) {
-                        return '5rem';
+                        return '60px';
                     } else if (summonerName.length > 10) {
-                        return '6rem';
+                        return '80px';
                     } else {
-                        return '7rem';
+                        return '100px';
                     }
                 } else {
                     if (summonerName.length > 14) {
-                        return '1.5rem';
+                        return '30px';
                     } else if (summonerName.length > 10) {
-                        return '2.5rem';
+                        return '40px';
                     } else {
-                        return '3.5rem';
+                        return '50px';
                     }
                 }
             }
@@ -647,14 +647,14 @@
             }
 
             .top-wrapper {
-                padding-top: 20px;
+                margin-top: 10px;
                 display: grid;
                 background-color: white;
                 width: 100%;
-                grid-gap: 10px 15px;
-                border-bottom: 3px solid #f4f4f4;
-                grid-template: 100px / 0.25fr 1.75fr repeat(11, 1fr) 0.25fr;
-                grid-template-areas: ". avatar title title title title title title title title title options options ." ". avatar ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ." ". menu menu menu menu menu menu menu menu menu menu menu menu .";
+                grid-gap: 0 15px;
+                grid-template: 100px 90px 60px / 150px repeat(11, 1fr);
+                grid-template-areas: "avatar title title title title title title title title title options options" "avatar ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked" "menu menu menu menu menu menu menu menu menu menu menu menu";
+                height: 250px;
 
                 .avatar-wrapper {
                     grid-area: avatar;
@@ -665,6 +665,7 @@
 
                     .avatar {
                         position: relative;
+                        overflow: hidden;
 
                         img {
                             border-radius: 10px;
@@ -679,12 +680,18 @@
                             padding: 2px 20px;
                             background-color: white;
                             border-top-left-radius: 10px;
-                            font-size: 1rem;
+                            font-size: 12px;
                             font-weight: bold;
                             @media #{$bp-md}{
-                                font-size: 2rem;
+                                font-size: 24px;
                             }
                         }
+                    }
+
+                    .updated {
+                        font-size: 0.7rem;
+                        opacity: 0.8;
+                        margin: 0.35rem 0;
                     }
 
                     button {
@@ -694,22 +701,9 @@
                         color: white;
                         font-size: 0.8rem;
                         font-weight: bold;
-                        border-radius: 10px;
+                        border-radius: 5px;
                         cursor: pointer;
-                        display: none;
-                        @media #{$bp-md}{
-                            display: block;
-                        }
-                    }
-
-                    .updated {
-                        font-size: 0.8rem;
-                        opacity: 0.8;
-                        margin: 0.4rem 0;
-                        display: none;
-                        @media #{$bp-md}{
-                            display: block;
-                        }
+                        border: none;
                     }
                 }
 
@@ -724,6 +718,7 @@
 
                     .summonerName {
                         font-family: 'Panton Black', sans-serif;
+                        margin-bottom: -20px;
                     }
 
                     .badges {
@@ -833,7 +828,7 @@
                     width: 100%;
                     position: relative;
                     display: grid;
-                    grid-template: auto / repeat(8, 1fr);
+                    grid-template: auto / repeat(6, 1fr);
                     text-align: center;
 
                     a {
@@ -852,8 +847,10 @@
                             opacity: 0.6;
                             cursor: pointer;
                             transition: all 0.25s ease;
-                            padding: 20px;
                             border-bottom: 2px solid transparent;
+                            height: 100%;
+                            width: 100%;
+                            display: flex;
                         }
                     }
                 }
@@ -861,6 +858,9 @@
 
             #summoner-content-wrapper {
                 background-color: #F6F7FB;
+                border-top: 3px solid #f4f4f4;
+                min-height: calc(100vh - 315px);
+                padding: 20px 0;
             }
 
             footer {

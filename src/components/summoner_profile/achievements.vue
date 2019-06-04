@@ -1,5 +1,5 @@
 <template>
-  <div id="achievements">
+  <div id="achievements" class="container">
     <h1>Achievements</h1>
   </div>
 </template>

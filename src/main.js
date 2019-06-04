@@ -17,6 +17,7 @@ Vue.use(VueCookie);
 Vue.use(Vuex);
 
 import store from './store.js'
+import { createProvider } from './vue-apollo'
 
 Vue.mixin(titleMixin);
 
@@ -61,6 +62,7 @@ Date.prototype.addDays = function (days) {
 new Vue({
     router,
     store,
+    apolloProvider: createProvider(),
     render: h => h(App)
 }).$mount(
     '#app'

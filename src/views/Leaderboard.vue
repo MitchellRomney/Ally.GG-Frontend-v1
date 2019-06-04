@@ -2,7 +2,7 @@
     <div id="leaderboard">
         <transition name="fade">
             <pulse-loader v-if="loading" :color="'#FF0081'"></pulse-loader>
-            <div class="content" v-else v-cloak>
+            <div class="content container" v-else v-cloak>
                 <h1>Leaderboard</h1>
                 <table class="leaderboard-table">
                     <tr>

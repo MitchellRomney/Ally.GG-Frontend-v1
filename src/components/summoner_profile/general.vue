@@ -1,5 +1,5 @@
 <template>
-    <div class="content-general">
+    <div class="content-general container">
         <div class="ranked-panel">
             <h2>Ranked Solo</h2>
             <h5 class="rank" v-if="summoner.rankedSolo" v-cloak>
@@ -108,11 +108,11 @@
 
 <style scoped lang="scss">
     .content-general {
-        padding: 30px 0;
         display: grid;
         grid-gap: 20px;
-        grid-template: 1fr / 0.5fr repeat(12, 1fr) 0.5fr;
-        grid-template-areas: ". matches matches matches matches matches matches matches matches matches ranked ranked ranked .";
+        grid-template: 400px / repeat(12, 1fr);
+        grid-template-areas:
+                "matches matches matches matches matches matches matches matches matches ranked ranked ranked";
 
         .ranked-panel {
             grid-area: ranked;
@@ -133,7 +133,7 @@
 
             .svg-item {
                 width: 100%;
-                height: 36vh;
+                height: 290px;
                 position: relative;
                 display: flex;
                 align-items: center;
@@ -152,22 +152,24 @@
 
                 .inside-svg {
                     position: absolute;
-                    top: 25%;
+                    display: flex;
+                    flex-direction: column;
                     text-align: center;
 
                     .total-LP {
-                        font-size: 2.5rem;
+                        font-size: 26px;
                         color: $palette-primary;
                     }
 
                     .win-loss {
                         color: grey;
-                        font-size: 1rem;
+                        font-size: 20px;
                         font-weight: normal;
                     }
 
                     .medal {
-                        width: 7vw;
+                        width: 80px;
+                        align-self: center;
                     }
                 }
             }

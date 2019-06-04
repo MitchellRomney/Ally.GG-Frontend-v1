@@ -61,3 +61,23 @@ input:focus, textarea:focus, select:focus {
   background-color: $palette-secondary;
   z-index: 1000;
 }
+
+.container {
+  margin: auto;
+
+  @media #{$bp-sm}{
+    max-width: 560px;
+  }
+
+  @media #{$bp-md}{
+    max-width: 750px;
+  }
+
+  @media #{$bp-lg}{
+    max-width: 980px;
+  }
+
+  @media #{$bp-xl}{
+    max-width: 1180px;
+  }
+}

@@ -1,5 +1,5 @@
 <template>
-    <div id="content-matches">
+    <div id="content-matches" class="container">
         <h1>Matches</h1>
         <transition name="fade">
             <div class="loading" v-if="matchLoading">

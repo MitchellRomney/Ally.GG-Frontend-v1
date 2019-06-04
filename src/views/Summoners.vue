@@ -1,10 +1,12 @@
 <template>
     <div id="summoners">
-        <h1>My Summoners</h1>
-        <div class="summoner" v-for="summoner in mySummoners">
-            <router-link :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
-                {{ summoner.summonerName }}
-            </router-link>
+        <div class="content container">
+            <h1>My Summoners</h1>
+            <div class="summoner" v-for="summoner in mySummoners">
+                <router-link :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
+                    {{ summoner.summonerName }}
+                </router-link>
+            </div>
         </div>
     </div>
 </template>
@@ -13,8 +15,7 @@
     export default {
         name: 'summoners',
         title: 'Summoners - Ally.GG',
-        components: {
-        },
+        components: {},
         data() {
             return {
                 // Summoner Data
