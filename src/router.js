@@ -5,7 +5,8 @@ import UserProfile from './views/UserProfile'
 import Login from './views/Login.vue'
 import Admin from './views/Admin.vue'
 import Loading from './views/Loading.vue'
-import Leaderboard from './views/Leaderboard.vue'
+import Improve from './views/Improve.vue'
+import Improve_Match from './components/improve/match.vue'
 import Summoners from './views/Summoners.vue'
 import SummonerProfile from './views/SummonerProfile.vue'
 import SummonerProfile_General from './components/summoner_profile/general.vue'
@@ -62,12 +63,19 @@ let router = new Router({
             component: UserProfile
         },
         {
-            path: '/leaderboard',
-            name: 'leaderboard',
+            path: '/improve',
+            name: 'improve',
             meta: {
                 requiresAuth: true
             },
-            component: Leaderboard
+            component: Improve,
+            children: [
+                {
+                    name: 'improve_match',
+                    path: ':match',
+                    component: Improve_Match
+                }
+            ]
         },
         {
             path: '/summoners/',

@@ -118,12 +118,16 @@
                     <div class="players">
                         <div class="blue-team">
                             <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 100">
+                                <router-link :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
                                 {{ player.summoner.summonerName }}
+                            </router-link>
                             </div>
                         </div>
                         <div class="red-team">
                             <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 200">
+                                <router-link :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
                                 {{ player.summoner.summonerName }}
+                            </router-link>
                             </div>
                         </div>
                     </div>

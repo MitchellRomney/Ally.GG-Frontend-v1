@@ -1,9 +1,15 @@
+/* Palette */
 $palette-primary: #030B1E;
 $palette-secondary: #FFFFFF;
 $palette-accent: #FF0081;
+$palette-win: #2D9CDB;
+$palette-loss: #EB5757;
 
 /* Breakpoints */
 $bp-sm: "(min-width: 576px)"; // col-sm
 $bp-md: "(min-width: 768px)"; // col-md
 $bp-lg: "(min-width: 992px)"; // col-lg
 $bp-xl: "(min-width: 1200px)"; // col-xl
+
+/* Extra */
+$shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);

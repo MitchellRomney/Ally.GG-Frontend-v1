@@ -23,7 +23,7 @@
             dateJoined
             Profiles {
               Summoners {
-                summonerName
+                summonerId
               }
             }
           }

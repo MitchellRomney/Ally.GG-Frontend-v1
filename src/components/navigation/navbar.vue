@@ -6,7 +6,7 @@
         <ul class="nav-items">
             <NavItem exact name="Home" link="/" icon="home"/>
             <NavItem name="Summoners" link="/summoners" icon="users"/>
-            <NavItem name="Leaderboard" link="/leaderboard" icon="trophy"/>
+            <NavItem name="Improve" link="/improve" icon="trophy"/>
         </ul>
     </nav>
 </template>

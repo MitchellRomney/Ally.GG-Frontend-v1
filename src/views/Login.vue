@@ -173,9 +173,9 @@
 
                     .logo {
                         img {
-                            width: 100%;
+                            width: 80%;
                             @media #{$bp-lg}{
-                                width: 60%;
+                                width: 40%;
                             }
                         }
                     }
