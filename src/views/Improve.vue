@@ -210,7 +210,6 @@
 
             .match-info {
                 grid-area: info;
-                border: 1px solid #DFE3E8;
                 height: 100%;
                 overflow-y: scroll;
             }

@@ -15,16 +15,24 @@
                     </div>
                 </div>
             </div>
-            <div class="search-results" v-if="search_results && search_results.length > 0 || search_loading">
+            <div class="search-results" v-if="search_results || search_loading">
                 <pulse-loader v-if="search_loading" :color="'#FF0081'"></pulse-loader>
                 <ul class="results" v-else>
-                    <li class="header">Summoners</li>
-                    <li class="result" v-for="summoner in search_results.slice(0,10)" :key="summoner.id">
+                    <li class="header" v-if="search_summoner_results.length > 0">Summoners</li>
+                    <li class="result" v-for="summoner in search_summoner_results.slice(0,10)" :key="summoner.id">
                         <router-link :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
                             <img class="resp-img"
                                  :src="'https://ddragon.leagueoflegends.com/cdn/9.10.1/img/profileicon/' + summoner.profileIconId + '.png'">
                             <span v-on:click="clearSearch">{{ summoner.summonerName }}</span>
                             <span class="level">Level {{ summoner.summonerLevel }}</span>
+                        </router-link>
+                    </li>
+                    <li class="header" v-if="search_champion_results.length > 0">Champions</li>
+                    <li class="result" v-for="champion in search_champion_results.slice(0,10)" :key="champion.champId">
+                        <router-link :to="{ name: 'summoner_profile', params: { summoner: champion.champId }}">
+                            <img class="resp-img" :src="getChampionTileUrl(champion)" :alt="champion.name"/>
+                            <span v-on:click="clearSearch">{{ champion.name }}</span>
+                            <span class="level"><span v-for="tag in champion.tags"> {{ tag }} </span></span>
                         </router-link>
                     </li>
                 </ul>
@@ -64,12 +72,17 @@
 
     let query_summonerSearch =
         `
-        query SummonerSearch($entry: String) {
+        query Search($entry: String) {
           summonerSearch(entry: $entry) {
             summonerId
             summonerName
             summonerLevel
             profileIconId
+          }
+          championSearch(entry: $entry) {
+            name
+            champId
+            tags
           }
         }
         `;
@@ -85,7 +98,8 @@
 
                 // Search
                 search_entry: null,
-                search_results: [],
+                search_summoner_results: [],
+                search_champion_results: [],
                 search_loading: false,
                 search_server: 'OCE',
                 search_server_options: ['OCE', 'NA', 'KR', 'EUW']
@@ -125,7 +139,13 @@
                         },
                     }
                 }).then((response) => {
-                    this.search_results = response.data.data.summonerSearch;
+                    this.search_summoner_results = response.data.data.summonerSearch;
+                    this.search_champion_results = response.data.data.championSearch;
+
+                    for (let key in this.search_champion_results) {
+                        this.search_champion_results[key].tags = this.search_champion_results[key].tags.replace(/\[*[',\]]/gi, '').split(" ");
+                    }
+
                     this.search_loading = false;
                 });
             },
@@ -137,11 +157,17 @@
                 this.$router.push({name: 'summoner_profile', params: {summoner: this.search_entry}});
                 this.search_entry = null;
                 this.search_results = null;
-            }
+            },
+            getChampionTileUrl(champion) {
+                return require('../../assets/images/champion-tiles/' + champion.champId + '_0.jpg');
+            },
         },
         computed: {
             user() {
                 return this.$store.state.user
+            },
+            search_results() {
+                return this.search_summoner_results.length > 0 || this.search_champion_results.length > 0
             }
         },
     }
@@ -245,7 +271,7 @@
                 overflow-y: scroll;
                 flex-direction: column;
                 border-radius: 5px;
-                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+                box-shadow: $shadow;
                 background-color: white;
 
 

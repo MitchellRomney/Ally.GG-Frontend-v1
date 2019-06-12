@@ -27,6 +27,8 @@
     "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
     "tar": "^4.4.8",
+    "tiptap": "^1.22.1",
+    "tiptap-extensions": "^1.22.1",
     "vue": "^2.6.10",
     "vue-apollo": "^3.0.0-beta.11",
     "vue-cookie": "^1.1.4",

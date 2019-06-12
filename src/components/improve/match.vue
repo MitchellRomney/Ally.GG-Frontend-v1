@@ -4,16 +4,48 @@
             <logo-bounce v-if="loading"></logo-bounce>
             <div class="content" v-if="!loading">
                 <h1 class="header">Match {{ match.gameId }}</h1>
-                <div class="log">
-                    <h2>Improvement Log</h2>
-                    <div><strong>The Good:</strong> {{ log_good }}</div>
-                    <div><strong>The Bad:</strong> {{ log_bad }}</div>
-                    <div><strong>LP:</strong> {{ log_lp }}</div>
+                <div class="log" v-if="!emptyLog || editLog">
+                    <h2 class="header">
+                        Improvement Log
+                        <button @click="updateImprovementLog" v-if="editLog">Save</button>
+                        <button @click="editLog = true" v-else>Edit</button>
+                    </h2>
                     <div>
-                        <strong v-if="log_opponent.length > 1">Opponents:</strong>
-                        <strong v-else>Opponent:</strong>
-                        <span v-for="champion in log_opponent"> {{ champion.name }}</span>
+                        <h4>What I did well:</h4>
+                        <div v-if="editLog">
+                            <editor-menu-bar :editor="good_editor" v-slot="{ commands, isActive }">
+                                <button :class="{ 'is-active': isActive.bold() }" @click="commands.bold">
+                                    Bold
+                                </button>
+                            </editor-menu-bar>
+                            <editor-content :editor="good_editor"/>
+                        </div>
+                        <span v-else v-html="log_good"></span>
                     </div>
+                    <div>
+                        <h4>What I need to improve on:</h4>
+                        <editor-content :editor="bad_editor" v-if="editLog"/>
+                        <span v-else v-html="log_bad"></span>
+                    </div>
+                    <form>
+                        <div>
+                            <label for="lpInput" v-if="player.win">LP Gained:</label>
+                            <label for="lpInput" v-else>LP Lost:</label>
+                            <input id="lpInput" type="number" v-model="log_lp" v-if="editLog"/>
+                            <span v-else>{{ log_lp }}</span>
+                        </div>
+                        <div>
+                            <h4 v-if="log_opponent.length > 1">Opponents:</h4>
+                            <h4 v-else>Opponent:</h4>
+                            <span v-for="champion in log_opponent"> {{ champion.name }}</span>
+                        </div>
+                    </form>
+                </div>
+                <div class="empty-log" v-else>
+                    <h2 class="header">Improvement Log
+                        <button @click="editLog = true">Improve</button>
+                    </h2>
+                    You haven't logged your personal development thoughts on this game yet.
                 </div>
                 <div class="players">
                     <h2 class="header">Players</h2>
@@ -96,6 +128,8 @@
 
 <script>
     import axios from 'axios'
+    import {Editor, EditorContent, EditorMenuBar} from 'tiptap'
+    import {Bold} from 'tiptap-extensions'
 
     let query_getMatch =
         `query ($gameId: Int!, $summonerId: String = "") {
@@ -264,17 +298,29 @@
             champion: Object,
             summoner: Object,
         },
+        components: {
+            EditorContent,
+            EditorMenuBar,
+        },
         data() {
             return {
                 // Data
                 match: {},
                 player: {},
 
+                // Editing
+                editLog: false,
+                good_editor: null,
+                bad_editor: null,
+                lp_editor: null,
+                opponent_editor: null,
+
                 // Log
-                log_good: "",
-                log_bad: "",
+                log_good: null,
+                log_bad: null,
                 log_lp: null,
                 log_opponent: [],
+                emptyLog: false,
 
                 // Loading Flags
                 loading: true,
@@ -290,15 +336,14 @@
             },
         },
         watch: {
-            gameId() {
-                return this.champion
-            }
+            match() {
+                this.loadEditors();
+            },
         },
-        components: {},
         methods: {
             getChampionSplashUrl(champion) {
-                if (champion.champId === 'Fiddlesticks') {
-                    return require('../../assets/images/champion-loading/FiddleSticks_0.jpg');
+                if (champion.champId === 'FiddleSticks') {
+                    return require('../../assets/images/champion-loading/Fiddlesticks_0.jpg');
                 } else {
                     return require('../../assets/images/champion-loading/' + champion.champId + '_0.jpg');
                 }
@@ -341,6 +386,10 @@
                         this.log_bad = log.bad;
                         this.log_lp = log.lp;
                         this.log_opponent = log.opponent;
+
+                        this.loadEditors();
+                    } else {
+                        this.emptyLog = true;
                     }
 
                     // Loading
@@ -348,6 +397,10 @@
                 });
             },
             updateImprovementLog() {
+                this.log_good = this.good_editor.getHTML();
+                this.log_bad = this.bad_editor.getHTML();
+                this.editLog = false;
+
                 axios({
                     url: process.env.VUE_APP_API_URL + '/graphql',
                     method: 'post',
@@ -356,10 +409,58 @@
                         variables: {
                             summonerId: this.summoner.summonerId,
                             gameId: this.gameId,
+                            good: this.log_good,
+                            bad: this.log_bad,
+                            lp: this.log_lp,
+                            opponent: [],
+
                         },
                     }
                 }).then((response) => {
                     this.loading = false;
+                    this.editLog = false;
+                });
+            },
+            loadEditors() {
+                // Good
+                if (this.log_good) {
+                    this.good_editor = new Editor({
+                        extensions: [
+                            new Bold(),
+                        ],
+                        content: this.log_good,
+                    });
+                } else {
+                    this.good_editor = new Editor({
+                        extensions: [
+                            new Bold(),
+                        ],
+                        content: '<p></p>',
+                    })
+                }
+
+                // Bad
+                if (this.log_bad) {
+                    this.bad_editor = new Editor({
+                        extensions: [
+                            new Bold(),
+                        ],
+                        content: this.log_bad,
+                    });
+                } else {
+                    this.bad_editor = new Editor({
+                        extensions: [
+                            new Bold(),
+                        ],
+                        content: '<p></p>',
+                    })
+                }
+
+                this.lp_editor = new Editor({
+                    content: this.log_lp,
+                });
+                this.opponent_editor = new Editor({
+                    // content: this.log_opponent,
                 });
             }
         },
@@ -378,8 +479,13 @@
         .content {
 
             .header {
-                border-bottom: 1px solid #DFE3E8;
                 margin-bottom: 10px;
+            }
+
+            .log, .empty-log {
+                .header {
+                    border-bottom: 1px solid #DFE3E8;
+                }
             }
 
             .players {

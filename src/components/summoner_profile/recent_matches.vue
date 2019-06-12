@@ -169,11 +169,7 @@
                 }
             },
             getChampionSplashUrl(champion) {
-                if (champion.champId === 'Fiddlesticks') {
-                    return require('../../assets/images/champion-loading/FiddleSticks_0.jpg');
-                } else {
-                    return require('../../assets/images/champion-loading/' + champion.champId + '_0.jpg');
-                }
+                return require('../../assets/images/champion-loading/' + champion.champId + '_0.jpg');
             },
             getChampionTileUrl(champion) {
                 return require('../../assets/images/champion-tiles/' + champion.champId + '_0.jpg');
