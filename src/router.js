@@ -120,6 +120,15 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
 
+    console.log('To:');
+    console.log(to);
+
+    console.log('From:');
+    console.log(from);
+
+    console.log('Next:');
+    console.log(next);
+
     if (to.fullPath === '/login') {
         next();
         console.log('90');
