@@ -123,12 +123,6 @@ router.beforeEach((to, from, next) => {
     console.log('To:');
     console.log(to);
 
-    console.log('From:');
-    console.log(from);
-
-    console.log('Next:');
-    console.log(next);
-
     if (to.name === 'login') {
         next();
         console.log('90');
@@ -136,7 +130,7 @@ router.beforeEach((to, from, next) => {
 
     let token = Vue.cookie.get('token');
 
-    if (token) {
+    if (token && to.name !== 'login') {
         // If there is a JWT token, always use it as Auth header.
         Vue.prototype.$http.defaults.headers.common['Authorization'] = 'JWT ' + token;
 
