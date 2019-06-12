@@ -133,19 +133,21 @@ router.beforeEach((to, from, next) => {
         if (token_creation.addDays(7) < Date.now()) {
             next({
                 path: '/login',
-                params: {
+                query: {
                     nextUrl: to.fullPath
                 }
             });
+            console.log('1');
             goLogin = true;
         }
     }
 
     // Check if page requires login.
     if (to.matched.some(record => record.meta.requiresAuth)) {
-
+        console.log('lol');
         // If user doesn't have a token (ie. Not authenticated), send to login.
         if (!token || goLogin) {
+            console.log('2');
             next({
                 path: '/login',
             })
@@ -161,7 +163,7 @@ router.beforeEach((to, from, next) => {
     }
 
     if (to.matched.some(record => record.meta.admin)) {
-
+        console.log('4');
         // If user doesn't have a token (ie. Not authenticated), send to login.
         if (!token || goLogin) {
             next({
@@ -181,6 +183,7 @@ router.beforeEach((to, from, next) => {
             })
         }
     }
+    console.log('3');
 
     // Send the user to wherever they intended to go.
     next();
