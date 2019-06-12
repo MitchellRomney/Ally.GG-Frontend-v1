@@ -120,6 +120,8 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
 
+    console.log(to);
+    
     let token = Vue.cookie.get('token');
 
     if (token) {
