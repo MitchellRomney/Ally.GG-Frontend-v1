@@ -120,8 +120,12 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
 
+    if (to.fullPath === '/login') {
+        next();
+        console.log('90');
+    }
+
     let token = Vue.cookie.get('token');
-    let goLogin = false;
 
     if (token) {
         // If there is a JWT token, always use it as Auth header.
@@ -138,7 +142,6 @@ router.beforeEach((to, from, next) => {
                 }
             });
             console.log('1');
-            goLogin = true;
         }
     }
 
