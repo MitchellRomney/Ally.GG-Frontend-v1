@@ -120,12 +120,8 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
 
-    // If they're already headed to the login page, take them there.
-    if (to.fullPath !== '/login') {
-        next();
-    }
-        
     let token = Vue.cookie.get('token');
+    let goLogin = false;
 
     if (token) {
         // If there is a JWT token, always use it as Auth header.
@@ -137,8 +133,11 @@ router.beforeEach((to, from, next) => {
         if (token_creation.addDays(7) < Date.now()) {
             next({
                 path: '/login',
-                params: {nextUrl: to.fullPath}
-            })
+                params: {
+                    nextUrl: to.fullPath
+                }
+            });
+            goLogin = true;
         }
     }
 
@@ -146,7 +145,7 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
 
         // If user doesn't have a token (ie. Not authenticated), send to login.
-        if (!token) {
+        if (!token || goLogin) {
             next({
                 path: '/login',
             })
@@ -164,7 +163,7 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.admin)) {
 
         // If user doesn't have a token (ie. Not authenticated), send to login.
-        if (!token) {
+        if (!token || goLogin) {
             next({
                 path: '/login',
             })
