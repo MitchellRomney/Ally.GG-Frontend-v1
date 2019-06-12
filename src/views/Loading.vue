@@ -64,7 +64,6 @@
         methods: {
             loadState() {
                 let token = this.$cookie.get('token');
-
                 let token_payload = JWT(token);
                 let token_expiry = new Date(token_payload.exp * 1000);
 

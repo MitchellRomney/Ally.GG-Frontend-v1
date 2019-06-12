@@ -119,10 +119,15 @@ let router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-    
+
+    // If they're already headed to the login page, take them there.
+    if (to.fullPath !== '/login') {
+        next();
+    }
+        
     let token = Vue.cookie.get('token');
 
-    if (token && to.fullPath !== '/login') {
+    if (token) {
         // If there is a JWT token, always use it as Auth header.
         Vue.prototype.$http.defaults.headers.common['Authorization'] = 'JWT ' + token;
 
