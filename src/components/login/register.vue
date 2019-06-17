@@ -1,6 +1,7 @@
 <template>
     <div class="register">
-        <div class="wrapper">
+        <logo-bounce v-if="loading"></logo-bounce>
+        <div class="wrapper" v-else v-cloak>
             <div class="logo">
                 <img class="resp-img" alt="Ally.GG Logo" src="../../assets/images/logo.png">
             </div>
@@ -73,6 +74,32 @@
           }
         }`;
 
+    let mutation_login =
+        `mutation TokenAuth($username: String!, $password: String!) {
+          tokenAuth(username: $username, password: $password) {
+            token
+            user {
+              id
+              username
+              firstName
+              lastName
+              isStaff
+              isActive
+              isSuperuser
+              lastLogin
+              dateJoined
+              Profiles {
+                id
+                Summoners {
+                  summonerId
+                }
+                dateModified
+                dateCreated
+              }
+            }
+          }
+        }`;
+
     export default {
         name: 'register',
         title: 'Register - Ally.GG',
@@ -93,6 +120,7 @@
                 valid_key: null,
 
                 // Loading
+                loading: false,
                 username_loading: false,
                 password_loading: false,
                 password2_loading: false,
@@ -153,7 +181,7 @@
         methods: {
             register() {
                 if (this.valid_form) {
-                    this.$emit('Register', '');
+                    this.loading = true;
 
                     axios({
                         method: "POST",
@@ -169,10 +197,37 @@
                         }
                     }).then((response) => {
                         if (response.data.data.register.success) {
+                            this.login();
+                            this.loading = false;
                             this.user_registered = true;
                         }
                     });
                 }
+            },
+            login() {
+                axios({
+                    method: "POST",
+                    url: process.env.VUE_APP_API_URL + '/graphql',
+                    data: {
+                        query: mutation_login,
+                        variables: {
+                            username: this.username,
+                            password: this.password
+                        },
+                    }
+                }).then((response) => {
+
+                    // Get the JWT token and set it in the Cookies to keep session.
+                    let token = response.data.data.tokenAuth.token;
+                    this.$cookie.set('token', token);
+
+                    // Get the user information from the response and set the userId in cookies.
+                    let user = response.data.data.tokenAuth.user;
+                    this.$cookie.set('userId', user.id);
+
+                    // Put the user information in the current state.
+                    this.$store.commit('setUser', user);
+                });
             },
             checkUserExists() {
                 axios({
@@ -215,7 +270,7 @@
                         this.valid_key = false;
                     }
                 });
-            }
+            },
         },
         mounted() {
         }
@@ -227,6 +282,7 @@
         display: flex;
         flex-direction: column;
         text-align: center;
+        position: relative;
 
         .wrapper {
             margin: auto;

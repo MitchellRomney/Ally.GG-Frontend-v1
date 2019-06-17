@@ -2,7 +2,7 @@
     <div id="login">
         <div class="content">
             <logo-bounce v-if="loading"></logo-bounce>
-            <router-view v-if="!loading" v-cloak @Login="loginSubmitted" @Register="registrationSubmitted"></router-view>
+            <router-view v-if="!loading" v-cloak @Login="loading = true"></router-view>
             <footer>
                 <ul>
                     <li>
@@ -54,11 +54,7 @@
                 errorMessage: '',
             }
         },
-        methods: {
-            loginSubmitted() {
-                this.loading = true;
-            },
-        }
+        methods: {}
     }
 </script>
 
