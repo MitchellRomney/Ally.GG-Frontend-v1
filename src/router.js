@@ -5,6 +5,8 @@ import UserProfile from './views/UserProfile'
 import Login from './views/Login.vue'
 import Admin from './views/Admin.vue'
 import Loading from './views/Loading.vue'
+import LoginComp from './components/login/login'
+import Register from './components/login/register'
 import Improve from './views/Improve.vue'
 import Improve_Match from './components/improve/match.vue'
 import Summoners from './views/Summoners.vue'
@@ -39,6 +41,18 @@ let router = new Router({
             path: '/login',
             name: 'login',
             component: Login,
+            children: [
+                {
+                    name: 'loginComp',
+                    path: '',
+                    component: LoginComp
+                },
+                {
+                    name: 'register',
+                    path: '/register',
+                    component: Register
+                }
+            ]
         },
         {
             path: '/loading',

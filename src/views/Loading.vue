@@ -22,9 +22,12 @@
             lastLogin
             dateJoined
             Profiles {
+              id
               Summoners {
                 summonerId
               }
+              dateModified
+              dateCreated
             }
           }
         }

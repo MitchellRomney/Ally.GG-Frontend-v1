@@ -12,7 +12,11 @@
                     {{ success }}
                 </div>
                 <div class="buttons">
-                    <button v-on:click="UpdateAllRankedSummoners">Update All Ranked Summoners</button>
+                    <button @click="UpdateAllRankedSummoners">Update All Ranked Summoners</button>
+                    <div class="generate-key">
+                        <span v-if="newKey">{{ newKey }}</span>
+                        <button @click="CreateAccessKey">Generate Early Access Key</button>
+                    </div>
                 </div>
             </div>
         </transition>
@@ -23,13 +27,18 @@
     import axios from 'axios';
 
     let mutate_getAllRankedSummoners =
-        `
-        mutation getAllRankedSummoners($server:String!, $queue: String!){
+        `mutation getAllRankedSummoners($server:String!, $queue: String!){
           fetchAllRankedSummoners(server: $server, queue: $queue){
             success
           }
-        }
-        `;
+        }`;
+
+    let mutate_CreateAccessKey =
+        `mutation CreateAccessKey {
+          createAccessKey {
+            key
+          }
+        }`;
 
     export default {
         name: 'admin',
@@ -38,6 +47,8 @@
         computed: {},
         data() {
             return {
+                newKey: '',
+
                 loading: false,
                 success: null,
             }
@@ -59,6 +70,18 @@
                 }).then((response) => {
                     this.loading = false;
                     this.success = response.success;
+                });
+            },
+            CreateAccessKey() {
+                axios({
+                    url: process.env.VUE_APP_API_URL + '/graphql',
+                    method: 'post',
+                    data: {
+                        query: mutate_CreateAccessKey,
+                    }
+                }).then((response) => {
+                    console.log(response);
+                    this.newKey = response.data.data.createAccessKey.key;
                 });
             }
         },

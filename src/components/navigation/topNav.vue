@@ -393,7 +393,7 @@
                     position: absolute;
                     top: 100%;
                     right: 0;
-                    width: 100px;
+                    width: 150px;
                     padding: 10px;
                     border-radius: 10px 2px 10px 10px;
                     background-color: white;
