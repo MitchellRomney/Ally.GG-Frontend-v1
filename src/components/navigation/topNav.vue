@@ -125,7 +125,7 @@
             },
             logout() {
                 this.$cookie.delete('token');
-                this.$cookie.delete('user');
+                this.$store.commit('logout');
                 this.$router.go();
             },
             fetchSearch() {

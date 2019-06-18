@@ -39,11 +39,10 @@ let router = new Router({
         },
         {
             path: '/login',
-            name: 'login',
             component: Login,
             children: [
                 {
-                    name: 'loginComp',
+                    name: 'login',
                     path: '',
                     component: LoginComp
                 },

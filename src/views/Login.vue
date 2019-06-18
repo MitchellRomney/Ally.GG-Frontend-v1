@@ -1,8 +1,7 @@
 <template>
     <div id="login">
         <div class="content">
-            <logo-bounce v-if="loading"></logo-bounce>
-            <router-view v-if="!loading" v-cloak @Login="loading = true"></router-view>
+            <router-view></router-view>
             <footer>
                 <ul>
                     <li>
@@ -77,7 +76,6 @@
             display: grid;
             grid-template: auto 50px / auto;
             grid-template-areas: 'content' 'footer';
-            padding: 10px 50px;
             height: 100vh;
 
             footer {

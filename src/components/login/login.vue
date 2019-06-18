@@ -1,20 +1,24 @@
 <template>
     <div class="login">
-        <div class="wrapper">
+        <logo-bounce v-if="loading"></logo-bounce>
+        <div class="wrapper" v-else v-cloak>
             <div class="logo">
                 <img class="resp-img" alt="Ally.GG Logo" src="../../assets/images/logo.png">
+            </div>
+            <div class="error" v-if="errorMessage">
+                {{ errorMessage }}
             </div>
             <h3 class="byline">Login to your account</h3>
             <form @submit.prevent="login" class="form">
                 <div class="username">
                     <label for="username_input"><b>Username:</b></label>
                     <input id="username_input" v-model="username" placeholder="Enter your username..."
-                           autocomplete="on">
+                           autocomplete="on" @keyup.enter="login">
                 </div>
                 <div class="password">
                     <label for="password_input"><b>Password:</b></label>
                     <input id="password_input" v-model="password" type="password"
-                           placeholder="Enter your password..." autocomplete="on">
+                           placeholder="Enter your password..." autocomplete="on" @keyup.enter="login">
                 </div>
             </form>
             <button class="submit" @click="login">Login</button>
@@ -70,40 +74,48 @@
                 loading: false,
 
                 // Error Handling
-                isError: false,
-                errorMessage: '',
+                errorMessage: null,
             }
         },
         methods: {
             login() {
-                this.$emit('Login', '');
+                if (this.username && this.password) {
+                    this.loading = true;
 
-                axios({
-                    method: "POST",
-                    url: process.env.VUE_APP_API_URL + '/graphql',
-                    data: {
-                        query: mutation_login,
-                        variables: {
-                            username: this.username,
-                            password: this.password
-                        },
-                    }
-                }).then((response) => {
+                    axios({
+                        method: "POST",
+                        url: process.env.VUE_APP_API_URL + '/graphql',
+                        data: {
+                            query: mutation_login,
+                            variables: {
+                                username: this.username,
+                                password: this.password
+                            },
+                        }
+                    }).then((response) => {
 
-                    // Get the JWT token and set it in the Cookies to keep session.
-                    let token = response.data.data.tokenAuth.token;
-                    this.$cookie.set('token', token);
+                        if (response.data.data.tokenAuth !== null) {
 
-                    // Get the user information from the response and set the userId in cookies.
-                    let user = response.data.data.tokenAuth.user;
-                    this.$cookie.set('userId', user.id);
+                            // Get the JWT token and set it in the Cookies to keep session.
+                            let token = response.data.data.tokenAuth.token;
+                            this.$cookie.set('token', token);
 
-                    // Put the user information in the current state.
-                    this.$store.commit('setUser', user);
+                            // Get the user information from the response and set the userId in cookies.
+                            let user = response.data.data.tokenAuth.user;
+                            this.$cookie.set('userId', user.id);
 
-                    // Redirect to home.
-                    this.$router.push('/');
-                });
+                            // Put the user information in the current state.
+                            this.$store.commit('setUser', user);
+
+                            // Redirect to home.
+                            this.$router.push('/');
+
+                        } else {
+                            this.loading = false;
+                            this.errorMessage = 'The username or password entered is incorrect, please try again.';
+                        }
+                    });
+                }
             },
         }
     }
@@ -114,9 +126,11 @@
         display: flex;
         flex-direction: column;
         text-align: center;
+        position: relative;
 
         .wrapper {
             margin: auto;
+            padding: 10px 50px;
 
             .logo {
                 img {
@@ -129,6 +143,14 @@
 
             .byline {
                 margin: 25px 0;
+            }
+
+            .error {
+                width: 100%;
+                padding: 20px;
+                background-color: $palette-loss;
+                color: white;
+                margin: 20px 0;
             }
 
             form {

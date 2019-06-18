@@ -286,6 +286,7 @@
 
         .wrapper {
             margin: auto;
+            padding: 10px 50px;
 
             .logo {
                 img {
