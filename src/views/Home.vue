@@ -16,6 +16,7 @@
                     </div>
                 </div>
             </div>
+            <button @click="socketSend">Send!</button>
         </div>
     </div>
 </template>
@@ -33,7 +34,19 @@
                 return this.user.Profiles[0].Summoners
             }
         },
-        methods: {},
+        methods: {
+            socketSend() {
+                let data = {
+                    "message": "Hello!"
+                };
+
+                this.$socket.send(JSON.stringify(data));
+            }
+        },
+        mounted() {
+            this.$connect(process.env.VUE_APP_WS_URL + '/chat', { format: 'json' });
+            this.$options.sockets.onmessage = (data) => console.log(data);
+        }
     }
 </script>
 

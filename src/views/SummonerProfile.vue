@@ -149,8 +149,7 @@
     import imagesLoaded from 'vue-images-loaded'
 
     let query_getSummonerInfo =
-        `
-        query SummonerProfile($summonerName: String, $games: Int) {
+        `query SummonerProfile($summonerName: String, $games: Int) {
           summoner(summonerName: $summonerName) {
             summonerId
             summonerName
@@ -312,8 +311,8 @@
 
     let mutation_updateSummoner =
         `
-        mutation updateSummoner($summonerId: String!){
-          updateSummoner(summonerId: $summonerId){
+        mutation updateSummoner($summonerId: String!, $summonerName: String!){
+          updateSummoner(summonerId: $summonerId, summonerName: $summonerName){
             updated
             message
             newMatches
@@ -495,6 +494,7 @@
                 if (before.params.summoner !== after.params.summoner) {
                     this.summonerLoaded = false;
                     this.getSummonerInfo();
+                    this.webSocketManager();
                 }
             }
         },
@@ -566,8 +566,7 @@
                  * @param data.newMatches   List of new matches not yet in the database.
                  */
                 this.summonerLoaded = false;
-                console.log(mutation_updateSummoner);
-                console.log(this.summoner.summonerId);
+
                 axios({
                     url: process.env.VUE_APP_API_URL + '/graphql',
                     method: 'post',
@@ -575,49 +574,71 @@
                         query: mutation_updateSummoner,
                         variables: {
                             summonerId: this.summoner.summonerId,
+                            summonerName: this.summoner.summonerName
                         },
                     }
                 }).then((response) => {
+                    // Store the data in an easier to use variable.
                     let data = response.data.data.updateSummoner;
-                    this.summoner = data.summoner;
-                    this.summonerLoaded = true;
+                    console.log(data);
 
-                    if (data.newMatches !== []) {
-
-                        this.remaining_matches = data.newMatches.length;
-
-                        for (let key in data.newMatches) {
-                            this.fetchMatch(data.newMatches[key]);
-                        }
-                    }
-
-                    // If Summoner has updated with a name change, change URL path.
-                    if (this.summoner.summonerName !== this.$route.params.summoner) {
-                        this.$router.replace('/summoners/' + this.summoner.summonerName);
+                    if (data.updated) {
+                        // Place the new Summoner data.
+                        this.summoner = data.summoner;
                         this.summonerLoaded = true;
+
+                        // If there are new matches, start making requests for the new matches.
+                        if (data.newMatches !== []) {
+
+                            this.remaining_matches = data.newMatches.length;
+
+                            for (let key in data.newMatches) {
+                                this.fetchMatches(data.newMatches);
+                            }
+                        }
+
+                        // If Summoner has updated with a name change, change URL path.
+                        if (this.summoner.summonerName !== this.$route.params.summoner) {
+                            this.$router.replace('/summoners/' + this.summoner.summonerName);
+                            this.summonerLoaded = true;
+                        }
+                    } else {
+                        this.summonerLoaded = true;
+                        this.isError = true;
+                        this.errorMessage = data.message;
                     }
                 })
             },
-            fetchMatch(gameId) {
+            fetchMatches(gameIdList) {
                 /**
                  * @param data.player   Player object information from a specific match.
                  */
-                axios({
-                    url: process.env.VUE_APP_API_URL + '/graphql',
-                    method: 'post',
-                    data: {
-                        query: mutation_fetchMatch,
-                        variables: {
-                            gameId: gameId,
-                            summonerId: this.summoner.summonerId
-                        },
-                    }
-                }).then((response) => {
-                    console.log(response);
-                    let data = response.data.data.fetchMatch;
-                    this.matches.push(data.player);
-                    this.remaining_matches += -1;
-                });
+
+                let requestList = [];
+
+                for (let gameId in gameIdList) {
+                    requestList.push(
+                        axios({
+                            url: process.env.VUE_APP_API_URL + '/graphql',
+                            method: 'post',
+                            data: {
+                                query: mutation_fetchMatch,
+                                variables: {
+                                    gameId: gameId,
+                                    summonerId: this.summoner.summonerId
+                                },
+                            }
+                        })
+                    )
+                }
+
+                axios.all(requestList)
+                    .then((response) => {
+                        console.log(response);
+                        // let data = response.data.data.fetchMatch;
+                        // this.matches.push(data.player);
+                        this.remaining_matches = 0;
+                    });
             },
             getMedalUrl(tier, rank) {
                 return require('../assets/images/ranked_medals/' + tier.toLowerCase() + '_' + rank + '.png');
@@ -625,8 +646,33 @@
             isImagesLoaded() {
                 this.imagesLoaded = true;
             },
+            webSocketManager() {
+                this.$disconnect();
+                if (this.$options.sockets.onmessage) {
+                    delete this.$options.sockets.onmessage;
+                }
+
+                this.$connect(
+                    process.env.VUE_APP_WS_URL + '/summoner/' + this.$route.params.summoner, {
+                        format: 'json',
+                        store: this.$store,
+                    });
+                this.$options.sockets.onmessage = (response) => {
+                    let data = JSON.parse(response.data);
+                    if (data.data) {
+                        if ('match' in data.data) {
+                            let player = JSON.parse(data.data.match).player;
+
+                            console.log(data.message);
+
+                            this.matches.push(player);
+                        }
+                    }
+                };
+            }
         },
         mounted() {
+            this.webSocketManager();
             this.getSummonerInfo();
         }
     }

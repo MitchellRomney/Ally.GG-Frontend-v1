@@ -12,12 +12,19 @@ import titleMixin from './mixins/titleMixin'
 import VueCookie from 'vue-cookie'
 import Axios from 'axios'
 import LogoBounce from './components/loading/logoBounce'
+import VueNativeSock from 'vue-native-websocket'
+
+
+Vue.use(VueNativeSock, process.env.VUE_APP_WS_URL, {
+    store: store,
+    connectManually: true,
+});
 
 Vue.use(VueCookie);
 Vue.use(Vuex);
 
 import store from './store.js'
-import { createProvider } from './vue-apollo'
+import {createProvider} from './vue-apollo'
 
 Vue.mixin(titleMixin);
 
