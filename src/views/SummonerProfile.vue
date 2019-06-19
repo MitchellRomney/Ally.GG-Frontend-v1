@@ -312,8 +312,8 @@
 
     let mutation_updateSummoner =
         `
-        mutation updateSummoner($id: String!){
-          updateSummoner(id: $id){
+        mutation updateSummoner($summonerId: String!){
+          updateSummoner(summonerId: $summonerId){
             updated
             message
             newMatches
@@ -359,8 +359,7 @@
         `;
 
     let mutation_fetchMatch =
-        `
-        mutation FetchMatch($gameId: String!, $summonerId: String!) {
+        `mutation FetchMatch($gameId: String!, $summonerId: String!) {
           fetchMatch(input: {gameId: $gameId, summonerId: $summonerId}) {
             player {
               champion {
@@ -462,8 +461,7 @@
               }
             }
           }
-        }
-        `;
+        }`;
 
     export default {
         name: 'summoner_profile',
@@ -563,18 +561,20 @@
                     this.summonerLoaded = true;
                 });
             },
-            async updateSummoner() {
+            updateSummoner() {
                 /**
                  * @param data.newMatches   List of new matches not yet in the database.
                  */
                 this.summonerLoaded = false;
-                await axios({
+                console.log(mutation_updateSummoner);
+                console.log(this.summoner.summonerId);
+                axios({
                     url: process.env.VUE_APP_API_URL + '/graphql',
                     method: 'post',
                     data: {
                         query: mutation_updateSummoner,
                         variables: {
-                            id: this.summoner.summonerId,
+                            summonerId: this.summoner.summonerId,
                         },
                     }
                 }).then((response) => {

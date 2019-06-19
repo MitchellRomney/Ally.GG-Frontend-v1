@@ -6,8 +6,15 @@
             </h1>
         </div>
         <div class="content">
-            <div id="verify" class="panel" v-if="summoners.length === 0">
-                You have no connected users.
+            <div id="summoners" class="panel">
+                <div v-if="summoners.length === 0">
+                    You have no verified Summoners.
+                </div>
+                <div v-else>
+                    <div class="summoner" v-for="summoner in summoners">
+                        {{ summoner.summonerName }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
