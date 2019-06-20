@@ -194,13 +194,17 @@
 
 <style scoped lang="scss">
     #recent-matches {
-        grid-area: matches;
+        grid-column-end: span 3;
         background-color: white;
         border: 3px solid #f4f4f4;
         border-radius: 20px;
         position: relative;
         display: flex;
         flex-direction: column;
+
+        @media #{$bp-md}{
+            grid-column-end: span 2;
+        }
 
         .header {
             padding: 10px 10px 0 10px;
@@ -262,7 +266,7 @@
                 transition: all 0.5s ease;
                 position: absolute;
                 width: 75%;
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                box-shadow: $shadow;
                 grid-template: 60px 1fr 2fr / 1fr 4fr;
                 grid-template-areas: 'splash head' 'splash stats' 'splash players';
 

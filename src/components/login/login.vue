@@ -36,32 +36,34 @@
 
     let mutation_login =
         `mutation TokenAuth($username: String!, $password: String!) {
-      tokenAuth(username: $username, password: $password) {
-        token
-        user {
-          id
-          username
-          firstName
-          lastName
-          isStaff
-          isActive
-          isSuperuser
-          lastLogin
-          dateJoined
-          Profiles {
-            id
-            Summoners {
-              summonerName
-              profileIconId
-              summonerLevel
-              summonerId
+          tokenAuth(username: $username, password: $password) {
+            token
+            user {
+              id
+              username
+              firstName
+              lastName
+              isStaff
+              isActive
+              isSuperuser
+              lastLogin
+              dateJoined
+              Profiles {
+                id
+                Summoners {
+                  summonerName
+                  profileIconId
+                  summonerLevel
+                  summonerId
+                }
+                premium
+                premiumStart
+                dateModified
+                dateCreated
+              }
             }
-            dateModified
-            dateCreated
           }
-        }
-      }
-    }`;
+        }`;
 
     export default {
         name: 'login-component',

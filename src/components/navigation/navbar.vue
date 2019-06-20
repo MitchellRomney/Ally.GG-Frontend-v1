@@ -43,7 +43,6 @@
         position: fixed;
         height: 100%;
         width: 130px;
-        z-index: 1000;
 
         @media #{$bp-lg}{
             display: block;

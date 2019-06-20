@@ -9,8 +9,7 @@
     import axios from 'axios';
 
     let query_fetchUser =
-        `
-        query fetchUser($id: Int) {
+        `query fetchUser($id: Int) {
           user(id: $id) {
             id
             username
@@ -29,12 +28,13 @@
                 summonerId
                 summonerLevel
               }
+              premium
+              premiumStart
               dateModified
               dateCreated
             }
           }
-        }
-        `;
+        }`;
 
     let mutation_refreshToken =
         `

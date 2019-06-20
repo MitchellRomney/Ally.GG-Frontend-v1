@@ -1,5 +1,8 @@
 <template>
     <div class="home">
+        <transition name="fade">
+            <verify-modal v-if="showVerifyModal" @close="showVerifyModal = false"></verify-modal>
+        </transition>
         <div class="page-header">
             <h1>
                 Hey <span>{{ user.username }}</span>, what are we doing today?
@@ -34,10 +37,19 @@
 </template>
 
 <script>
+    import VerifyModal from '../components/verify_modal'
+
     export default {
         name: 'home',
         title: 'Home - Ally.GG',
-        components: {},
+        components: {
+            VerifyModal
+        },
+        data() {
+            return {
+                showVerifyModal: false,
+            }
+        },
         computed: {
             user() {
                 return this.$store.state.user
@@ -48,7 +60,7 @@
         },
         methods: {
             connectSummoner() {
-
+                this.showVerifyModal = true;
             }
         },
         mounted() {

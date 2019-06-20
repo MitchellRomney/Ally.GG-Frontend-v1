@@ -11,17 +11,19 @@
                              :src="'https://ddragon.leagueoflegends.com/cdn/9.10.1/img/profileicon/' + summoner.profileIconId + '.png'">
                         <span class="level">{{ summoner.summonerLevel }}</span>
                     </div>
-                    <span class="updated">Last Updated: <span>{{ summoner.lastUpdated }}</span></span>
+                </div>
+                <div class="update">
+                    <span class="last-updated">Last Updated: <span>{{ summoner.lastUpdated }}</span></span>
                     <button v-on:click="updateSummoner">Update Summoner</button>
                 </div>
                 <div class="title">
                     <h1 class="summonerName" :style="'font-size: ' + nameFontSize">{{ summoner.summonerName }}</h1>
-                    <div class="badges">
-                        <div class="badge premium">
-                            <img class="resp-img" src="../assets/images/badges/premium.png" alt="Premium"/>
-                        </div>
-                        <div class="badge verified">
+                    <div class="badges" v-if="summoner.userProfile">
+                        <div class="badge verified" v-if="summoner.userProfile !== null">
                             <img class="resp-img" src="../assets/images/badges/verified.png" alt="Verified"/>
+                        </div>
+                        <div class="badge premium" v-if="summoner.userProfile.premium">
+                            <img class="resp-img" src="../assets/images/badges/premium.png" alt="Premium"/>
                         </div>
                     </div>
                 </div>
@@ -157,6 +159,14 @@
             summonerLevel
             lastUpdated
             userProfile {
+              friends {
+                user {
+                  id
+                  username
+                }
+              }
+              premium
+              premiumStart
               user {
                 username
               }
@@ -518,10 +528,15 @@
                 display: grid;
                 background-color: white;
                 width: 100%;
-                grid-gap: 0 15px;
-                grid-template: 100px 90px 60px / 150px repeat(11, 1fr);
-                grid-template-areas: "avatar title title title title title title title title title options options" "avatar ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked" "menu menu menu menu menu menu menu menu menu menu menu menu";
-                height: 250px;
+                grid-gap: 15px;
+                grid-template: auto / repeat(4, 1fr);
+                grid-template-areas: "avatar title title title" "ranked ranked ranked ranked" "update update update options" "menu menu menu menu";
+                padding: 0 20px;
+
+                @media #{$bp-md}{
+                    grid-template: 100px 90px 60px / 100px repeat(11, 1fr);
+                    grid-template-areas: "avatar title title title title title title title title title options options" "update ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked" "menu menu menu menu menu menu menu menu menu menu menu menu";
+                }
 
                 .avatar-wrapper {
                     grid-area: avatar;
@@ -542,20 +557,30 @@
 
                         .level {
                             position: absolute;
-                            bottom: -10px;
+                            bottom: -5px;
                             right: 0;
-                            padding: 2px 20px;
+                            padding: 2px 10px;
                             background-color: white;
                             border-top-left-radius: 10px;
                             font-size: 12px;
                             font-weight: bold;
                             @media #{$bp-md}{
                                 font-size: 24px;
+                                padding: 2px 20px;
+                                bottom: -10px;
                             }
                         }
                     }
+                }
 
-                    .updated {
+                .update {
+                    grid-area: update;
+                    display: flex;
+                    justify-content: center;
+                    flex-direction: column;
+                    text-align: center;
+
+                    .last-updated {
                         font-size: 0.7rem;
                         opacity: 0.8;
                         margin: 0.35rem 0;
@@ -595,8 +620,12 @@
                 .options {
                     grid-area: options;
                     display: flex;
-                    flex-direction: row-reverse;
                     align-items: center;
+                    justify-content: center;
+
+                    @media #{$bp-md}{
+                        flex-direction: row-reverse;
+                    }
 
                     a {
                         width: 40px;
@@ -629,23 +658,40 @@
 
                     .unranked {
                         .text {
-                            margin-left: 10px;
+                            @media #{$bp-md}{
+                                margin-left: 10px;
+                            }
                         }
                     }
 
                     .ranked-stat, .unranked {
                         position: relative;
                         height: 100%;
-                        margin-right: 10px;
                         display: flex;
-                        width: 300px;
+                        width: 33%;
+                        flex-direction: column;
+                        align-content: center;
+                        text-align: center;
+                        margin: auto;
+
+                        @media #{$bp-md}{
+                            width: 300px;
+                            flex-direction: row;
+                            margin-right: 10px;
+                            text-align: left;
+                        }
 
                         .medal {
-                            width: 25%;
+                            width: 50%;
                             height: 100%;
                             display: flex;
-                            margin: 0 5px;
                             align-items: center;
+                            margin: auto;
+
+                            @media #{$bp-md}{
+                                margin: 0 5px;
+                                width: 25%;
+                            }
                         }
 
                         .text {
@@ -662,6 +708,11 @@
                             .rank {
                                 color: $palette-accent;
                                 font-weight: bold;
+                                font-size: 1rem;
+
+                                @media #{$bp-md}{
+                                    font-size: 1.5em;
+                                }
                             }
 
                             .winrate {
@@ -686,9 +737,9 @@
                     border-radius: 20px;
                     width: 100%;
                     position: relative;
-                    display: grid;
-                    grid-template: auto / repeat(6, 1fr);
+                    display: flex;
                     text-align: center;
+                    overflow-x: scroll;
 
                     a {
                         &.router-link-exact-active {
@@ -702,7 +753,7 @@
                         li {
                             align-items: center;
                             justify-content: center;
-                            font-size: 1.5rem;
+                            font-size: 1rem;
                             opacity: 0.6;
                             cursor: pointer;
                             transition: all 0.25s ease;
@@ -710,6 +761,12 @@
                             height: 100%;
                             width: 100%;
                             display: flex;
+                            padding: 10px;
+                            margin: 0 10px;
+
+                            @media #{$bp-md}{
+                                font-size: 1.5rem;
+                            }
                         }
                     }
                 }
@@ -719,7 +776,11 @@
                 background-color: #F6F7FB;
                 border-top: 3px solid #f4f4f4;
                 min-height: calc(100vh - 315px);
-                padding: 20px 0;
+                padding: 20px;
+
+                @media #{$bp-md}{
+                    padding: 20px 0;
+                }
             }
 
             footer {
