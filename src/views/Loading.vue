@@ -24,7 +24,10 @@
             Profiles {
               id
               Summoners {
+                summonerName
+                profileIconId
                 summonerId
+                summonerLevel
               }
               dateModified
               dateCreated
@@ -47,7 +50,7 @@
         name: 'loading',
         title: 'Loading - Ally.GG',
         components: {},
-        props : ["nextUrl"],
+        props: ["nextUrl"],
         data() {
             return {
                 userLoaded: false,
@@ -112,9 +115,11 @@
                     }).then((response) => {
                         this.userLoaded = true;
                         this.$store.commit('setUser', response.data.data.user);
+                        this.webSocketManager();
                     });
                 } else {
                     this.userLoaded = true;
+                    this.webSocketManager();
                 }
             },
             goNext() {
@@ -125,6 +130,21 @@
                 } else {
                     this.$router.push('/');
                 }
+            },
+            webSocketManager() {
+                if (this.$options.sockets.onmessage) {
+                    delete this.$options.sockets.onmessage;
+                }
+
+                this.$connect(
+                    process.env.VUE_APP_WS_URL + '/dashboard/' + this.$store.state.user.id, {
+                        format: 'json',
+                        store: this.$store,
+                    });
+                this.$options.sockets.onmessage = (response) => {
+                    let data = JSON.parse(response.data);
+                    console.log(data);
+                };
             }
         },
         mounted() {

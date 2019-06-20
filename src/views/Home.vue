@@ -1,22 +1,34 @@
 <template>
     <div class="home">
-        <div class="header">
+        <div class="page-header">
             <h1>
-                Welcome back, <span>{{ user.username }}</span>
+                Hey <span>{{ user.username }}</span>, what are we doing today?
             </h1>
         </div>
         <div class="content">
             <div id="summoners" class="panel">
-                <div v-if="summoners.length === 0">
-                    You have no verified Summoners.
+                <div class="panel-header">
+                    <h2>Your Summoners</h2>
+                    <button @click="connectSummoner">Add+</button>
                 </div>
-                <div v-else>
+                <div v-if="summoners.length === 0">
+                    You have not verified any Summoners yet!
+                </div>
+                <div v-else class="summoners">
                     <div class="summoner" v-for="summoner in summoners">
-                        {{ summoner.summonerName }}
+                        <router-link :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
+                            <div class="avatar">
+                                <img class="resp-img" v-if="summoner.profileIconId"
+                                     :src="'https://ddragon.leagueoflegends.com/cdn/9.10.1/img/profileicon/' + summoner.profileIconId + '.png'">
+                            </div>
+                            <h3 class="name">
+                                {{ summoner.summonerName }}
+                            </h3>
+                            <span class="level">Level: {{ summoner.summonerLevel }}</span>
+                        </router-link>
                     </div>
                 </div>
             </div>
-            <button @click="socketSend">Send!</button>
         </div>
     </div>
 </template>
@@ -35,17 +47,11 @@
             }
         },
         methods: {
-            socketSend() {
-                let data = {
-                    "message": "Hello!"
-                };
+            connectSummoner() {
 
-                this.$socket.send(JSON.stringify(data));
             }
         },
         mounted() {
-            this.$connect(process.env.VUE_APP_WS_URL + '/chat', { format: 'json' });
-            this.$options.sockets.onmessage = (data) => console.log(data);
         }
     }
 </script>
@@ -57,9 +63,10 @@
         min-height: calc(100vh - 65px);
         border-top: 1px solid #DFE3E8;
 
-        .header {
+        .page-header {
             text-align: center;
             font-family: 'Panton Black', sans-serif;
+            padding-bottom: 50px;
 
             h1 {
 
@@ -79,6 +86,34 @@
                 border: 3px solid #f4f4f4;
                 border-radius: 20px;
                 padding: 20px;
+            }
+
+            #summoners {
+                .panel-header {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                }
+
+                .summoners {
+                    display: flex;
+                    justify-content: space-evenly;
+                    height: 100%;
+                    align-items: center;
+
+                    .summoner {
+                        text-align: center;
+
+                        .avatar {
+                            width: 100px;
+                            margin-bottom: 10px;
+
+                            img {
+                                border-radius: 50%;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

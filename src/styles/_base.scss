@@ -81,3 +81,14 @@ input:focus, textarea:focus, select:focus {
     max-width: 1180px;
   }
 }
+
+button {
+  background-color: $palette-accent;
+  padding: 5px 10px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}

@@ -742,14 +742,6 @@
 
                     button {
                         width: 100%;
-                        background-color: $palette-accent;
-                        padding: 5px;
-                        color: white;
-                        font-size: 0.8rem;
-                        font-weight: bold;
-                        border-radius: 5px;
-                        cursor: pointer;
-                        border: none;
                     }
                 }
 
