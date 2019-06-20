@@ -1,6 +1,6 @@
 <template>
     <li class="nav-item">
-        <router-link :to=link class="nav-link" :exact="exact">
+        <router-link :to=link class="nav-link" :exact="exact" v-if="link !== 'None'">
             <div class="icon">
                 <font-awesome-icon :icon=icon />
             </div>
@@ -8,6 +8,17 @@
                 {{ name }}
             </div>
         </router-link>
+        <div class="disabled" v-else>
+            <div class="icon">
+                <font-awesome-icon :icon=icon />
+            </div>
+            <div class="name">
+                {{ name }}
+            </div>
+            <div class="tooltip">
+                {{ message }}
+            </div>
+        </div>
     </li>
 </template>
 
@@ -18,7 +29,8 @@
             name: String,
             link: String,
             icon: String,
-            exact: Boolean
+            exact: Boolean,
+            message: String,
         },
     }
 </script>
@@ -31,7 +43,7 @@
         margin: 5px 0;
         font-weight: 500;
 
-        .nav-link {
+        .nav-link, .disabled {
             display: flex;
             align-items: center;
             transition: all 0.22s ease;
@@ -69,6 +81,49 @@
 
             .name {
                 opacity: 0.6;
+            }
+        }
+
+        .disabled {
+            position: relative;
+
+            .tooltip {
+                position: absolute;
+                background-color: rgba(0, 0, 0, 0.2);
+                opacity: 0;
+                padding: 10px;
+                width: 200px;
+                left: -100%;
+                border-radius: 10px;
+                box-shadow: $shadow;
+                transition: all 0.5s ease;
+                align-content: center;
+                top: 50%;
+                margin-top: -40px;
+            }
+
+            &:hover {
+                .tooltip {
+                    display: flex;
+                    left: 130%;
+                    opacity: 0.8;
+                }
+
+                .icon {
+                    opacity: 0.3;
+                }
+
+                .name {
+                    opacity: 0.3;
+                }
+            }
+
+            .icon {
+                opacity: 0.3;
+            }
+
+            .name {
+                opacity: 0.3;
             }
         }
     }

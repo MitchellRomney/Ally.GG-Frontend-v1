@@ -51,6 +51,9 @@
           Profiles {
             id
             Summoners {
+              summonerName
+              profileIconId
+              summonerLevel
               summonerId
             }
             dateModified

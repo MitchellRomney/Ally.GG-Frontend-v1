@@ -306,159 +306,12 @@
               name
             }
           }
-        }
-        `;
+        }`;
 
     let mutation_updateSummoner =
-        `
-        mutation updateSummoner($summonerId: String!, $summonerName: String!){
-          updateSummoner(summonerId: $summonerId, summonerName: $summonerName){
-            updated
-            message
+        `mutation updateSummoner($summonerId: String!){
+          updateSummoner(summonerId: $summonerId){
             newMatches
-            summoner {
-              summonerId
-              summonerName
-              profileIconId
-              summonerLevel
-              lastUpdated
-              rankedSolo {
-                tier
-                rank
-                rankNumber
-                lp
-                leagueName
-                wins
-                losses
-                ringValues
-              }
-              rankedFlex5 {
-                tier
-                rank
-                rankNumber
-                lp
-                leagueName
-                wins
-                losses
-                ringValues
-              }
-              rankedFlex3 {
-                tier
-                rank
-                rankNumber
-                lp
-                leagueName
-                wins
-                losses
-                ringValues
-              }
-            }
-          }
-        }
-        `;
-
-    let mutation_fetchMatch =
-        `mutation FetchMatch($gameId: String!, $summonerId: String!) {
-          fetchMatch(input: {gameId: $gameId, summonerId: $summonerId}) {
-            player {
-              champion {
-                key
-                name
-                champId
-              }
-              lane
-              laneOpponent {
-                champion {
-                  key
-                  name
-                  champId
-                }
-              }
-              win
-              kills
-              deaths
-              assists
-              kdaAverage
-              champLevel
-              killParticipation
-              totalMinionsKilled
-              csPmin
-              item0 {
-                itemId
-                name
-              }
-              item1 {
-                itemId
-                name
-              }
-              item2 {
-                itemId
-                name
-              }
-              item3 {
-                itemId
-                name
-              }
-              item4 {
-                itemId
-                name
-              }
-              item5 {
-                itemId
-                name
-              }
-              item6 {
-                itemId
-                name
-              }
-              spell1Id {
-                name
-                imageFull
-              }
-              spell2Id {
-                name
-                imageFull
-              }
-              perk0 {
-                name
-                icon
-              }
-              perkSubStyle
-              perk4 {
-                name
-              }
-              match {
-                gameId
-                queue
-                gameDurationTime
-                timeago
-                timestamp
-                players {
-                  participantId
-                  team {
-                    teamId
-                  }
-                  summoner {
-                    summonerName
-                    rankedSolo {
-                      tier
-                      rank
-                      rankNumber
-                    }
-                    rankedFlex5 {
-                      tier
-                      rank
-                      rankNumber
-                    }
-                    rankedFlex3 {
-                      tier
-                      rank
-                      rankNumber
-                    }
-                  }
-                }
-              }
-            }
           }
         }`;
 
@@ -558,6 +411,7 @@
                 }).then((summonerProfileInfo) => {
                     this.summoner = summonerProfileInfo.data.data.summoner;
                     this.matches = summonerProfileInfo.data.data.summonerPlayers;
+                    this.webSocketManager();
                     this.summonerLoaded = true;
                 });
             },
@@ -574,7 +428,6 @@
                         query: mutation_updateSummoner,
                         variables: {
                             summonerId: this.summoner.summonerId,
-                            summonerName: this.summoner.summonerName
                         },
                     }
                 }).then((response) => {
@@ -582,63 +435,8 @@
                     let data = response.data.data.updateSummoner;
                     console.log(data);
 
-                    if (data.updated) {
-                        // Place the new Summoner data.
-                        this.summoner = data.summoner;
-                        this.summonerLoaded = true;
-
-                        // If there are new matches, start making requests for the new matches.
-                        if (data.newMatches !== []) {
-
-                            this.remaining_matches = data.newMatches.length;
-
-                            for (let key in data.newMatches) {
-                                this.fetchMatches(data.newMatches);
-                            }
-                        }
-
-                        // If Summoner has updated with a name change, change URL path.
-                        if (this.summoner.summonerName !== this.$route.params.summoner) {
-                            this.$router.replace('/summoners/' + this.summoner.summonerName);
-                            this.summonerLoaded = true;
-                        }
-                    } else {
-                        this.summonerLoaded = true;
-                        this.isError = true;
-                        this.errorMessage = data.message;
-                    }
+                    this.remaining_matches = data.newMatches;
                 })
-            },
-            fetchMatches(gameIdList) {
-                /**
-                 * @param data.player   Player object information from a specific match.
-                 */
-
-                let requestList = [];
-
-                for (let gameId in gameIdList) {
-                    requestList.push(
-                        axios({
-                            url: process.env.VUE_APP_API_URL + '/graphql',
-                            method: 'post',
-                            data: {
-                                query: mutation_fetchMatch,
-                                variables: {
-                                    gameId: gameId,
-                                    summonerId: this.summoner.summonerId
-                                },
-                            }
-                        })
-                    )
-                }
-
-                axios.all(requestList)
-                    .then((response) => {
-                        console.log(response);
-                        // let data = response.data.data.fetchMatch;
-                        // this.matches.push(data.player);
-                        this.remaining_matches = 0;
-                    });
             },
             getMedalUrl(tier, rank) {
                 return require('../assets/images/ranked_medals/' + tier.toLowerCase() + '_' + rank + '.png');
@@ -653,26 +451,49 @@
                 }
 
                 this.$connect(
-                    process.env.VUE_APP_WS_URL + '/summoner/' + this.$route.params.summoner, {
+                    process.env.VUE_APP_WS_URL + '/summoner/' + this.summoner.summonerId, {
                         format: 'json',
                         store: this.$store,
                     });
                 this.$options.sockets.onmessage = (response) => {
+
+                    // Parse and store data in variable.
                     let data = JSON.parse(response.data);
+
+                    // If there is proper data in the response...
                     if (data.data) {
+
+                        // If data is a new match...
                         if ('match' in data.data) {
                             let player = JSON.parse(data.data.match).player;
 
                             console.log(data.message);
 
+                            // Add new match to match list.
                             this.matches.push(player);
+
+                            // Decrease the remaining matches count by 1.
+                            this.remaining_matches += -1;
+
+                            // Else if data is new Summoner data..
+                        } else if ('summoner' in data.data) {
+
+                            // Store the new Summoner information.
+                            this.summoner = JSON.parse(data.data.summoner).summoner;
+
+                            // Declare the Summoner as loaded.
+                            this.summonerLoaded = true;
+
+                            // If Summoner has updated with a name change, change URL path.
+                            if (this.summoner.summonerName !== this.$route.params.summoner) {
+                                this.$router.replace('/summoners/' + this.summoner.summonerName);
+                            }
                         }
                     }
                 };
             }
         },
         mounted() {
-            this.webSocketManager();
             this.getSummonerInfo();
         }
     }

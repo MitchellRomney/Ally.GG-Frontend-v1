@@ -6,7 +6,10 @@
         <ul class="nav-items">
             <NavItem exact name="Home" link="/" icon="home"/>
             <NavItem name="Summoners" link="/summoners" icon="users"/>
-            <NavItem name="Improve" link="/improve" icon="trophy"/>
+            <NavItem name="Improve" link="/improve" icon="trophy" v-if="summoners.length > 0"/>
+            <NavItem name="Improve" link='None' icon="trophy"
+                     message="You need to verify at least 1 Summoner to use this feature."
+                     v-if="summoners.length === 0"/>
         </ul>
     </nav>
 </template>
@@ -18,6 +21,14 @@
         name: 'Navbar',
         components: {
             NavItem
+        },
+        computed: {
+            user() {
+                return this.$store.state.user
+            },
+            summoners() {
+                return this.user.Profiles[0].Summoners
+            }
         },
     }
 </script>
