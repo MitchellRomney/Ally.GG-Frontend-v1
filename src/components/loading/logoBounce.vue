@@ -16,25 +16,33 @@
 </script>
 
 <style scoped lang="scss">
-    #logo_bounce {
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        max-height: 100vh;
-        background-color: white;
+    #ally-gg {
+        #logo_bounce {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            background-color: white;
+            max-height: calc(100vh - 65px);
 
-        .logo {
-            height: 100px;
-            animation-direction: normal;
-            animation-play-state: running;
-            animation-duration: 1s;
-            transform-origin: 50px 50px;
-            -webkit-animation: bounce-anim 1s infinite;
-            animation: bounce-anim 1s infinite
+            .logo {
+                height: 100px;
+                animation-direction: normal;
+                animation-play-state: running;
+                animation-duration: 1s;
+                transform-origin: 50px 50px;
+                -webkit-animation: bounce-anim 1s infinite;
+                animation: bounce-anim 1s infinite
+            }
+        }
+
+        &.dark {
+            #logo_bounce {
+                background-color: $palette-dark-primary;
+            }
         }
     }
 </style>

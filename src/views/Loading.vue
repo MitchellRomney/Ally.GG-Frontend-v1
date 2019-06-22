@@ -28,6 +28,7 @@
                 summonerId
                 summonerLevel
               }
+              darkMode
               premium
               premiumStart
               dateModified
@@ -102,7 +103,7 @@
                         this.$store.state.user = user;
                     });
 
-                } else if (!this.$store.state.user.username) {  // If user has logged in but state doesn't know the user.
+                } else if (Object.keys(this.$store.state.user).length === 0) {  // If user has logged in but state doesn't know the user.
                     axios({
                         method: "POST",
                         url: process.env.VUE_APP_API_URL + '/graphql',

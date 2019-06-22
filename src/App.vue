@@ -1,5 +1,5 @@
 <template>
-    <div id="ally-gg" :class="{ main: loadDashboard }">
+    <div id="ally-gg" :class="{ main: loadDashboard, dark: darkMode }">
         <Navbar v-if="loadDashboard"/>
         <TopNav v-if="loadDashboard"/>
         <div id="content">
@@ -32,6 +32,13 @@
                 // Return false if the current path is not part of the main dashboard.
                 return !websitePaths.includes(this.$route.path)
             },
+            darkMode() {
+                if (Object.keys(this.$store.state.user).length !== 0){
+                    return this.$store.state.user.Profiles[0].darkMode
+                } else {
+                    return false
+                }
+            }
         },
         methods: {},
         mounted() {
@@ -50,6 +57,7 @@
         color: $palette-primary;
         min-height: 100vh;
         background-color: $palette-secondary;
+        transition: all 0.5s ease;
 
         &.main {
             display: grid;
@@ -69,6 +77,11 @@
 
         #content {
             grid-area: main;
+            overflow-y: scroll;
+        }
+
+        &.dark {
+            background-color: $palette-dark-primary;
         }
     }
 </style>

@@ -48,7 +48,6 @@
                             <stop offset="100%" stop-color="#f7797d"/>
                         </linearGradient>
                     </defs>
-                    <circle class="donut-hole" cx="20" cy="20" r="15.91549430918954" fill="#fff"></circle>
                     <circle class="donut-ring" cx="20" cy="20" r="15.91549430918954" fill="transparent"
                             stroke-width="3.5"></circle>
                     <circle class="donut-segment" cx="20" cy="20" r="15.91549430918954" fill="transparent"
@@ -108,71 +107,112 @@
 </script>
 
 <style scoped lang="scss">
-    .content-general {
-        display: grid;
-        grid-gap: 20px;
-        grid-template: 400px / repeat(3, 1fr);
-        grid-auto-rows: 400px;
+    #ally-gg {
+        .content-general {
+            display: grid;
+            grid-gap: 20px;
+            grid-template: 400px / repeat(3, 1fr);
+            grid-auto-rows: 400px;
+            color: $palette-primary;
+            transition: all 0.5s ease;
 
-        .ranked-panel {
-            background-color: white;
-            border: 3px solid #f4f4f4;
-            border-radius: 20px;
-            padding: 20px;
-            grid-column-end: span 3;
-            @media #{$bp-md}{
-                grid-column-end: span 1;
-            }
-
-            .rank {
-                color: $palette-accent;
-                margin-top: 5px;
-            }
-
-            .league {
-                text-align: right;
-                color: grey;
-            }
-
-            .svg-item {
-                width: 100%;
-                height: 290px;
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                .donut-segment {
-                    animation: donut-chart-fill 1s reverse ease-in;
-                    transform-origin: center;
-                    transform: scaleX(-1);
-                    stroke-linecap: round;
+            .ranked-panel {
+                background-color: white;
+                border: 3px solid #f4f4f4;
+                border-radius: 20px;
+                padding: 20px;
+                grid-column-end: span 3;
+                transition: all 0.5s ease;
+                @media #{$bp-md}{
+                    grid-column-end: span 1;
                 }
 
-                .donut-ring {
-                    stroke: lightgrey;
+                h2 {
+                    color: $palette-primary;
                 }
 
-                .inside-svg {
-                    position: absolute;
+                .rank {
+                    color: $palette-accent;
+                    margin-top: 5px;
+                }
+
+                .league {
+                    text-align: right;
+                    color: grey;
+                }
+
+                .svg-item {
+                    width: 100%;
+                    height: 290px;
+                    position: relative;
                     display: flex;
-                    flex-direction: column;
-                    text-align: center;
+                    align-items: center;
+                    justify-content: center;
 
-                    .total-LP {
-                        font-size: 26px;
-                        color: $palette-primary;
+                    .donut-segment {
+                        animation: donut-chart-fill 1s reverse ease-in;
+                        transform-origin: center;
+                        transform: scaleX(-1);
+                        stroke-linecap: round;
                     }
 
-                    .win-loss {
+                    .donut-ring {
+                        transition: stroke 0.5s ease;
+                        stroke: lightgrey;
+                    }
+
+                    .inside-svg {
+                        position: absolute;
+                        display: flex;
+                        flex-direction: column;
+                        text-align: center;
+
+                        .total-LP {
+                            font-size: 26px;
+                            color: $palette-primary;
+                        }
+
+                        .win-loss {
+                            color: grey;
+                            font-size: 20px;
+                            font-weight: normal;
+                        }
+
+                        .medal {
+                            width: 80px;
+                            align-self: center;
+                        }
+                    }
+                }
+            }
+        }
+
+        &.dark {
+            .content-general {
+                color: white;
+
+                .ranked-panel {
+                    background-color: $palette-dark-primary;
+                    border: 3px solid $palette-dark-border;
+
+                    h2 {
+                        color: white;
+                    }
+
+                    .league {
                         color: grey;
-                        font-size: 20px;
-                        font-weight: normal;
                     }
 
-                    .medal {
-                        width: 80px;
-                        align-self: center;
+                    .svg-item {
+                        .donut-ring {
+                            stroke: $palette-dark-border;
+                        }
+
+                        .inside-svg {
+                            .total-LP {
+                                color: white;
+                            }
+                        }
                     }
                 }
             }

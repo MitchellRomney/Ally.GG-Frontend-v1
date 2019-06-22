@@ -510,287 +510,358 @@
 </script>
 
 <style scoped lang="scss">
+    #ally-gg {
+        #summonerProfile {
+            width: 100%;
+            position: relative;
+            color: $palette-primary;
 
-    #summonerProfile {
-        width: 100%;
-        position: relative;
+            .content {
+                height: calc(100vh - 65px);
+                overflow: hidden;
 
-        .content {
-            height: calc(100vh - 65px);
-            overflow: hidden;
-
-            &.loaded {
-                height: 100%;
-            }
-
-            .top-wrapper {
-                margin-top: 10px;
-                display: grid;
-                background-color: white;
-                width: 100%;
-                grid-gap: 15px;
-                grid-template: auto / repeat(4, 1fr);
-                grid-template-areas: "avatar title title title" "ranked ranked ranked ranked" "update update update options" "menu menu menu menu";
-                padding: 0 20px;
-
-                @media #{$bp-md}{
-                    grid-template: 100px 90px 60px / 100px repeat(11, 1fr);
-                    grid-template-areas: "avatar title title title title title title title title title options options" "update ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked" "menu menu menu menu menu menu menu menu menu menu menu menu";
+                &.loaded {
+                    height: 100%;
                 }
 
-                .avatar-wrapper {
-                    grid-area: avatar;
-                    border-radius: 20px;
-                    text-align: center;
-                    display: flex;
-                    flex-direction: column;
+                .top-wrapper {
+                    margin-top: 10px;
+                    display: grid;
+                    background-color: white;
+                    width: 100%;
+                    grid-gap: 15px;
+                    grid-template: auto / repeat(4, 1fr);
+                    grid-template-areas: "avatar title title title" "ranked ranked ranked ranked" "update update update options" "menu menu menu menu";
+                    padding: 0 20px;
+                    transition: all 0.5s ease;
 
-                    .avatar {
-                        position: relative;
-                        overflow: hidden;
+                    @media #{$bp-md}{
+                        grid-gap: 0 15px;
+                        grid-template: 150px 90px 60px / 150px repeat(11, 1fr);
+                        grid-template-areas: "avatar title title title title title title title title title options options" "update ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked" "menu menu menu menu menu menu menu menu menu menu menu menu";
+                    }
 
-                        img {
-                            border-radius: 10px;
-                            height: auto;
-                            width: auto;
+                    .avatar-wrapper {
+                        grid-area: avatar;
+                        border-radius: 20px;
+                        text-align: center;
+                        display: flex;
+                        flex-direction: column;
+
+                        .avatar {
+                            position: relative;
+                            overflow: hidden;
+
+                            img {
+                                border-radius: 10px;
+                                height: auto;
+                                width: auto;
+                            }
+
+                            .level {
+                                position: absolute;
+                                bottom: -5px;
+                                right: 0;
+                                padding: 2px 10px;
+                                background-color: white;
+                                border-top-left-radius: 10px;
+                                font-size: 12px;
+                                font-weight: bold;
+                                transition: background-color 0.5s ease;
+
+                                @media #{$bp-md}{
+                                    font-size: 24px;
+                                    padding: 2px 20px;
+                                    bottom: -10px;
+                                }
+                            }
+                        }
+                    }
+
+                    .update {
+                        grid-area: update;
+                        display: flex;
+                        justify-content: center;
+                        flex-direction: column;
+                        text-align: center;
+
+                        .last-updated {
+                            font-size: 0.7rem;
+                            opacity: 0.8;
+                            margin: 0.35rem 0;
                         }
 
-                        .level {
-                            position: absolute;
-                            bottom: -5px;
-                            right: 0;
-                            padding: 2px 10px;
-                            background-color: white;
-                            border-top-left-radius: 10px;
-                            font-size: 12px;
-                            font-weight: bold;
+                        button {
+                            width: 100%;
+                        }
+                    }
+
+                    .title {
+                        grid-area: title;
+                        display: flex;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        @media #{$bp-md}{
+                            justify-content: flex-start;
+                        }
+
+                        .summonerName {
+                            font-family: 'Panton Black', sans-serif;
+                            margin-bottom: -20px;
+                            color: $palette-primary;
+                        }
+
+                        .badges {
+                            margin-left: 25px;
+                            display: flex;
+
+                            .badge {
+                                width: 40px;
+                                cursor: pointer;
+                                margin-right: 10px;
+                            }
+                        }
+                    }
+
+                    .options {
+                        grid-area: options;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-evenly;
+                        flex-direction: row-reverse;
+
+                        a {
+                            width: 30px;
+                            height: 30px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            background-color: #DFE3E8;
+                            border-radius: 50%;
+
                             @media #{$bp-md}{
-                                font-size: 24px;
-                                padding: 2px 20px;
-                                bottom: -10px;
+                                width: 40px;
+                                height: 40px;
+                                margin: 0 10px;
+                            }
+
+                            &.star {
+                                background-color: #F2C94C;
+
+                                svg {
+                                    color: white;
+                                }
+                            }
+
+                            svg {
+                                color: #828282;
+                                font-size: 1rem;
+
+                                @media #{$bp-md}{
+                                    font-size: 1.25rem;
+                                }
+                            }
+                        }
+                    }
+
+                    .ranked-stats {
+                        grid-area: ranked;
+                        display: flex;
+
+                        .unranked {
+                            .text {
+                                @media #{$bp-md}{
+                                    margin-left: 10px;
+                                }
+                            }
+                        }
+
+                        .ranked-stat, .unranked {
+                            position: relative;
+                            height: 100%;
+                            display: flex;
+                            width: 33%;
+                            flex-direction: column;
+                            align-content: center;
+                            text-align: center;
+                            margin: auto;
+
+                            @media #{$bp-md}{
+                                width: 300px;
+                                flex-direction: row;
+                                margin-right: 10px;
+                                text-align: left;
+                            }
+
+                            .medal {
+                                width: 50%;
+                                height: 100%;
+                                display: flex;
+                                align-items: center;
+                                margin: auto;
+
+                                @media #{$bp-md}{
+                                    margin: 0 5px;
+                                    width: 25%;
+                                }
+                            }
+
+                            .text {
+                                padding: 5px 0;
+                                display: flex;
+                                justify-content: center;
+                                flex-direction: column;
+
+                                .faded {
+                                    color: grey;
+                                    font-weight: normal;
+                                }
+
+                                .rank {
+                                    color: $palette-accent;
+                                    font-weight: bold;
+                                    font-size: 1rem;
+
+                                    @media #{$bp-md}{
+                                        font-size: 1.5em;
+                                    }
+                                }
+
+                                .winrate {
+                                    span {
+                                        font-weight: normal;
+                                    }
+                                }
+                            }
+                        }
+
+                        .unranked {
+                            .text {
+                                .rank {
+                                    color: $palette-primary;
+                                }
+                            }
+                        }
+                    }
+
+                    #summoner-menu {
+                        grid-area: menu;
+                        border-radius: 20px;
+                        width: 100%;
+                        position: relative;
+                        display: flex;
+                        text-align: center;
+
+                        a {
+                            &.router-link-exact-active {
+                                li {
+                                    opacity: 1;
+                                    border-bottom: 2px solid $palette-accent;
+                                    font-weight: bold
+                                }
+                            }
+
+                            li {
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 1rem;
+                                opacity: 0.6;
+                                cursor: pointer;
+                                transition: all 0.25s ease;
+                                border-bottom: 2px solid transparent;
+                                height: 100%;
+                                width: 100%;
+                                display: flex;
+                                padding: 10px;
+                                margin: 0 10px;
+
+                                @media #{$bp-md}{
+                                    font-size: 1.5rem;
+                                }
                             }
                         }
                     }
                 }
 
-                .update {
-                    grid-area: update;
-                    display: flex;
-                    justify-content: center;
-                    flex-direction: column;
-                    text-align: center;
+                #summoner-content-wrapper {
+                    background-color: #F6F7FB;
+                    border-top: 3px solid #f4f4f4;
+                    min-height: calc(100vh - 315px);
+                    padding: 20px;
+                    transition: all 0.5s ease;
 
-                    .last-updated {
-                        font-size: 0.7rem;
-                        opacity: 0.8;
-                        margin: 0.35rem 0;
-                    }
-
-                    button {
-                        width: 100%;
+                    @media #{$bp-md}{
+                        padding: 20px 0;
                     }
                 }
 
-                .title {
-                    grid-area: title;
+                footer {
+                    height: 100px;
+                    background-color: #F6F7FB;
+                    border-top: 3px solid #f4f4f4;
                     display: flex;
+                    flex-direction: row-reverse;
+                    padding: 20px;
                     align-items: center;
-                    flex-wrap: wrap;
-                    @media #{$bp-md}{
-                        justify-content: flex-start;
-                    }
+                }
+            }
+        }
 
-                    .summonerName {
-                        font-family: 'Panton Black', sans-serif;
-                        margin-bottom: -20px;
-                    }
+        &.dark {
+            #summonerProfile {
+                color: white;
 
-                    .badges {
-                        margin-left: 25px;
-                        display: flex;
+                .content {
+                    .top-wrapper {
+                        background-color: $palette-dark-primary;
 
-                        .badge {
-                            width: 40px;
-                            cursor: pointer;
-                            margin-right: 10px;
+                        .avatar-wrapper {
+                            .avatar {
+                                .level {
+                                    background-color: $palette-dark-primary;
+                                }
+                            }
                         }
-                    }
-                }
 
-                .options {
-                    grid-area: options;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-
-                    @media #{$bp-md}{
-                        flex-direction: row-reverse;
-                    }
-
-                    a {
-                        width: 40px;
-                        height: 40px;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        background-color: #DFE3E8;
-                        border-radius: 50%;
-                        margin: 0 10px;
-
-                        &.star {
-                            background-color: #F2C94C;
-
-                            svg {
+                        .title {
+                            .summonerName {
                                 color: white;
                             }
                         }
 
-                        svg {
-                            color: #828282;
-                            font-size: 1.25rem;
-                        }
-                    }
-                }
 
-                .ranked-stats {
-                    grid-area: ranked;
-                    display: flex;
-
-                    .unranked {
-                        .text {
-                            @media #{$bp-md}{
-                                margin-left: 10px;
-                            }
-                        }
-                    }
-
-                    .ranked-stat, .unranked {
-                        position: relative;
-                        height: 100%;
-                        display: flex;
-                        width: 33%;
-                        flex-direction: column;
-                        align-content: center;
-                        text-align: center;
-                        margin: auto;
-
-                        @media #{$bp-md}{
-                            width: 300px;
-                            flex-direction: row;
-                            margin-right: 10px;
-                            text-align: left;
-                        }
-
-                        .medal {
-                            width: 50%;
-                            height: 100%;
-                            display: flex;
-                            align-items: center;
-                            margin: auto;
-
-                            @media #{$bp-md}{
-                                margin: 0 5px;
-                                width: 25%;
-                            }
-                        }
-
-                        .text {
-                            padding: 5px 0;
-                            display: flex;
-                            justify-content: center;
-                            flex-direction: column;
-
-                            .faded {
-                                color: grey;
-                                font-weight: normal;
-                            }
-
-                            .rank {
-                                color: $palette-accent;
-                                font-weight: bold;
-                                font-size: 1rem;
-
-                                @media #{$bp-md}{
-                                    font-size: 1.5em;
+                        .ranked-stats {
+                            .ranked-stat, .unranked {
+                                .text {
+                                    .faded {
+                                        color: grey;
+                                    }
+                                    .rank {
+                                        color: $palette-accent;
+                                    }
                                 }
                             }
 
-                            .winrate {
-                                span {
-                                    font-weight: normal;
+                            .unranked {
+                                .text {
+                                    .rank {
+                                        color: white;
+                                    }
                                 }
                             }
                         }
                     }
 
-                    .unranked {
-                        .text {
-                            .rank {
-                                color: $palette-primary;
-                            }
-                        }
+                    #summoner-content-wrapper {
+                        background-color: $palette-dark-secondary;
+                        border-top: 3px solid $palette-dark-border;
+                    }
+
+                    footer {
+                        background-color: $palette-dark-secondary;
+                        border-top: 3px solid $palette-dark-border;
                     }
                 }
-
-                #summoner-menu {
-                    grid-area: menu;
-                    border-radius: 20px;
-                    width: 100%;
-                    position: relative;
-                    display: flex;
-                    text-align: center;
-                    overflow-x: scroll;
-
-                    a {
-                        &.router-link-exact-active {
-                            li {
-                                opacity: 1;
-                                border-bottom: 2px solid $palette-accent;
-                                font-weight: bold
-                            }
-                        }
-
-                        li {
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 1rem;
-                            opacity: 0.6;
-                            cursor: pointer;
-                            transition: all 0.25s ease;
-                            border-bottom: 2px solid transparent;
-                            height: 100%;
-                            width: 100%;
-                            display: flex;
-                            padding: 10px;
-                            margin: 0 10px;
-
-                            @media #{$bp-md}{
-                                font-size: 1.5rem;
-                            }
-                        }
-                    }
-                }
-            }
-
-            #summoner-content-wrapper {
-                background-color: #F6F7FB;
-                border-top: 3px solid #f4f4f4;
-                min-height: calc(100vh - 315px);
-                padding: 20px;
-
-                @media #{$bp-md}{
-                    padding: 20px 0;
-                }
-            }
-
-            footer {
-                height: 100px;
-                background-color: #F6F7FB;
-                border-top: 3px solid #f4f4f4;
-                display: flex;
-                flex-direction: row-reverse;
-                padding: 20px;
-                align-items: center;
             }
         }
     }

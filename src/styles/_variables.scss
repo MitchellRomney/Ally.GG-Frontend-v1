@@ -5,6 +5,10 @@ $palette-accent: #FF0081;
 $palette-win: #2D9CDB;
 $palette-loss: #EB5757;
 
+$palette-dark-primary: #252435;
+$palette-dark-secondary: #141d26;
+$palette-dark-border: #17171c;
+
 /* Breakpoints */
 $bp-sm: "(min-width: 576px)"; // col-sm
 $bp-md: "(min-width: 768px)"; // col-md
@@ -13,3 +17,4 @@ $bp-xl: "(min-width: 1200px)"; // col-xl
 
 /* Extra */
 $shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);
+$dark-shadow: 0 5px 10px rgba(0,0,0,.05), 0 15px 40px rgba(0,0,0,.2);

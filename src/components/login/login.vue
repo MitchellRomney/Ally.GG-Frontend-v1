@@ -56,6 +56,7 @@
                   summonerLevel
                   summonerId
                 }
+                darkMode
                 premium
                 premiumStart
                 dateModified

@@ -193,349 +193,406 @@
 </script>
 
 <style scoped lang="scss">
-    #recent-matches {
-        grid-column-end: span 3;
-        background-color: white;
-        border: 3px solid #f4f4f4;
-        border-radius: 20px;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-
-        @media #{$bp-md}{
-            grid-column-end: span 2;
-        }
-
-        .header {
-            padding: 10px 10px 0 10px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-content: center;
-        }
-
-        .match_loader {
-            height: 100%;
-            background-color: transparent;
-        }
-
-        .match-carousel {
+    #ally-gg {
+        #recent-matches {
+            grid-column-end: span 3;
+            background-color: white;
+            border: 3px solid #f4f4f4;
+            border-radius: 20px;
             position: relative;
-            height: 100%;
-            padding: 10px 0;
-            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            color: $palette-primary;
+            transition: all 0.5s ease;
 
-            .previous-button, .next-button {
-                height: 50px;
-                width: 50px;
-                position: absolute;
-                cursor: pointer;
-                background-color: $palette-accent;
-                top: 45%;
-                border-radius: 50%;
+            @media #{$bp-md}{
+                grid-column-end: span 2;
+            }
+
+            .header {
+                padding: 10px 10px 0 10px;
                 display: flex;
-                z-index: 100;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: 1.5rem;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-
-                &.disabled {
-                    background-color: grey;
-                    cursor: pointer;
-                }
+                flex-direction: row;
+                justify-content: space-between;
+                align-content: center;
             }
 
-            .previous-button {
-                left: 5%;
+            .match_loader {
+                height: 100%;
+                background-color: transparent;
             }
 
-            .next-button {
-                right: 5%;
-            }
-
-            .match {
-                background-color: white;
+            .match-carousel {
+                position: relative;
+                height: 100%;
+                padding: 10px 0;
                 overflow: hidden;
-                border: 3px solid #f4f4f4;
-                border-radius: 20px;
-                display: none;
-                top: 5%;
-                bottom: 5%;
-                transition: all 0.5s ease;
-                position: absolute;
-                width: 75%;
-                box-shadow: $shadow;
-                grid-template: 60px 1fr 2fr / 1fr 4fr;
-                grid-template-areas: 'splash head' 'splash stats' 'splash players';
 
-                &.subPreviousMatch {
-                    display: grid;
-                    left: -100%;
-                    right: 25%;
-                    transform: scale(0.5, 0.5);
-                }
-
-                &.previousMatch {
-                    display: grid;
-                    left: -50%;
-                    right: 75%;
-                    transform: scale(0.5, 0.5);
-                }
-
-                &.focusedMatch {
-                    display: grid;
-                    left: 12.5%;
-                    right: 12.5%;
-                }
-
-                &.nextMatch {
-                    display: grid;
-                    right: -50%;
-                    left: 75%;
-                    transform: scale(0.5, 0.5);
-                }
-
-                &.subNextMatch {
-                    display: block;
-                    left: 125%;
-                    right: -100%;
-                    transform: scale(0.5, 0.5);
-                }
-
-                .splash-wrapper {
-                    grid-area: splash;
-                    border-right: 3px solid #f4f4f4;
-                    overflow: hidden;
-
-                    .splash {
-                        background-position: center;
-                        background-size: cover;
-                        transform: scale(1.1, 1.1);
-                        height: 100%;
-                    }
-                }
-
-                .head {
-                    grid-area: head;
-                    padding: 0 10px;
+                .previous-button, .next-button {
+                    height: 50px;
+                    width: 50px;
+                    position: absolute;
+                    cursor: pointer;
+                    background-color: $palette-accent;
+                    top: 45%;
+                    border-radius: 50%;
                     display: flex;
+                    z-index: 100;
                     align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: 1.5rem;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
-                    .champion {
-                        font-family: 'Panton Black', sans-serif;
-                        font-size: 2.5rem;
-                        height: 50px;
+                    &.disabled {
+                        background-color: grey;
+                        cursor: pointer;
+                    }
+                }
+
+                .previous-button {
+                    left: 5%;
+                }
+
+                .next-button {
+                    right: 5%;
+                }
+
+                .match {
+                    background-color: white;
+                    overflow: hidden;
+                    border: 3px solid #f4f4f4;
+                    border-radius: 20px;
+                    display: none;
+                    top: 5%;
+                    bottom: 5%;
+                    transition: all 0.5s ease;
+                    position: absolute;
+                    width: 75%;
+                    box-shadow: $shadow;
+                    grid-template: 60px 1fr 2fr / 1fr 4fr;
+                    grid-template-areas: 'splash head' 'splash stats' 'splash players';
+
+                    &.subPreviousMatch {
+                        display: grid;
+                        left: -100%;
+                        right: 25%;
+                        transform: scale(0.5, 0.5);
                     }
 
-                    .vs {
-                        display: flex;
-                        padding: 10px;
-                        align-items: center;
+                    &.previousMatch {
+                        display: grid;
+                        left: -50%;
+                        right: 75%;
+                        transform: scale(0.5, 0.5);
+                    }
 
-                        img {
-                            width: 35px;
-                            height: 35px;
-                            border-radius: 10px;
-                            margin-left: 10px;
+                    &.focusedMatch {
+                        display: grid;
+                        left: 12.5%;
+                        right: 12.5%;
+                    }
+
+                    &.nextMatch {
+                        display: grid;
+                        right: -50%;
+                        left: 75%;
+                        transform: scale(0.5, 0.5);
+                    }
+
+                    &.subNextMatch {
+                        display: block;
+                        left: 125%;
+                        right: -100%;
+                        transform: scale(0.5, 0.5);
+                    }
+
+                    .splash-wrapper {
+                        grid-area: splash;
+                        border-right: 3px solid #f4f4f4;
+                        overflow: hidden;
+                        transition: border 0.5s ease;
+
+                        .splash {
+                            background-position: center;
+                            background-size: cover;
+                            transform: scale(1.1, 1.1);
+                            height: 100%;
                         }
                     }
 
-                    .result {
+                    .head {
+                        grid-area: head;
+                        padding: 0 10px;
                         display: flex;
-                        flex-direction: column;
                         align-items: center;
-                        margin: 0 10px;
 
-                        .win {
-                            color: #2D9CDB;
-                            font-weight: bold;
+                        .champion {
+                            font-family: 'Panton Black', sans-serif;
+                            font-size: 2.5rem;
+                            height: 50px;
+                            color: $palette-primary;
                         }
 
-                        .loss {
-                            color: #EB5757;
-                            font-weight: bold;
+                        .vs {
+                            display: flex;
+                            padding: 10px;
+                            align-items: center;
+                            color: $palette-primary;
+
+                            img {
+                                width: 35px;
+                                height: 35px;
+                                border-radius: 10px;
+                                margin-left: 10px;
+                            }
                         }
 
-                        .time {
-                            font-weight: normal;
-                        }
-                    }
-
-                    .match-info {
-                        margin-left: auto;
-                        display: flex;
-                        flex-direction: row-reverse;
-                        align-items: center;
-                        font-size: 0.8rem;
-                        opacity: 0.6;
-
-                        .role {
-                            height: 40px;
-                        }
-
-                        .info {
+                        .result {
                             display: flex;
                             flex-direction: column;
-                            text-align: right;
-
-                            .queue {
-                                font-weight: bold;
-                            }
-                        }
-                    }
-                }
-
-                .stats {
-                    grid-area: stats;
-                    padding: 10px;
-                    display: grid;
-                    grid-template: 1fr / 1fr 1fr 1fr;
-                    border-bottom: 1px solid #f4f4f4;
-
-                    .items {
-                        display: grid;
-                        grid-template: 1fr 1fr / repeat(6, 1fr);
-                        grid-template-areas: "trinket item1 item2 item3 summoner1 rune-primary" "trinket item4 item5 item6 summoner2 rune-secondary";
-                        align-items: center;
-                        grid-gap: 2px;
-
-                        img {
-                            width: 30px;
-                            border-radius: 5px;
-                        }
-
-                        .trinket, .item-1, .item-2, .item-3, .item-4, .item-5, .item-6, .summoner-1, .summoner-2 {
-                            height: 30px;
-                            width: 30px;
-                            background-color: lightgrey;
-                            border-radius: 4px;
-                        }
-
-                        .trinket {
-                            grid-area: trinket;
-                            margin-right: 4px;
-                        }
-
-                        .item-1 {
-                            grid-area: item1;
-                            align-self: end;
-                        }
-
-                        .item-2 {
-                            grid-area: item2;
-                            align-self: end;
-                        }
-
-                        .item-3 {
-                            grid-area: item3;
-                            align-self: end;
-                        }
-
-                        .item-4 {
-                            grid-area: item4;
-                            align-self: start;
-                        }
-
-                        .item-5 {
-                            grid-area: item5;
-                            align-self: start;
-                        }
-
-                        .item-6 {
-                            grid-area: item6;
-                            align-self: start;
-                        }
-
-                        .summoner-1 {
-                            grid-area: summoner1;
-                            align-self: end;
-                            margin-left: 4px;
-                        }
-
-                        .summoner-2 {
-                            grid-area: summoner2;
-                            align-self: start;
-                            margin-left: 4px;
-
-                        }
-
-                        .rune-primary {
-                            grid-area: rune-primary;
-                            align-self: end;
-                            margin: 0 4px;
-                        }
-
-                        .rune-secondary {
-                            grid-area: rune-secondary;
-                            align-self: start;
-                            margin: 0 4px;
-                        }
-                    }
-
-                    .player-info {
-                        display: flex;
-                        text-align: center;
-                        flex-direction: column;
-                        align-self: center;
-
-                        .kda {
+                            align-items: center;
+                            margin: 0 10px;
                             color: $palette-primary;
-                            font-weight: bold;
-                            font-size: 1.7rem;
-                        }
 
-                        .average {
-                            color: grey;
-                        }
-                    }
-
-                    .sub-info {
-                        display: flex;
-                        text-align: center;
-                        flex-direction: column;
-                        align-self: center;
-
-                        .farm {
-                            font-size: 1.1rem;
-                        }
-
-                        .kill_p {
-                            font-size: 0.9rem;
-
-                            span {
-                                font-size: 1.2rem;
+                            .win {
+                                color: #2D9CDB;
                                 font-weight: bold;
+                            }
+
+                            .loss {
+                                color: #EB5757;
+                                font-weight: bold;
+                            }
+
+                            .time {
+                                font-weight: normal;
+                            }
+                        }
+
+                        .match-info {
+                            margin-left: auto;
+                            display: flex;
+                            flex-direction: row-reverse;
+                            align-items: center;
+                            font-size: 0.8rem;
+                            opacity: 0.6;
+                            color: $palette-primary;
+
+                            .role {
+                                height: 40px;
+                            }
+
+                            .info {
+                                display: flex;
+                                flex-direction: column;
+                                text-align: right;
+
+                                .queue {
+                                    font-weight: bold;
+                                }
                             }
                         }
                     }
-                }
 
-                .players {
-                    grid-area: players;
-                    padding: 10px;
-                    display: grid;
-                    grid-template: auto / 1fr 1fr;
-                    grid-gap: 20px;
+                    .stats {
+                        grid-area: stats;
+                        padding: 10px;
+                        display: grid;
+                        grid-template: 1fr / 1fr 1fr 1fr;
+                        border-bottom: 1px solid #f4f4f4;
+                        transition: border 0.5s ease;
+                        color: $palette-primary;
 
-                    .blue-team, .red-team {
-                        display: flex;
-                        flex-wrap: wrap;
-                        align-content: space-around;
+                        .items {
+                            display: grid;
+                            grid-template: 1fr 1fr / repeat(6, 1fr);
+                            grid-template-areas: "trinket item1 item2 item3 summoner1 rune-primary" "trinket item4 item5 item6 summoner2 rune-secondary";
+                            align-items: center;
+                            grid-gap: 2px;
 
-                        .player {
-                            width: 100%;
+                            img {
+                                width: 30px;
+                                border-radius: 5px;
+                            }
+
+                            .trinket, .item-1, .item-2, .item-3, .item-4, .item-5, .item-6, .summoner-1, .summoner-2 {
+                                height: 30px;
+                                width: 30px;
+                                background-color: lightgrey;
+                                border-radius: 4px;
+                                transition: background-color 0.5s ease;
+                            }
+
+                            .trinket {
+                                grid-area: trinket;
+                                margin-right: 4px;
+                            }
+
+                            .item-1 {
+                                grid-area: item1;
+                                align-self: end;
+                            }
+
+                            .item-2 {
+                                grid-area: item2;
+                                align-self: end;
+                            }
+
+                            .item-3 {
+                                grid-area: item3;
+                                align-self: end;
+                            }
+
+                            .item-4 {
+                                grid-area: item4;
+                                align-self: start;
+                            }
+
+                            .item-5 {
+                                grid-area: item5;
+                                align-self: start;
+                            }
+
+                            .item-6 {
+                                grid-area: item6;
+                                align-self: start;
+                            }
+
+                            .summoner-1 {
+                                grid-area: summoner1;
+                                align-self: end;
+                                margin-left: 4px;
+                            }
+
+                            .summoner-2 {
+                                grid-area: summoner2;
+                                align-self: start;
+                                margin-left: 4px;
+
+                            }
+
+                            .rune-primary {
+                                grid-area: rune-primary;
+                                align-self: end;
+                                margin: 0 4px;
+                            }
+
+                            .rune-secondary {
+                                grid-area: rune-secondary;
+                                align-self: start;
+                                margin: 0 4px;
+                            }
+                        }
+
+                        .player-info {
+                            display: flex;
+                            text-align: center;
+                            flex-direction: column;
+                            align-self: center;
+
+                            .kda {
+                                color: $palette-primary;
+                                font-weight: bold;
+                                font-size: 1.7rem;
+                            }
+
+                            .average {
+                                color: grey;
+                            }
+                        }
+
+                        .sub-info {
+                            display: flex;
+                            text-align: center;
+                            flex-direction: column;
+                            align-self: center;
+
+                            .farm {
+                                font-size: 1.1rem;
+                            }
+
+                            .kill_p {
+                                font-size: 0.9rem;
+
+                                span {
+                                    font-size: 1.2rem;
+                                    font-weight: bold;
+                                }
+                            }
                         }
                     }
 
-                    .blue-team {
-                        text-align: right;
+                    .players {
+                        grid-area: players;
+                        padding: 10px;
+                        display: grid;
+                        grid-template: auto / 1fr 1fr;
+                        grid-gap: 20px;
+
+                        .blue-team, .red-team {
+                            display: flex;
+                            flex-wrap: wrap;
+                            align-content: space-around;
+
+                            .player {
+                                width: 100%;
+                            }
+                        }
+
+                        .blue-team {
+                            text-align: right;
+                        }
                     }
                 }
             }
-
         }
 
+        &.dark {
+            #recent-matches {
+                background-color: $palette-dark-primary;
+                border: 3px solid $palette-dark-border;
+                color: white;
+
+                .match-carousel {
+                    .match {
+                        background-color: $palette-dark-primary;
+                        border: 3px solid $palette-dark-border;
+                        box-shadow: $dark-shadow;
+
+                        .splash-wrapper {
+                            border-right: 3px solid $palette-dark-border;
+                        }
+
+                        .head {
+                            .champion, .match-info, .result, .vs {
+                                color: white;
+                            }
+                        }
+
+                        .stats {
+                            border-bottom: 1px solid $palette-dark-border;
+                            color: white;
+
+                            .items {
+                                .trinket, .item-1, .item-2, .item-3, .item-4, .item-5, .item-6, .summoner-1, .summoner-2 {
+                                    background-color: $palette-dark-border;
+                                }
+                            }
+
+                            .player-info {
+                                .kda {
+                                    color: white;
+                                }
+
+                                .average {
+                                    color: grey;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 </style>
