@@ -16,7 +16,8 @@
             </div>
             <div class="match-info">
                 <transition name="fade" mode="out-in">
-                    <router-view :key="key" :champion="matchList[0].champion" v-if="!loading" :summoner="summoners[selectedSummoner]">
+                    <router-view :key="key" :champion="matchList[0].champion" v-if="!loading"
+                                 :summoner="summoners[selectedSummoner]">
                     </router-view>
                 </transition>
             </div>
@@ -145,73 +146,86 @@
 </script>
 
 <style scoped lang="scss">
-    #improve {
-        height: 100%;
-
-        .content {
-            display: grid;
+    #ally-gg {
+        #improve {
             height: 100%;
-            grid-template: calc(100vh - 65px) / 1fr 3fr;
-            grid-template-areas: "list info";
 
-            .match-list {
-                grid-area: list;
-                overflow-y: scroll;
+            .content {
+                display: grid;
                 height: 100%;
+                grid-template: calc(100vh - 65px) / 1fr 3fr;
+                grid-template-areas: "list info";
 
-                .match-wrapper {
-                    height: 70px;
-                    border-bottom: 1px solid #DFE3E8;
-                    display: flex;
+                .match-list {
+                    grid-area: list;
+                    overflow-y: scroll;
+                    height: 100%;
 
-                    .match {
-                        display: grid;
-                        grid-template: 1fr 1fr / repeat(4, 1fr);
-                        grid-template-areas: "tile win level ." "tile kda avg .";
-                        padding: 10px 0;
-                        width: 100%;
-                        background-color: rgba(235, 87, 87, 0.1);
+                    .match-wrapper {
+                        height: 70px;
+                        border-bottom: 1px solid #DFE3E8;
+                        display: flex;
 
-                        &.win {
-                            background-color: rgba(44, 156, 218, 0.1)
-                        }
+                        .match {
+                            display: grid;
+                            grid-template: 1fr 1fr / repeat(4, 1fr);
+                            grid-template-areas: "tile win level ." "tile kda avg .";
+                            padding: 10px 0;
+                            width: 100%;
+                            background-color: rgba(235, 87, 87, 0.1);
 
-                        .tile {
-                            grid-area: tile;
-                            border-radius: 5px;
-                        }
+                            &.win {
+                                background-color: rgba(44, 156, 218, 0.1)
+                            }
 
-                        .win {
-                            color: $palette-win;
-                            grid-area: win;
-                            font-weight: bold;
-                        }
+                            .tile {
+                                grid-area: tile;
+                                border-radius: 5px;
+                            }
 
-                        .loss {
-                            color: $palette-loss;
-                            grid-area: win;
-                            font-weight: bold;
-                        }
+                            .win {
+                                color: $palette-win;
+                                grid-area: win;
+                                font-weight: bold;
+                            }
 
-                        .level {
-                            grid-area: level;
-                        }
+                            .loss {
+                                color: $palette-loss;
+                                grid-area: win;
+                                font-weight: bold;
+                            }
 
-                        .kda {
-                            grid-area: kda;
-                        }
+                            .level {
+                                grid-area: level;
+                            }
 
-                        .average {
-                            grid-area: avg;
+                            .kda {
+                                grid-area: kda;
+                            }
+
+                            .average {
+                                grid-area: avg;
+                            }
                         }
                     }
                 }
-            }
 
-            .match-info {
-                grid-area: info;
-                height: 100%;
-                overflow-y: scroll;
+                .match-info {
+                    grid-area: info;
+                    height: 100%;
+                    overflow-y: scroll;
+                    color: $palette-primary;
+                }
+            }
+        }
+
+        &.dark {
+            #improve {
+                .content {
+                    .match-info {
+                        color: white;
+                    }
+                }
             }
         }
     }

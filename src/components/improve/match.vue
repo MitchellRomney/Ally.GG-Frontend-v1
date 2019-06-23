@@ -471,116 +471,136 @@
 </script>
 
 <style scoped lang="scss">
-    #match {
-        position: relative;
-        height: 100%;
-        padding: 20px;
+    #ally-gg {
+        #match {
+            position: relative;
+            height: 100%;
+            padding: 20px;
 
-        .content {
-
-            .header {
-                margin-bottom: 10px;
-            }
-
-            .log, .empty-log {
-                .header {
-                    border-bottom: 1px solid #DFE3E8;
-                }
-            }
-
-            .players {
-                display: grid;
-                grid-template: auto / 1fr 1fr;
-                grid-gap: 10px;
-                margin: 20px 0;
+            .content {
 
                 .header {
-                    grid-column: span 2;
-                    border-bottom: 1px solid #DFE3E8;
+                    margin-bottom: 10px;
                 }
 
-                .player {
-                    .stats {
-                        display: flex;
-                        text-align: center;
+                .log, .empty-log {
+                    .header {
+                        border-bottom: 1px solid #DFE3E8;
+                    }
+                }
 
-                        .items {
-                            display: grid;
-                            grid-template: 1fr 1fr / repeat(6, 1fr);
-                            grid-template-areas: "trinket item1 item2 item3 summoner1 rune-primary" "trinket item4 item5 item6 summoner2 rune-secondary";
-                            align-items: center;
-                            grid-gap: 2px;
+                .players {
+                    display: grid;
+                    grid-template: auto / 1fr 1fr;
+                    grid-gap: 10px;
+                    margin: 20px 0;
 
-                            img {
-                                width: 30px;
-                                border-radius: 5px;
+                    .header {
+                        grid-column: span 2;
+                        border-bottom: 1px solid #DFE3E8;
+                    }
+
+                    .player {
+                        .stats {
+                            display: flex;
+                            text-align: center;
+
+                            .items {
+                                display: grid;
+                                grid-template: 1fr 1fr / repeat(6, 1fr);
+                                grid-template-areas: "trinket item1 item2 item3 summoner1 rune-primary" "trinket item4 item5 item6 summoner2 rune-secondary";
+                                align-items: center;
+                                grid-gap: 2px;
+
+                                img {
+                                    width: 30px;
+                                    border-radius: 5px;
+                                }
+
+                                .trinket, .item-1, .item-2, .item-3, .item-4, .item-5, .item-6, .summoner-1, .summoner-2 {
+                                    height: 30px;
+                                    width: 30px;
+                                    background-color: lightgrey;
+                                    border-radius: 4px;
+                                }
+
+                                .trinket {
+                                    grid-area: trinket;
+                                    margin-right: 4px;
+                                }
+
+                                .item-1 {
+                                    grid-area: item1;
+                                    align-self: end;
+                                }
+
+                                .item-2 {
+                                    grid-area: item2;
+                                    align-self: end;
+                                }
+
+                                .item-3 {
+                                    grid-area: item3;
+                                    align-self: end;
+                                }
+
+                                .item-4 {
+                                    grid-area: item4;
+                                    align-self: start;
+                                }
+
+                                .item-5 {
+                                    grid-area: item5;
+                                    align-self: start;
+                                }
+
+                                .item-6 {
+                                    grid-area: item6;
+                                    align-self: start;
+                                }
+
+                                .summoner-1 {
+                                    grid-area: summoner1;
+                                    align-self: end;
+                                    margin-left: 4px;
+                                }
+
+                                .summoner-2 {
+                                    grid-area: summoner2;
+                                    align-self: start;
+                                    margin-left: 4px;
+
+                                }
+
+                                .rune-primary {
+                                    grid-area: rune-primary;
+                                    align-self: end;
+                                    margin: 0 4px;
+                                }
+
+                                .rune-secondary {
+                                    grid-area: rune-secondary;
+                                    align-self: start;
+                                    margin: 0 4px;
+                                }
                             }
+                        }
+                    }
+                }
+            }
+        }
 
-                            .trinket, .item-1, .item-2, .item-3, .item-4, .item-5, .item-6, .summoner-1, .summoner-2 {
-                                height: 30px;
-                                width: 30px;
-                                background-color: lightgrey;
-                                border-radius: 4px;
-                            }
-
-                            .trinket {
-                                grid-area: trinket;
-                                margin-right: 4px;
-                            }
-
-                            .item-1 {
-                                grid-area: item1;
-                                align-self: end;
-                            }
-
-                            .item-2 {
-                                grid-area: item2;
-                                align-self: end;
-                            }
-
-                            .item-3 {
-                                grid-area: item3;
-                                align-self: end;
-                            }
-
-                            .item-4 {
-                                grid-area: item4;
-                                align-self: start;
-                            }
-
-                            .item-5 {
-                                grid-area: item5;
-                                align-self: start;
-                            }
-
-                            .item-6 {
-                                grid-area: item6;
-                                align-self: start;
-                            }
-
-                            .summoner-1 {
-                                grid-area: summoner1;
-                                align-self: end;
-                                margin-left: 4px;
-                            }
-
-                            .summoner-2 {
-                                grid-area: summoner2;
-                                align-self: start;
-                                margin-left: 4px;
-
-                            }
-
-                            .rune-primary {
-                                grid-area: rune-primary;
-                                align-self: end;
-                                margin: 0 4px;
-                            }
-
-                            .rune-secondary {
-                                grid-area: rune-secondary;
-                                align-self: start;
-                                margin: 0 4px;
+        &.dark {
+            #match {
+                .content {
+                    .players {
+                        .player {
+                            .stats {
+                                .items {
+                                    .trinket, .item-1, .item-2, .item-3, .item-4, .item-5, .item-6, .summoner-1, .summoner-2 {
+                                        background-color: $palette-dark-border;
+                                    }
+                                }
                             }
                         }
                     }
