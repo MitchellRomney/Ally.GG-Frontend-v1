@@ -153,12 +153,14 @@
             },
             clearSearch() {
                 this.search_entry = null;
-                this.search_results = null;
+                this.search_summoner_results = [];
+                this.search_champion_results = [];
             },
             goSummoner() {
                 this.$router.push({name: 'summoner_profile', params: {summoner: this.search_entry}});
                 this.search_entry = null;
-                this.search_results = null;
+                this.search_summoner_results = [];
+                this.search_champion_results = [];
             },
             getChampionTileUrl(champion) {
                 return require('../../assets/images/champion-tiles/' + champion.champId + '_0.jpg');

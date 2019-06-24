@@ -6,133 +6,136 @@
                 {{ matchesRemaining }} matches remaining...
             </div>
         </div>
-        <div class="match-carousel">
-            <div class="previous-button" @click="prevMatchIndex()" :class="{ disabled : matchIndex === 0 }">
-                <font-awesome-icon icon="arrow-left"/>
-            </div>
-            <div class="next-button" @click="nextMatchIndex()"
-                 :class="{ disabled : matchIndex === matches.length - 1 }">
-                <font-awesome-icon icon="arrow-right"/>
-            </div>
-            <div class="match" v-for="(match, index) in matches"
-                 :class="{
+        <transition name="fade" mode="out-in">
+            <PulseLoader v-if="matchLoading" :color="'#FF0081'" key="1"></PulseLoader>
+            <div class="match-carousel" v-else v-cloak key="2">
+                <div class="previous-button" @click="prevMatchIndex()" :class="{ disabled : matchIndex === 0 }">
+                    <font-awesome-icon icon="arrow-left"/>
+                </div>
+                <div class="next-button" @click="nextMatchIndex()"
+                     :class="{ disabled : matchIndex === matches.length - 1 }">
+                    <font-awesome-icon icon="arrow-right"/>
+                </div>
+                <div class="match" v-for="(match, index) in matches"
+                     :class="{
                         subPreviousMatch : index === matchIndex - 2,
                         previousMatch : index === matchIndex - 1,
                         focusedMatch : index === matchIndex,
                         nextMatch : index === matchIndex + 1,
                         subNextMatch : index === matchIndex + 2
                      }">
-                <div class="splash-wrapper">
-                    <div class="splash"
-                         :style="{ 'background-image': 'url(' + getChampionSplashUrl(match.champion) + ')' }">
-                    </div>
-                </div>
-                <div class="head">
-                    <h3 class="champion">{{ match.champion.name }}</h3>
-                    <div class="vs" v-if="match.laneOpponent">
-                        vs.
-                        <img class="resp-img" v-for="opponent in match.laneOpponent"
-                             :src="getChampionTileUrl(opponent.champion)"
-                             :alt="opponent.champion.name"/>
-                    </div>
-                    <div class="result">
-                        <h3 class="win" v-if="match.win">Win</h3>
-                        <h3 class="loss" v-if="!match.win">Loss</h3>
-                        <h4 class="time">{{ match.match.gameDurationTime }}</h4>
-                    </div>
-                    <div class="match-info">
-                        <img v-if="match.lane !== 'NONE'" class="resp-img role" :src="getRoleIconUrl(match.lane)"
-                             :alt="match.lane"/>
-                        <div class="info">
-                            <span class="queue">{{ match.match.queue }}</span>
-                            <span class="timeago">{{ match.match.timeago }}</span>
+                    <div class="splash-wrapper">
+                        <div class="splash"
+                             :style="{ 'background-image': 'url(' + getChampionSplashUrl(match.champion) + ')' }">
                         </div>
                     </div>
-                </div>
-                <div class="stats">
-                    <div class="items">
-                        <div class="trinket">
-                            <img v-if="match.item6.itemId !== 0"
-                                 :src="getItemUrl(match.item6.itemId)"
-                                 :alt="match.item6.name">
+                    <div class="head">
+                        <h3 class="champion">{{ match.champion.name }}</h3>
+                        <div class="vs" v-if="match.laneOpponent">
+                            vs.
+                            <img class="resp-img" v-for="opponent in match.laneOpponent"
+                                 :src="getChampionTileUrl(opponent.champion)"
+                                 :alt="opponent.champion.name"/>
                         </div>
-                        <div class="item-1">
-                            <img v-if="match.item0.itemId !== 0"
-                                 :src="getItemUrl(match.item0.itemId)"
-                                 :alt="match.item0.name"/>
+                        <div class="result">
+                            <h3 class="win" v-if="match.win">Win</h3>
+                            <h3 class="loss" v-if="!match.win">Loss</h3>
+                            <h4 class="time">{{ match.match.gameDurationTime }}</h4>
                         </div>
-                        <div class="item-2">
-                            <img v-if="match.item1.itemId !== 0"
-                                 :src="getItemUrl(match.item1.itemId)"
-                                 :alt="match.item1.name"/>
-                        </div>
-                        <div class="item-3">
-                            <img v-if="match.item2.itemId !== 0"
-                                 :src="getItemUrl(match.item2.itemId)"
-                                 :alt="match.item2.name"/>
-                        </div>
-                        <div class="item-4">
-                            <img v-if="match.item3.itemId !== 0"
-                                 :src="getItemUrl(match.item3.itemId)"
-                                 :alt="match.item3.name"/>
-                        </div>
-                        <div class="item-5">
-                            <img v-if="match.item4.itemId !== 0"
-                                 :src="getItemUrl(match.item4.itemId)"
-                                 :alt="match.item4.name"/>
-                        </div>
-                        <div class="item-6">
-                            <img v-if="match.item5.itemId !== 0"
-                                 :src="getItemUrl(match.item5.itemId)"
-                                 :alt="match.item5.name"/>
-                        </div>
-                        <div class="summoner-1">
-                            <img :src="getSSpellUrl(match.spell1Id)"
-                                 :alt="match.spell1Id.name"/>
-                        </div>
-                        <div class="summoner-2">
-                            <img :src="getSSpellUrl(match.spell2Id)"
-                                 :alt="match.spell2Id.name"/>
-                        </div>
-                        <div class="rune-primary">
-                            <img :src="getPrimaryRuneUrl(match.perk0)"
-                                 :alt="match.perk0.name"/>
-                        </div>
-                        <div class="rune-secondary">
-                            <img :src="getSecondaryStyleUrl(match.perkSubStyle)"
-                                 :alt="match.perk4.name"/>
+                        <div class="match-info">
+                            <img v-if="match.lane !== 'NONE'" class="resp-img role" :src="getRoleIconUrl(match.lane)"
+                                 :alt="match.lane"/>
+                            <div class="info">
+                                <span class="queue">{{ match.match.queue }}</span>
+                                <span class="timeago">{{ match.match.timeago }}</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="player-info">
-                        <span class="level">Level {{ match.champLevel }}</span>
-                        <span class="kda">{{ match.kills }}/{{ match.deaths }}/{{ match.assists }}</span>
-                        <span class="average">{{ match.kdaAverage }} KDA</span>
-                    </div>
-                    <div class="sub-info">
-                        <span class="farm">{{ match.totalMinionsKilled }} ({{ match.csPmin }}) CS</span>
-                        <span class="kill_p">Kill Participation<br><span>{{ match.killParticipation }}</span></span>
-                    </div>
-                </div>
-                <div class="players">
-                    <div class="blue-team">
-                        <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 100">
-                            <router-link
-                                    :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
-                                {{ player.summoner.summonerName }}
-                            </router-link>
+                    <div class="stats">
+                        <div class="items">
+                            <div class="trinket">
+                                <img v-if="match.item6.itemId !== 0"
+                                     :src="getItemUrl(match.item6.itemId)"
+                                     :alt="match.item6.name">
+                            </div>
+                            <div class="item-1">
+                                <img v-if="match.item0.itemId !== 0"
+                                     :src="getItemUrl(match.item0.itemId)"
+                                     :alt="match.item0.name"/>
+                            </div>
+                            <div class="item-2">
+                                <img v-if="match.item1.itemId !== 0"
+                                     :src="getItemUrl(match.item1.itemId)"
+                                     :alt="match.item1.name"/>
+                            </div>
+                            <div class="item-3">
+                                <img v-if="match.item2.itemId !== 0"
+                                     :src="getItemUrl(match.item2.itemId)"
+                                     :alt="match.item2.name"/>
+                            </div>
+                            <div class="item-4">
+                                <img v-if="match.item3.itemId !== 0"
+                                     :src="getItemUrl(match.item3.itemId)"
+                                     :alt="match.item3.name"/>
+                            </div>
+                            <div class="item-5">
+                                <img v-if="match.item4.itemId !== 0"
+                                     :src="getItemUrl(match.item4.itemId)"
+                                     :alt="match.item4.name"/>
+                            </div>
+                            <div class="item-6">
+                                <img v-if="match.item5.itemId !== 0"
+                                     :src="getItemUrl(match.item5.itemId)"
+                                     :alt="match.item5.name"/>
+                            </div>
+                            <div class="summoner-1">
+                                <img :src="getSSpellUrl(match.spell1Id)"
+                                     :alt="match.spell1Id.name"/>
+                            </div>
+                            <div class="summoner-2">
+                                <img :src="getSSpellUrl(match.spell2Id)"
+                                     :alt="match.spell2Id.name"/>
+                            </div>
+                            <div class="rune-primary">
+                                <img :src="getPrimaryRuneUrl(match.perk0)"
+                                     :alt="match.perk0.name"/>
+                            </div>
+                            <div class="rune-secondary">
+                                <img :src="getSecondaryStyleUrl(match.perkSubStyle)"
+                                     :alt="match.perk4.name"/>
+                            </div>
+                        </div>
+                        <div class="player-info">
+                            <span class="level">Level {{ match.champLevel }}</span>
+                            <span class="kda">{{ match.kills }}/{{ match.deaths }}/{{ match.assists }}</span>
+                            <span class="average">{{ match.kdaAverage }} KDA</span>
+                        </div>
+                        <div class="sub-info">
+                            <span class="farm">{{ match.totalMinionsKilled }} ({{ match.csPmin }}) CS</span>
+                            <span class="kill_p">Kill Participation<br><span>{{ match.killParticipation }}</span></span>
                         </div>
                     </div>
-                    <div class="red-team">
-                        <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 200">
-                            <router-link
-                                    :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
-                                {{ player.summoner.summonerName }}
-                            </router-link>
+                    <div class="players">
+                        <div class="blue-team">
+                            <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 100">
+                                <router-link
+                                        :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
+                                    {{ player.summoner.summonerName }}
+                                </router-link>
+                            </div>
+                        </div>
+                        <div class="red-team">
+                            <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 200">
+                                <router-link
+                                        :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
+                                    {{ player.summoner.summonerName }}
+                                </router-link>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -210,7 +213,7 @@
             }
 
             .header {
-                padding: 10px 10px 0 10px;
+                padding: 20px 20px 0 20px;
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;
@@ -220,6 +223,10 @@
             .match_loader {
                 height: 100%;
                 background-color: transparent;
+            }
+
+            .v-spinner {
+                height: 100%;
             }
 
             .match-carousel {
@@ -553,6 +560,10 @@
                 background-color: $palette-dark-primary;
                 border: 3px solid $palette-dark-border;
                 color: white;
+
+                .v-spinner {
+                    background-color: $palette-dark-primary;
+                }
 
                 .match-carousel {
                     .match {

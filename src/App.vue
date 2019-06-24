@@ -2,7 +2,7 @@
     <div id="ally-gg" :class="{ main: loadDashboard, dark: darkMode }">
         <Navbar v-if="loadDashboard"/>
         <TopNav v-if="loadDashboard"/>
-        <div id="content">
+        <div id="view-wrapper">
             <router-view/>
         </div>
     </div>
@@ -75,7 +75,7 @@
             }
         }
 
-        #content {
+        #view-wrapper {
             grid-area: main;
             overflow-y: scroll;
         }

@@ -19,7 +19,9 @@ const store = new Vuex.Store({
     },
     mutations: {
         setUser(state, user) {
+            console.log('Set User: ');
             console.log(user);
+            console.log(state);
             state.user = user;
             if (user.Profiles[0].Summoners.length > 0) {
                 state.summoners = user.Profiles[0].Summoners;

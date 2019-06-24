@@ -31,6 +31,7 @@
     "tiptap-extensions": "^1.22.1",
     "vue": "^2.6.10",
     "vue-apollo": "^3.0.0-beta.11",
+    "vue-content-loader": "^0.2.2",
     "vue-cookie": "^1.1.4",
     "vue-images-loaded": "^1.1.2",
     "vue-native-websocket": "^2.0.13",
