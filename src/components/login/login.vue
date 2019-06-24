@@ -36,9 +36,9 @@
 
     let mutation_login =
         `mutation TokenAuth($username: String!, $password: String!) {
-          tokenAuth(username: $username, password: $password) {
-            token
+          login(username: $username, password: $password) {
             user {
+              token
               id
               username
               firstName
@@ -100,15 +100,15 @@
                         }
                     }).then((response) => {
 
-                        if (response.data.data.tokenAuth !== null) {
-
-                            // Get the JWT token and set it in the Cookies to keep session.
-                            let token = response.data.data.tokenAuth.token;
-                            this.$cookie.set('token', token);
+                        if (response.data.data.login !== null) {
 
                             // Get the user information from the response and set the userId in cookies.
-                            let user = response.data.data.tokenAuth.user;
+                            let user = response.data.data.login.user;
                             this.$cookie.set('userId', user.id);
+
+                            // Get the JWT token and set it in the Cookies to keep session.
+                            let token = user.token;
+                            this.$cookie.set('token', token);
 
                             // Put the user information in the current state.
                             this.$store.commit('setUser', user);

@@ -115,6 +115,7 @@
                         }
                     }).then((response) => {
                         this.userLoaded = true;
+                        console.log(response);
                         this.$store.commit('setUser', response.data.data.user);
                         this.webSocketManager();
                     });
@@ -124,7 +125,7 @@
                 }
             },
             goNext() {
-                this.$store.commit('stateLoaded');
+                this.$store.commit('loadState');
 
                 if (this.$route.query.nextUrl != null) {
                     this.$router.push(this.$route.query.nextUrl);

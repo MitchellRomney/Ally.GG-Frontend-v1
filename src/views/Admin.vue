@@ -1,5 +1,5 @@
 <template>
-    <div class="admin">
+    <div class="admin" v-if="user.isSuperuser">
         <transition name="fade">
             <logo-bounce v-if="loading"></logo-bounce>
             <div class="content" v-else>
@@ -44,7 +44,11 @@
         name: 'admin',
         title: 'Admin Panel - Ally.GG',
         components: {},
-        computed: {},
+        computed: {
+            user() {
+                return this.$store.state.user
+            },
+        },
         data() {
             return {
                 newKey: '',

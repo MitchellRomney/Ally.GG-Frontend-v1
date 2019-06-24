@@ -6,14 +6,6 @@ import VueCookie from 'vue-cookie';
 Vue.use(Vuex);
 Vue.use(VueCookie);
 
-function initialState() {
-    return {
-        stateLoaded: false,
-        user: {},
-        summoners: {},
-    }
-}
-
 const store = new Vuex.Store({
     state: {
         stateLoaded: false,
@@ -27,18 +19,19 @@ const store = new Vuex.Store({
     },
     mutations: {
         setUser(state, user) {
+            console.log(user);
             state.user = user;
-            state.summoners = user.Profiles[0].Summoners;
+            if (user.Profiles[0].Summoners.length > 0) {
+                state.summoners = user.Profiles[0].Summoners;
+            }
         },
-        stateLoaded(state) {
+        loadState(state) {
             state.stateLoaded = true;
         },
         logout(state) {
-            const s = initialState();
-
-            Object.keys(s).forEach(key => {
-                state[key] = s[key]
-            })
+            state.stateLoaded = false;
+            state.user = {};
+            state.summoners = {};
         },
         SOCKET_ONOPEN(state, event) {
             console.log('Connected to WebSocket: ' + event.currentTarget.url);

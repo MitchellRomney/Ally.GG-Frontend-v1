@@ -58,7 +58,7 @@
                     <font-awesome-icon icon="caret-down"/>
                 </a>
                 <ul v-if="open_menu" class="options-dropdown">
-                    <li>
+                    <li v-if="user.isSuperuser">
                         <router-link to="/admin">Admin Panel</router-link>
                     </li>
                     <li><a @click="logout">Logout</a></li>
