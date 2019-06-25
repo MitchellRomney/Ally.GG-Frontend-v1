@@ -106,6 +106,7 @@
 
             @media #{$bp-md}{
                 box-shadow: none;
+                opacity: 1;
             }
 
             &.open {
