@@ -24,8 +24,8 @@
                         <th scope="col">#</th>
                         <th scope="col">Summoner Name</th>
                         <th scope="col">Tier</th>
-                        <th scope="col">Wins</th>
-                        <th scope="col">Losses</th>
+                        <th class="wins-header" scope="col">Wins</th>
+                        <th class="losses-header" scope="col">Losses</th>
                         <th scope="col">League Points</th>
                     </tr>
                     <tr v-for="summoner in soloLadder" :data-href="'/summoners/' + summoner.summonerName">
@@ -44,12 +44,12 @@
                                 {{ summoner.rankedSolo.tier }} {{ summoner.rankedSolo.rank }}
                             </router-link>
                         </td>
-                        <td>
+                        <td class="wins">
                             <router-link :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
                                 {{ summoner.rankedSolo.wins }}
                             </router-link>
                         </td>
-                        <td>
+                        <td class="losses">
                             <router-link :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
                                 {{ summoner.rankedSolo.losses }}
                             </router-link>
@@ -142,7 +142,11 @@
     #ally-gg {
         #summoners {
             position: relative;
-            padding: 50px;
+            padding: 20px;
+
+            @media #{$bp-md}{
+                padding: 50px;
+            }
 
             h2 {
                 margin-bottom: 20px;
@@ -173,6 +177,7 @@
                 position: relative;
                 height: 100%;
                 width: 100%;
+                margin-top: 20px;
 
                 .leaderboard-table {
                     width: 100%;
@@ -182,6 +187,19 @@
                     overflow: hidden;
                     border-collapse: collapse;
                     text-align: center;
+                    font-size: 0.8rem;
+
+                    @media #{$bp-md}{
+                        font-size: 1rem;
+                    }
+
+                    .wins, .wins-header, .losses, .losses-header {
+                        display: none;
+
+                        @media #{$bp-md}{
+                            display: table-cell;
+                        }
+                    }
 
                     tr {
                         border: 1px solid #dfe3e8;
@@ -193,13 +211,21 @@
 
                         th {
                             background-color: #ececec;
-                            padding: 15px;
+                            padding: 10px;
+
+                            @media #{$bp-md}{
+                                padding: 15px;
+                            }
                         }
 
                         td {
                             a {
                                 display: block;
+                                padding: 10px;
+
+                                @media #{$bp-md}{
                                 padding: 15px;
+                            }
                             }
                         }
                     }

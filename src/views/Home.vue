@@ -72,10 +72,14 @@
     #ally-gg {
         .home {
             background-color: #F6F7FB;
-            padding: 50px;
             min-height: calc(100vh - 65px);
             border-top: 1px solid #DFE3E8;
             transition: all 0.5s ease;
+            padding: 20px;
+
+            @media #{$bp-md}{
+                padding: 50px;
+            }
 
             .page-header {
                 text-align: center;

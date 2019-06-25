@@ -1,12 +1,14 @@
 <template>
     <div id="top-nav">
+        <div class="menu" @click="$emit('toggle-nav')">
+            <font-awesome-icon icon="bars"/>
+        </div>
         <div class="search">
             <input @keyup.enter="goSummoner()"
                    class="search-input"
                    type="text"
                    v-model="search_entry"
-                   placeholder="Find a Summoner..."
-            >
+                   placeholder="Find a Summoner...">
             <div class="server-select">
                 <div class="selected-server">{{ search_server }}</div>
                 <div class="server-dropdown">
@@ -38,12 +40,20 @@
                 </ul>
             </div>
         </div>
+        <div class="notifications">
+            <font-awesome-icon icon="bell"/>
+        </div>
         <div class="profile" v-if="user.username">
-            <div class="notifications">
-                <font-awesome-icon icon="bell"/>
-            </div>
-            <div class="avatar">
-                <img class="resp-img" src="../../assets/images/placeholder.png" :alt="user.username">
+            <div class="avatar" @click="toggleMenu">
+                <div class="img-wrapper">
+                    <img class="resp-img" src="../../assets/images/placeholder.png" :alt="user.username">
+                </div>
+                <ul v-if="open_menu" class="options-dropdown">
+                    <li v-if="user.isSuperuser">
+                        <router-link to="/admin">Admin Panel</router-link>
+                    </li>
+                    <li><a @click="logout">Logout</a></li>
+                </ul>
             </div>
             <div class="user">
                 <router-link :to="{ name: 'user_profile', params: { user: user.username }}">
@@ -52,17 +62,6 @@
                 <a href="#">
                     <span><font-awesome-icon icon="circle"/>Online</span>
                 </a>
-            </div>
-            <div class="acc-options">
-                <a href="#" @click="toggleMenu">
-                    <font-awesome-icon icon="caret-down"/>
-                </a>
-                <ul v-if="open_menu" class="options-dropdown">
-                    <li v-if="user.isSuperuser">
-                        <router-link to="/admin">Admin Panel</router-link>
-                    </li>
-                    <li><a @click="logout">Logout</a></li>
-                </ul>
             </div>
         </div>
     </div>
@@ -182,19 +181,38 @@
         #top-nav {
             background-color: white;
             grid-area: tnav;
-            justify-content: flex-end;
-            padding: 0 40px;
+            justify-content: space-evenly;
             display: flex;
             height: 65px;
-            width: calc(100vw - 130px);
+            width: 100%;
             transition: all 0.5s ease;
+
+            @media #{$bp-md}{
+                width: calc(100vw - 130px);
+                padding: 0 40px;
+                justify-content: flex-end;
+            }
+
+            .menu {
+                display: flex;
+                align-items: center;
+                font-size: 1.5rem;
+                cursor: pointer;
+
+                @media #{$bp-md}{
+                    display: none;
+                }
+            }
 
             .search {
                 display: flex;
                 align-items: center;
                 width: 250px;
-                margin: 0 20px;
                 position: relative;
+
+                @media #{$bp-md}{
+                    margin: 0 20px;
+                }
 
                 .search-input {
                     height: 35px;
@@ -339,36 +357,61 @@
                 }
             }
 
+            .notifications {
+                opacity: 0.2;
+                font-size: 1.2rem;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                color: $palette-primary;
+
+                @media #{$bp-md}{
+                  margin-right: 20px;
+                }
+            }
+
             .profile {
                 grid-area: profile;
                 display: flex;
                 align-items: center;
                 justify-content: flex-end;
 
-                .notifications {
-                    opacity: 0.4;
-                    margin-right: 20px;
-                    font-size: 1.2rem;
-                    display: none;
-
-                    @media #{$bp-lg}{
-                        display: block;
-                    }
-                }
-
                 .avatar {
-                    height: 40px;
-                    width: 40px;
-                    border-radius: 50%;
-                    overflow: hidden;
                     margin-right: 10px;
+                    position: relative;
+
+                    .img-wrapper {
+                        height: 40px;
+                        width: 40px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                    }
+
+                    .options-dropdown {
+                        position: absolute;
+                        top: 100%;
+                        right: 0;
+                        width: 150px;
+                        padding: 10px;
+                        border-radius: 10px 2px 10px 10px;
+                        background-color: white;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                        transition: all 0.3s ease-in-out 0s, visibility 0s linear 0.3s, z-index 0s linear 0.01s;
+                        text-align: center;
+                        z-index: 1050;
+                        border: 1px solid #DFE3E8;
+
+                        li {
+                            cursor: pointer;
+                        }
+                    }
                 }
 
                 .user {
                     margin-right: 15px;
                     display: none;
 
-                    @media #{$bp-lg}{
+                    @media #{$bp-md}{
                         display: block;
                     }
 
@@ -384,47 +427,16 @@
                         }
                     }
                 }
-
-                .acc-options {
-                    position: relative;
-                    display: none;
-
-                    @media #{$bp-lg}{
-                        display: block;
-                    }
-
-                    a {
-                        color: $palette-primary;
-                    }
-
-                    .options-dropdown {
-                        position: absolute;
-                        top: 100%;
-                        right: 0;
-                        width: 150px;
-                        padding: 10px;
-                        border-radius: 10px 2px 10px 10px;
-                        background-color: white;
-                        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-                        transition: all 0.3s ease-in-out 0s, visibility 0s linear 0.3s, z-index 0s linear 0.01s;
-                        text-align: center;
-                        z-index: 2000;
-
-                        li {
-                            cursor: pointer;
-                        }
-                    }
-
-                    i {
-                        font-size: 1.4rem;
-                    }
-                }
             }
         }
 
         &.dark {
             #top-nav {
                 background-color: $palette-dark-primary;
+
+                .menu {
+                    color: white;
+                }
 
                 .search {
                     .server-select {
@@ -453,15 +465,16 @@
                     }
                 }
 
-                .profile {
-                    .acc-options {
-                        a {
-                         color: white;
-                        }
+                .notifications {
+                    color: white;
+                }
 
+                .profile {
+                    .avatar {
                         .options-dropdown {
                             background-color: $palette-dark-secondary;
                             box-shadow: $dark-shadow;
+                            border: 1px solid $palette-dark-border;
                         }
                     }
                 }

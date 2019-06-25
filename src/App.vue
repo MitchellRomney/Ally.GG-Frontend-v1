@@ -1,7 +1,10 @@
 <template>
     <div id="ally-gg" :class="{ main: loadDashboard, dark: darkMode }">
-        <Navbar v-if="loadDashboard"/>
-        <TopNav v-if="loadDashboard"/>
+        <Navbar v-if="loadDashboard" :class="{ open: openNav }"/>
+        <transition name="fade">
+            <div class="navbar-cover" v-if="openNav" @click="openNav = false" key="1"></div>
+        </transition>
+        <TopNav v-if="loadDashboard" @toggle-nav="openNav = !openNav" />
         <div id="view-wrapper">
             <router-view/>
         </div>
@@ -17,6 +20,11 @@
         components: {
             Navbar,
             TopNav
+        },
+        data() {
+            return {
+                openNav: false,
+            }
         },
         computed: {
             loadDashboard() {
@@ -72,6 +80,16 @@
                 grid-template: 65px auto / 130px auto;
                 grid-template-areas: "nav tnav" "nav main";
             }
+        }
+
+        .navbar-cover {
+            position: fixed;
+            z-index: 1100;
+            background-color: rgba(0, 0, 0, 0.8);
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
         }
 
         #view-wrapper {

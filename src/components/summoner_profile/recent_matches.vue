@@ -175,6 +175,14 @@
                 matchIndex: 0
             }
         },
+        watch: {
+            $route(before, after) {
+                // Check if they've loaded a new Summoner.
+                if (before.params.summoner !== after.params.summoner) {
+                    this.matchIndex = 0;
+                }
+            },
+        },
         methods: {
             prevMatchIndex() {
                 if (this.matchIndex > 0) {

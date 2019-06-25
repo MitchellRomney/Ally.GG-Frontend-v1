@@ -149,6 +149,11 @@
     #ally-gg {
         #improve {
             height: 100%;
+            padding: 20px;
+
+            @media #{$bp-md}{
+                padding: 50px;
+            }
 
             .content {
                 display: grid;

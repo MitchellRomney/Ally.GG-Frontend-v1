@@ -10,10 +10,10 @@
             <NavItem name="Improve" link='None' icon="trophy"
                      message="You need to verify at least 1 Summoner to use this feature."
                      v-if="summoners.length === 0"/>
+            <li class="dark-mode">
+                <button @click="darkMode">Dark Mode</button>
+            </li>
         </ul>
-        <div class="dark-mode">
-            <button @click="darkMode">Dark Mode</button>
-        </div>
     </nav>
 </template>
 
@@ -46,7 +46,7 @@
         },
         computed: {
             user() {
-                if (Object.keys(this.$store.state.user).length !== 0){
+                if (Object.keys(this.$store.state.user).length !== 0) {
                     return this.$store.state.user
                 } else {
                     return null
@@ -93,16 +93,28 @@
             border-right: 1px solid #DFE3E8;
             text-align: left;
             background-color: white;
-            display: none;
             position: fixed;
-            height: 100%;
+            height: 100vh;
             width: 130px;
             flex-direction: column;
             align-items: center;
             transition: all 0.5s ease;
+            left: -130px;
+            z-index: 2000;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 
-            @media #{$bp-lg}{
-                display: flex;
+            @media #{$bp-md}{
+                box-shadow: none;
+            }
+
+            &.open {
+                left: 0;
+                box-shadow: none;
+            }
+
+            @media #{$bp-md}{
+                left: 0;
+                z-index: 950;
             }
 
             .logo-wrapper {
@@ -120,6 +132,7 @@
                 display: flex;
                 flex-direction: column;
                 height: calc(100vh - 90px);
+                align-items: center;
 
             }
 

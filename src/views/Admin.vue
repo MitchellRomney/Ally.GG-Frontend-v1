@@ -44,7 +44,8 @@
                             <span>Gold Summoners</span>
                         </div>
                         <div class="rank">
-                            <img alt="Platinum Tier" class="resp-img" src="../assets/images/ranked_medals/platinum_1.png">
+                            <img alt="Platinum Tier" class="resp-img"
+                                 src="../assets/images/ranked_medals/platinum_1.png">
                             <h3>{{ stats.platinumCount }}</h3>
                             <span>Platinum Summoners</span>
                         </div>
@@ -59,12 +60,14 @@
                             <span>Master Summoners</span>
                         </div>
                         <div class="rank">
-                            <img alt="Grandmaster Tier" class="resp-img" src="../assets/images/ranked_medals/grandmaster_1.png">
+                            <img alt="Grandmaster Tier" class="resp-img"
+                                 src="../assets/images/ranked_medals/grandmaster_1.png">
                             <h3>{{ stats.grandmasterCount }}</h3>
                             <span>Grandmaster Summoners</span>
                         </div>
                         <div class="rank">
-                            <img alt="Challenger Tier" class="resp-img" src="../assets/images/ranked_medals/challenger_1.png">
+                            <img alt="Challenger Tier" class="resp-img"
+                                 src="../assets/images/ranked_medals/challenger_1.png">
                             <h3>{{ stats.challengerCount }}</h3>
                             <span>Challenger Summoners</span>
                         </div>
@@ -184,12 +187,24 @@
 <style scoped lang="scss">
     #ally-gg {
         .admin {
-            padding: 50px;
             background-color: #F6F7FB;
             color: $palette-primary;
             min-height: calc(100vh - 65px);
+            padding: 20px;
+
+            @media #{$bp-md}{
+                padding: 50px;
+            }
 
             .content {
+                .header {
+                    text-align: center;
+
+                    @media #{$bp-md}{
+                        text-align: left;
+                    }
+                }
+
                 .buttons {
                     display: flex;
 

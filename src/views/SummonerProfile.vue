@@ -76,7 +76,7 @@
                                             :primaryColor="conLoadPrimary"
                                             :secondaryColor="conLoadSecondary"></content-loader>
                         </div>
-                        <div v-else v-cloak key="2">
+                        <div class="content" v-else v-cloak key="2">
                             <div class="ranked-stat" v-if="summoner.rankedSolo" v-cloak>
                                 <div class="medal">
                                     <img class="resp-img"
@@ -108,11 +108,11 @@
                     </transition>
                     <transition name="fade" mode="out-in">
                         <div class="content-loader" v-if="!summonerLoaded" key="1">
-                           <content-loader :width="150" :height="40"
+                            <content-loader :width="150" :height="40"
                                             :primaryColor="conLoadPrimary"
                                             :secondaryColor="conLoadSecondary"></content-loader>
                         </div>
-                        <div v-else v-cloak key="2">
+                        <div class="content" v-else v-cloak key="2">
                             <div class="ranked-stat" v-if="summoner.rankedFlex3" v-cloak>
                                 <div class="medal">
                                     <img class="resp-img"
@@ -148,7 +148,7 @@
                                             :primaryColor="conLoadPrimary"
                                             :secondaryColor="conLoadSecondary"></content-loader>
                         </div>
-                        <div v-else v-cloak key="2">
+                        <div class="content" v-else v-cloak key="2">
                             <div class="ranked-stat" v-if="summoner.rankedFlex5" v-cloak>
                                 <div class="medal">
                                     <img class="resp-img"
@@ -188,9 +188,6 @@
                     </router-link>
                     <router-link to="champions">
                         <li class="champions">Champions</li>
-                    </router-link>
-                    <router-link to="achievements">
-                        <li class="achievements">Achievements</li>
                     </router-link>
                     <span class="selector"></span>
                 </ul>
@@ -433,18 +430,18 @@
         },
         computed: {
             conLoadPrimary() {
-              if (this.$store.state.user.Profiles[0].darkMode){
-                  return '#141d26'
-              } else {
-                  return '#f9f9f9'
-              }
+                if (this.$store.state.user.Profiles[0].darkMode) {
+                    return '#141d26'
+                } else {
+                    return '#f9f9f9'
+                }
             },
             conLoadSecondary() {
-              if (this.$store.state.user.Profiles[0].darkMode){
-                  return '#17171c'
-              } else {
-                  return '#ecebeb'
-              }
+                if (this.$store.state.user.Profiles[0].darkMode) {
+                    return '#17171c'
+                } else {
+                    return '#ecebeb'
+                }
             },
             sortedMatches() {
                 return this.matches.sort(function (a, b) {
@@ -479,11 +476,11 @@
                     }
                 } else {
                     if (summonerName.length > 14) {
-                        return '30px';
+                        return '25px';
                     } else if (summonerName.length > 10) {
-                        return '40px';
+                        return '30px';
                     } else {
-                        return '50px';
+                        return '40px';
                     }
                 }
             }
@@ -645,7 +642,7 @@
                     background-color: white;
                     width: 100%;
                     grid-gap: 15px;
-                    grid-template: auto / repeat(4, 1fr);
+                    grid-template: 1fr auto 0.5fr 0.5fr / repeat(4, 1fr);
                     grid-template-areas: "avatar title title title" "ranked ranked ranked ranked" "update update update options" "menu menu menu menu";
                     padding: 0 20px;
                     transition: all 0.5s ease;
@@ -663,10 +660,6 @@
                         display: flex;
                         flex-direction: column;
                         position: relative;
-
-                        .content-loader {
-                            position: absolute;
-                        }
 
                         .avatar {
                             position: relative;
@@ -752,15 +745,13 @@
                     .options {
                         grid-area: options;
                         display: flex;
-                        align-items: center;
-                        justify-content: space-evenly;
-                        flex-direction: row-reverse;
 
                         .content {
                             display: flex;
                             align-items: center;
                             justify-content: space-evenly;
                             flex-direction: row-reverse;
+                            width: 100%;
                         }
 
                         a {
@@ -806,77 +797,76 @@
                             margin-right: 10px;
                         }
 
-                        .unranked {
-                            .text {
-                                @media #{$bp-md}{
-                                    margin-left: 10px;
-                                }
-                            }
-                        }
-
-                        .ranked-stat, .unranked {
-                            position: relative;
-                            height: 100%;
-                            display: flex;
+                        .content {
                             width: 33%;
-                            flex-direction: column;
-                            align-content: center;
                             text-align: center;
                             margin: auto;
+                            position: relative;
+                            height: 100%;
 
-                            @media #{$bp-md}{
-                                width: 300px;
-                                flex-direction: row;
-                                margin-right: 10px;
-                                text-align: left;
-                            }
-
-                            .medal {
-                                width: 50%;
-                                height: 100%;
-                                display: flex;
-                                align-items: center;
-                                margin: auto;
-
-                                @media #{$bp-md}{
-                                    margin: 0 5px;
-                                    width: 25%;
-                                }
-                            }
-
-                            .text {
-                                padding: 5px 0;
-                                display: flex;
-                                justify-content: center;
-                                flex-direction: column;
-
-                                .faded {
-                                    color: grey;
-                                    font-weight: normal;
-                                }
-
-                                .rank {
-                                    color: $palette-accent;
-                                    font-weight: bold;
-                                    font-size: 1rem;
+                            .unranked {
+                                .text {
+                                    .rank {
+                                        color: $palette-primary;
+                                    }
 
                                     @media #{$bp-md}{
-                                        font-size: 1.5em;
-                                    }
-                                }
-
-                                .winrate {
-                                    span {
-                                        font-weight: normal;
+                                        margin-left: 10px;
                                     }
                                 }
                             }
-                        }
 
-                        .unranked {
-                            .text {
-                                .rank {
-                                    color: $palette-primary;
+                            .ranked-stat, .unranked {
+                                display: flex;
+                                align-content: center;
+                                flex-direction: column;
+
+                                @media #{$bp-md}{
+                                    width: 300px;
+                                    flex-direction: row;
+                                    margin-right: 10px;
+                                    text-align: left;
+                                }
+
+                                .medal {
+                                    width: 50%;
+                                    height: 100%;
+                                    display: flex;
+                                    align-items: center;
+                                    margin: auto;
+
+                                    @media #{$bp-md}{
+                                        margin: 0 5px;
+                                        width: 25%;
+                                    }
+                                }
+
+                                .text {
+                                    padding: 5px 0;
+                                    display: flex;
+                                    justify-content: center;
+                                    flex-direction: column;
+
+                                    .faded {
+                                        color: grey;
+                                        font-weight: normal;
+                                    }
+
+                                    .rank {
+                                        color: $palette-accent;
+                                        font-weight: bold;
+                                        font-size: 1rem;
+
+                                        @media #{$bp-md}{
+                                            font-size: 1.5em;
+                                        }
+                                    }
+
+                                    .winrate {
+                                        span {
+                                            font-weight: normal;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -889,8 +879,18 @@
                         position: relative;
                         display: flex;
                         text-align: center;
+                        justify-content: space-evenly;
+
+                        @media #{$bp-md}{
+                            justify-content: flex-start;
+                        }
 
                         a {
+
+                            @media #{$bp-md}{
+                                margin-right: 20px;
+                            }
+
                             &.router-link-exact-active {
                                 li {
                                     opacity: 1;
@@ -911,7 +911,6 @@
                                 width: 100%;
                                 display: flex;
                                 padding: 10px;
-                                margin: 0 10px;
 
                                 @media #{$bp-md}{
                                     font-size: 1.5rem;
