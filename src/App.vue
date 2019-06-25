@@ -53,7 +53,6 @@
         -moz-osx-font-smoothing: grayscale;
         width: 100vw;
         margin: 0;
-        overflow-x: hidden;
         color: $palette-primary;
         min-height: 100vh;
         background-color: $palette-secondary;
@@ -78,6 +77,7 @@
         #view-wrapper {
             grid-area: main;
             overflow-y: scroll;
+            height: calc(100vh - 65px);
         }
 
         &.dark {

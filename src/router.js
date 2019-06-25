@@ -125,6 +125,13 @@ let router = new Router({
                 }
             ]
         },
+        {
+            path: '/champions/:champion',
+            name: 'champion_profile',
+            meta: {
+                requiresAuth: true,
+            },
+        }
     ],
     scrollBehavior(to, from, savedPosition) {
         return {x: 0, y: 0}

@@ -118,18 +118,34 @@
                     <div class="players">
                         <div class="blue-team">
                             <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 100">
-                                <router-link
-                                        :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
-                                    {{ player.summoner.summonerName }}
-                                </router-link>
+                                <div v-if="player.summoner.summonerName">
+                                    <router-link
+                                            :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
+                                        {{ player.summoner.summonerName }}
+                                    </router-link>
+                                </div>
+                                <div v-else v-cloak>
+                                    <router-link
+                                            :to="{ name: 'champion_profile', params: { champion: player.summoner.champion.champId }}">
+                                        {{ player.summoner.champion.name }}
+                                    </router-link>
+                                </div>
                             </div>
                         </div>
                         <div class="red-team">
                             <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 200">
-                                <router-link
-                                        :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
-                                    {{ player.summoner.summonerName }}
-                                </router-link>
+                                <div v-if="player.summoner">
+                                    <router-link
+                                            :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
+                                        {{ player.summoner.summonerName }}
+                                    </router-link>
+                                </div>
+                                <div v-else v-cloak>
+                                    <router-link
+                                            :to="{ name: 'champion_profile', params: { champion: player.champion.champId }}">
+                                        {{ player.champion.name }}
+                                    </router-link>
+                                </div>
                             </div>
                         </div>
                     </div>

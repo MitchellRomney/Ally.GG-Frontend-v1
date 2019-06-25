@@ -5,8 +5,9 @@
                 <div class="avatar-wrapper">
                     <transition name="fade" mode="out-in">
                         <div class="content-loader" v-if="!summonerIconLoaded" key="1">
-                            <content-loader :width="150" :height="150" primaryColor="#141d26" secondaryColor="#17171c">
-                            </content-loader>
+                            <content-loader :width="150" :height="150"
+                                            :primaryColor="conLoadPrimary"
+                                            :secondaryColor="conLoadSecondary"></content-loader>
                         </div>
                         <div class="avatar" v-else v-cloak key="2">
                             <img class="resp-img" v-if="summonerLoaded"
@@ -20,9 +21,9 @@
                 <div class="update">
                     <transition name="fade" mode="out-in">
                         <div class="content-loader" v-if="!summonerLoaded" key="1">
-                            <content-loader :width="150"
-                                            :height="50" primaryColor="#141d26" secondaryColor="#17171c">
-                            </content-loader>
+                            <content-loader :width="150" :height="50"
+                                            :primaryColor="conLoadPrimary"
+                                            :secondaryColor="conLoadSecondary"></content-loader>
                         </div>
                         <div class="content" v-else v-cloak key="2">
                             <span class="last-updated">Last Updated: <span>{{ summoner.lastUpdated }}</span></span>
@@ -33,8 +34,9 @@
                 <div class="title">
                     <transition name="fade" mode="out-in">
                         <div class="content-loader" v-if="!summonerLoaded" key="1">
-                            <content-loader :width="150" :height="20" primaryColor="#141d26" secondaryColor="#17171c">
-                            </content-loader>
+                            <content-loader :width="150" :height="20"
+                                            :primaryColor="conLoadPrimary"
+                                            :secondaryColor="conLoadSecondary"></content-loader>
                         </div>
                         <div class="content" v-else v-cloak key="2">
                             <h1 class="summonerName" :style="'font-size: ' + nameFontSize">{{ summoner.summonerName
@@ -53,8 +55,9 @@
                 <div class="options">
                     <transition name="fade" mode="out-in">
                         <div class="content-loader" v-if="!summonerLoaded" key="1">
-                            <content-loader :width="150" :height="60" primaryColor="#141d26" secondaryColor="#17171c">
-                            </content-loader>
+                            <content-loader :width="150" :height="60"
+                                            :primaryColor="conLoadPrimary"
+                                            :secondaryColor="conLoadSecondary"></content-loader>
                         </div>
                         <div class="content" v-else v-cloak key="2">
                             <a href="#">
@@ -69,8 +72,9 @@
                 <div class="ranked-stats">
                     <transition name="fade" mode="out-in">
                         <div class="content-loader" v-if="!summonerLoaded" key="1">
-                            <content-loader :width="150" :height="40" primaryColor="#141d26" secondaryColor="#17171c">
-                            </content-loader>
+                            <content-loader :width="150" :height="40"
+                                            :primaryColor="conLoadPrimary"
+                                            :secondaryColor="conLoadSecondary"></content-loader>
                         </div>
                         <div v-else v-cloak key="2">
                             <div class="ranked-stat" v-if="summoner.rankedSolo" v-cloak>
@@ -104,8 +108,9 @@
                     </transition>
                     <transition name="fade" mode="out-in">
                         <div class="content-loader" v-if="!summonerLoaded" key="1">
-                            <content-loader :width="150" :height="40" primaryColor="#141d26" secondaryColor="#17171c">
-                            </content-loader>
+                           <content-loader :width="150" :height="40"
+                                            :primaryColor="conLoadPrimary"
+                                            :secondaryColor="conLoadSecondary"></content-loader>
                         </div>
                         <div v-else v-cloak key="2">
                             <div class="ranked-stat" v-if="summoner.rankedFlex3" v-cloak>
@@ -139,8 +144,9 @@
                     </transition>
                     <transition name="fade" mode="out-in">
                         <div class="content-loader" v-if="!summonerLoaded" key="1">
-                            <content-loader :width="150" :height="40" primaryColor="#141d26" secondaryColor="#17171c">
-                            </content-loader>
+                            <content-loader :width="150" :height="40"
+                                            :primaryColor="conLoadPrimary"
+                                            :secondaryColor="conLoadSecondary"></content-loader>
                         </div>
                         <div v-else v-cloak key="2">
                             <div class="ranked-stat" v-if="summoner.rankedFlex5" v-cloak>
@@ -270,6 +276,10 @@
               timestamp
               players {
                 participantId
+                champion {
+                  champId
+                  name
+                }
                 team {
                   teamId
                 }
@@ -422,6 +432,20 @@
             },
         },
         computed: {
+            conLoadPrimary() {
+              if (this.$store.state.user.Profiles[0].darkMode){
+                  return '#141d26'
+              } else {
+                  return '#f9f9f9'
+              }
+            },
+            conLoadSecondary() {
+              if (this.$store.state.user.Profiles[0].darkMode){
+                  return '#17171c'
+              } else {
+                  return '#ecebeb'
+              }
+            },
             sortedMatches() {
                 return this.matches.sort(function (a, b) {
                     let x = a['match']['timestamp'];
@@ -609,8 +633,6 @@
             color: $palette-primary;
 
             .page-content {
-                height: calc(100vh - 65px);
-                overflow: hidden;
                 background-color: white;
 
                 &.loaded {
