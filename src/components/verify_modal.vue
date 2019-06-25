@@ -61,6 +61,7 @@
 
         .modal-wrapper {
             display: flex;
+            width: 100%;
 
             .modal-container {
                 margin: auto 20px;
@@ -74,7 +75,7 @@
 
                 @media #{$bp-md}{
                     width: 600px;
-                    margin: 0 auto;
+                    margin: auto;
                 }
 
                 .modal-header {

@@ -83,7 +83,7 @@
                 max-height: calc(100vh - 65px)
             }
 
-            @media #{$bp-lg}{
+            @media #{$bp-md}{
                 display: grid;
                 grid-template: 65px auto / 130px auto;
                 grid-template-areas: "nav tnav" "nav main";
@@ -102,6 +102,10 @@
             top: 0;
             width: 100vw;
             height: 100vh;
+
+            @media #{$bp-md}{
+                display: none;
+            }
         }
 
         #view-wrapper {

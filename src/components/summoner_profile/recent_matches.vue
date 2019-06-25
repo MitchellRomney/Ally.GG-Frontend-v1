@@ -263,8 +263,8 @@
                                 -45deg,
                                 transparent,
                                 transparent 1rem,
-                                $palette-dark-border 1rem,
-                                $palette-dark-border 2rem
+                                #f4f4f4 1rem,
+                                #f4f4f4 2rem
                 );
                 background-size: 200% 200%;
                 animation: barberpole 10s linear infinite;
@@ -624,6 +624,16 @@
                 background-color: $palette-dark-primary;
                 border: 3px solid $palette-dark-border;
                 color: white;
+
+                .match-progress {
+                    background-image: repeating-linear-gradient(
+                                    -45deg,
+                                    transparent,
+                                    transparent 1rem,
+                                    $palette-dark-border 1rem,
+                                    $palette-dark-border 2rem
+                    );
+                }
 
                 .v-spinner {
                     background-color: $palette-dark-primary;
