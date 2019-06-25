@@ -96,8 +96,12 @@
 
             .content {
                 display: grid;
-                grid-template: 300px / repeat(3, 1fr);
+                grid-template: 300px / 1fr;
                 grid-auto-columns: 300px;
+
+                @media #{$bp-md}{
+                    grid-template: 300px / repeat(3, 1fr);
+                }
 
                 .panel {
                     background-color: white;

@@ -1,34 +1,32 @@
 <template>
     <div id="verify-modal">
-        <div class="modal-mask">
-            <div class="modal-wrapper">
-                <div class="modal-container">
+        <div class="modal-wrapper">
+            <div class="modal-container">
 
-                    <div class="modal-header">
-                        <h2 class="header">
-                            Connect your Summoner to your Ally.GG account
-                        </h2>
-                        <button class="close" @click="$emit('close')">
-                            X
-                        </button>
-                    </div>
+                <div class="modal-header">
+                    <h2 class="header">
+                        Connect your Summoner to your Ally.GG account
+                    </h2>
+                    <button class="close" @click="$emit('close')">
+                        X
+                    </button>
+                </div>
 
-                    <div class="modal-body">
-                        <div class="body">
-                            Log into your Summoner account in the League client, and head over to Verification in
-                            settings. Enter and save the code provided below in the League client, and then click
-                            verify!
-                        </div>
-                        <div class="code">
-                            Verification code: {{ code }}
-                        </div>
+                <div class="modal-body">
+                    <div class="body">
+                        Log into your Summoner account in the League client, and head over to Verification in
+                        settings. Enter and save the code provided below in the League client, and then click
+                        verify!
                     </div>
+                    <div class="code">
+                        Verification code: {{ code }}
+                    </div>
+                </div>
 
-                    <div class="modal-footer">
-                        <slot name="footer">
-                            <button class="verify">VERIFY</button>
-                        </slot>
-                    </div>
+                <div class="modal-footer">
+                    <slot name="footer">
+                        <button class="verify">VERIFY</button>
+                    </slot>
                 </div>
             </div>
         </div>
@@ -49,30 +47,35 @@
 </script>
 
 <style scoped lang="scss">
-    .modal-mask {
+
+    #verify-modal {
         position: fixed;
-        z-index: 9998;
+        z-index: 2000;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
         background-color: rgba(0, 0, 0, .5);
-        display: table;
+        display: flex;
         transition: opacity .3s ease;
 
         .modal-wrapper {
-            display: table-cell;
-            vertical-align: middle;
+            display: flex;
 
             .modal-container {
-                width: 600px;
-                margin: 0 auto;
+                margin: auto 20px;
                 background-color: #fff;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
                 transition: all .3s ease;
                 border: 3px solid #f4f4f4;
                 border-radius: 20px;
                 position: relative;
+                z-index: 2100;
+
+                @media #{$bp-md}{
+                    width: 600px;
+                    margin: 0 auto;
+                }
 
                 .modal-header {
                     padding: 20px;

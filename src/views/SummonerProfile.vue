@@ -189,15 +189,22 @@
                     <router-link to="champions">
                         <li class="champions">Champions</li>
                     </router-link>
-                    <span class="selector"></span>
                 </ul>
             </div>
             <div id="summoner-content-wrapper">
                 <router-view :matches="sortedMatches" :summoner="summoner" :summonerLoaded="summonerLoaded"
-                             :matchLoading="!matchesLoaded" :matchesRemaining="remaining_matches"></router-view>
+                             :matchLoading="!matchesLoaded" :matchesRemaining="remaining_matches"
+                             :newMatches="newMatches"></router-view>
             </div>
             <footer>
-                Footer
+                <div class="teis-logo">
+                    <a href="https://www.theearthissquare.com" target="_blank">
+                        <transition name="fade" mode="out-in">
+                            <img class="resp-img" src="../assets/images/teis-logo.png" v-if="!darkMode"/>
+                            <img class="resp-img" src="../assets/images/teis-logo-white.png" v-else v-cloak />
+                        </transition>
+                    </a>
+                </div>
             </footer>
         </div>
     </div>
@@ -405,6 +412,7 @@
 
                 // Misc Data
                 remaining_matches: 0,
+                newMatches: 0,
 
                 // Loading Flags
                 summonerIconLoaded: false,
@@ -429,15 +437,20 @@
             },
         },
         computed: {
+            darkMode() {
+                if (this.$store.state.stateLoaded){
+                    return this.$store.state.user.Profiles[0].darkMode
+                } else return null
+            },
             conLoadPrimary() {
-                if (this.$store.state.user.Profiles[0].darkMode) {
+                if (this.darkMode) {
                     return '#141d26'
                 } else {
                     return '#f9f9f9'
                 }
             },
             conLoadSecondary() {
-                if (this.$store.state.user.Profiles[0].darkMode) {
+                if (this.darkMode) {
                     return '#17171c'
                 } else {
                     return '#ecebeb'
@@ -554,6 +567,7 @@
                     let data = response.data.data.updateSummoner;
 
                     this.remaining_matches = data.newMatches;
+                    this.newMatches = data.newMatches;
                 })
             },
             getMedalUrl(tier, rank) {
@@ -631,6 +645,7 @@
 
             .page-content {
                 background-color: white;
+                transition: all 0.5s ease;
 
                 &.loaded {
                     height: 100%;
@@ -940,6 +955,13 @@
                     flex-direction: row-reverse;
                     padding: 20px;
                     align-items: center;
+
+                    .teis-logo {
+                        width: 100px;
+                        display: flex;
+                        align-items: center;
+                        padding: 10px;
+                    }
                 }
             }
         }

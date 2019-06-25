@@ -1,7 +1,7 @@
 <template>
     <div class="content-general container">
         <RecentMatches :matches="matches" :matchLoading="matchLoading"
-                       :matchesRemaining="matchesRemaining"></RecentMatches>
+                       :matchesRemaining="matchesRemaining" :newMatches="newMatches"></RecentMatches>
         <div class="ranked-panel">
             <h2>Ranked Solo</h2>
             <transition name="fade" mode="out-in">
@@ -94,6 +94,7 @@
             summonerLoaded: Boolean,
             matchLoading: Boolean,
             matchesRemaining: Number,
+            newMatches: Number
         },
         methods: {
             getMedalUrl(tier, rank) {

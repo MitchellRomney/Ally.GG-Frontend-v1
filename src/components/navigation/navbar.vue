@@ -102,6 +102,7 @@
             left: -130px;
             z-index: 2000;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
 
             @media #{$bp-md}{
                 box-shadow: none;
@@ -109,7 +110,7 @@
 
             &.open {
                 left: 0;
-                box-shadow: none;
+                opacity: 1;
             }
 
             @media #{$bp-md}{

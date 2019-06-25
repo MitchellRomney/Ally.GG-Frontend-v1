@@ -48,13 +48,13 @@
                 <div class="img-wrapper">
                     <img class="resp-img" src="../../assets/images/placeholder.png" :alt="user.username">
                 </div>
-                <ul v-if="open_menu" class="options-dropdown">
-                    <li v-if="user.isSuperuser">
-                        <router-link to="/admin">Admin Panel</router-link>
-                    </li>
-                    <li><a @click="logout">Logout</a></li>
-                </ul>
             </div>
+            <ul v-if="open_menu" class="options-dropdown">
+                <li v-if="user.isSuperuser">
+                    <router-link to="/admin">Admin Panel</router-link>
+                </li>
+                <li><a @click="logout">Logout</a></li>
+            </ul>
             <div class="user">
                 <router-link :to="{ name: 'user_profile', params: { user: user.username }}">
                     <h4>{{ user.username }}</h4>
@@ -207,11 +207,12 @@
             .search {
                 display: flex;
                 align-items: center;
-                width: 250px;
+                width: 200px;
                 position: relative;
 
                 @media #{$bp-md}{
                     margin: 0 20px;
+                    width: 250px;
                 }
 
                 .search-input {
@@ -366,7 +367,7 @@
                 color: $palette-primary;
 
                 @media #{$bp-md}{
-                  margin-right: 20px;
+                    margin-right: 20px;
                 }
             }
 
@@ -375,10 +376,11 @@
                 display: flex;
                 align-items: center;
                 justify-content: flex-end;
+                position: relative;
 
                 .avatar {
                     margin-right: 10px;
-                    position: relative;
+                    cursor: pointer;
 
                     .img-wrapper {
                         height: 40px;
@@ -386,24 +388,24 @@
                         border-radius: 50%;
                         overflow: hidden;
                     }
+                }
 
-                    .options-dropdown {
-                        position: absolute;
-                        top: 100%;
-                        right: 0;
-                        width: 150px;
-                        padding: 10px;
-                        border-radius: 10px 2px 10px 10px;
-                        background-color: white;
-                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                        transition: all 0.3s ease-in-out 0s, visibility 0s linear 0.3s, z-index 0s linear 0.01s;
-                        text-align: center;
-                        z-index: 1050;
-                        border: 1px solid #DFE3E8;
+                .options-dropdown {
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    width: 150px;
+                    padding: 10px;
+                    border-radius: 10px 2px 10px 10px;
+                    background-color: white;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                    transition: all 0.3s ease-in-out 0s, visibility 0s linear 0.3s, z-index 0s linear 0.01s;
+                    text-align: center;
+                    z-index: 1050;
+                    border: 1px solid #DFE3E8;
 
-                        li {
-                            cursor: pointer;
-                        }
+                    li {
+                        cursor: pointer;
                     }
                 }
 
@@ -470,12 +472,10 @@
                 }
 
                 .profile {
-                    .avatar {
-                        .options-dropdown {
-                            background-color: $palette-dark-secondary;
-                            box-shadow: $dark-shadow;
-                            border: 1px solid $palette-dark-border;
-                        }
+                    .options-dropdown {
+                        background-color: $palette-dark-secondary;
+                        box-shadow: $dark-shadow;
+                        border: 1px solid $palette-dark-border;
                     }
                 }
             }

@@ -1,10 +1,11 @@
 <template>
-    <div id="ally-gg" :class="{ main: loadDashboard, dark: darkMode }">
+    <div id="ally-gg" :class="{ main: loadDashboard, dark: darkMode }"
+         v-touch:swipe.right="swipeRight" v-touch:swipe.left="swipeLeft">
         <Navbar v-if="loadDashboard" :class="{ open: openNav }"/>
         <transition name="fade">
             <div class="navbar-cover" v-if="openNav" @click="openNav = false" key="1"></div>
         </transition>
-        <TopNav v-if="loadDashboard" @toggle-nav="openNav = !openNav" />
+        <TopNav v-if="loadDashboard" @toggle-nav="openNav = !openNav"/>
         <div id="view-wrapper">
             <router-view/>
         </div>
@@ -41,14 +42,21 @@
                 return !websitePaths.includes(this.$route.path)
             },
             darkMode() {
-                if (Object.keys(this.$store.state.user).length !== 0){
+                if (Object.keys(this.$store.state.user).length !== 0) {
                     return this.$store.state.user.Profiles[0].darkMode
                 } else {
                     return false
                 }
             }
         },
-        methods: {},
+        methods: {
+            swipeRight() {
+                this.openNav = true;
+            },
+            swipeLeft() {
+                this.openNav = false;
+            }
+        },
         mounted() {
         }
     }
@@ -80,6 +88,10 @@
                 grid-template: 65px auto / 130px auto;
                 grid-template-areas: "nav tnav" "nav main";
             }
+
+            #view-wrapper {
+                height: calc(100vh - 65px);
+            }
         }
 
         .navbar-cover {
@@ -95,7 +107,7 @@
         #view-wrapper {
             grid-area: main;
             overflow-y: scroll;
-            height: calc(100vh - 65px);
+            height: 100vh;
         }
 
         &.dark {

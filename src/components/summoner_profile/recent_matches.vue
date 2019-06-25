@@ -1,9 +1,11 @@
 <template>
     <div id="recent-matches">
+        <div class="match-progress" :class="{ loading: matchLoadingPercentage !== '0' }"
+             :style="{ 'right': matchLoadingPercentage + '%' }"></div>
         <div class="header">
             <h2>Recent Matches</h2>
             <div class="remaining" v-if="matchesRemaining >  0">
-                {{ matchesRemaining }} matches remaining...
+                Loading {{ matchesRemaining }} new matches...
             </div>
         </div>
         <transition name="fade" mode="out-in">
@@ -157,18 +159,22 @@
 
 <script>
     import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
+    import {ContentLoader} from 'vue-content-loader';
+
 
     export default {
         name: 'general',
         title: 'General - Ally.GG',
         components: {
             PulseLoader,
+            ContentLoader,
         },
         props: {
             summoner: Object,
             matches: Array,
             matchLoading: Boolean,
             matchesRemaining: Number,
+            newMatches: Number,
         },
         data() {
             return {
@@ -182,6 +188,15 @@
                     this.matchIndex = 0;
                 }
             },
+        },
+        computed: {
+            matchLoadingPercentage() {
+                if (this.matchesRemaining > 0) {
+                    let matchesLoaded = this.newMatches - this.matchesRemaining;
+                    console.log(matchesLoaded.toString() + ' matches loaded.');
+                    return (100 - ((matchesLoaded / this.newMatches) * 100)).toString()
+                } else return '0'
+            }
         },
         methods: {
             prevMatchIndex() {
@@ -236,12 +251,36 @@
                 grid-column-end: span 2;
             }
 
+            .match-progress {
+                position: absolute;
+                height: 100%;
+                opacity: 0;
+                top: 0;
+                left: 0;
+                transition: all 0.5s ease;
+                border-radius: 20px;
+                background-image: repeating-linear-gradient(
+                                -45deg,
+                                transparent,
+                                transparent 1rem,
+                                $palette-dark-border 1rem,
+                                $palette-dark-border 2rem
+                );
+                background-size: 200% 200%;
+                animation: barberpole 10s linear infinite;
+
+                &.loading {
+                    opacity: 0.8;
+                }
+            }
+
             .header {
                 padding: 20px 20px 0 20px;
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;
                 align-content: center;
+                z-index: 50
             }
 
             .match_loader {
@@ -251,6 +290,7 @@
 
             .v-spinner {
                 height: 100%;
+                border-radius: 20px;
             }
 
             .match-carousel {

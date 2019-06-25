@@ -8,57 +8,63 @@
 }
 
 @keyframes bounce-anim {
-    0%,90% {
-        animation-timing-function: linear
-    }
+  0%, 90% {
+    animation-timing-function: linear
+  }
 
-    10% {
-        animation-timing-function: cubic-bezier(0,.4,.6,1);
-        -webkit-transform: translate(0,5px) scaleY(1.1);
-        transform: translate(0,5px) scaleY(1.1)
-    }
+  10% {
+    animation-timing-function: cubic-bezier(0, .4, .6, 1);
+    -webkit-transform: translate(0, 5px) scaleY(1.1);
+    transform: translate(0, 5px) scaleY(1.1)
+  }
 
-    50% {
-        animation-timing-function: cubic-bezier(.4,0,1,.6);
-        -webkit-transform: translate(0,-37px) scaleY(1.1);
-        transform: translate(0,-37px) scaleY(1.1)
-    }
+  50% {
+    animation-timing-function: cubic-bezier(.4, 0, 1, .6);
+    -webkit-transform: translate(0, -37px) scaleY(1.1);
+    transform: translate(0, -37px) scaleY(1.1)
+  }
 
-    0%,to {
-        -webkit-transform: translate(0,30px) scaleY(.5);
-        transform: translate(0,30px) scaleY(.5)
-    }
+  0%, to {
+    -webkit-transform: translate(0, 30px) scaleY(.5);
+    transform: translate(0, 30px) scaleY(.5)
+  }
 
-    90% {
-        -webkit-transform: translate(0,5px) scaleY(1.1);
-        transform: translate(0,5px) scaleY(1.1)
-    }
+  90% {
+    -webkit-transform: translate(0, 5px) scaleY(1.1);
+    transform: translate(0, 5px) scaleY(1.1)
+  }
 }
 
 @-webkit-keyframes bounce-anim {
-    0%,90% {
-        animation-timing-function: linear
-    }
+  0%, 90% {
+    animation-timing-function: linear
+  }
 
-    10% {
-        animation-timing-function: cubic-bezier(0,.4,.6,1);
-        -webkit-transform: translate(0,5px) scaleY(1.1);
-        transform: translate(0,5px) scaleY(1.1)
-    }
+  10% {
+    animation-timing-function: cubic-bezier(0, .4, .6, 1);
+    -webkit-transform: translate(0, 5px) scaleY(1.1);
+    transform: translate(0, 5px) scaleY(1.1)
+  }
 
-    50% {
-        animation-timing-function: cubic-bezier(.4,0,1,.6);
-        -webkit-transform: translate(0,-37px) scaleY(1.1);
-        transform: translate(0,-37px) scaleY(1.1)
-    }
+  50% {
+    animation-timing-function: cubic-bezier(.4, 0, 1, .6);
+    -webkit-transform: translate(0, -37px) scaleY(1.1);
+    transform: translate(0, -37px) scaleY(1.1)
+  }
 
-    0%,to {
-        -webkit-transform: translate(0,30px) scaleY(.5);
-        transform: translate(0,30px) scaleY(.5)
-    }
+  0%, to {
+    -webkit-transform: translate(0, 30px) scaleY(.5);
+    transform: translate(0, 30px) scaleY(.5)
+  }
 
-    90% {
-        -webkit-transform: translate(0,5px) scaleY(1.1);
-        transform: translate(0,5px) scaleY(1.1)
-    }
+  90% {
+    -webkit-transform: translate(0, 5px) scaleY(1.1);
+    transform: translate(0, 5px) scaleY(1.1)
+  }
+}
+
+@keyframes barberpole {
+  100% {
+    background-position: 100% 100%;
+  }
 }

@@ -13,7 +13,11 @@ import VueCookie from 'vue-cookie'
 import Axios from 'axios'
 import LogoBounce from './components/loading/logoBounce'
 import VueNativeSock from 'vue-native-websocket'
+import Vue2TouchEvents from 'vue2-touch-events'
+import store from './store.js'
 
+
+Vue.use(Vue2TouchEvents);
 
 Vue.use(VueNativeSock, process.env.VUE_APP_WS_URL, {
     store: store,
@@ -22,9 +26,6 @@ Vue.use(VueNativeSock, process.env.VUE_APP_WS_URL, {
 
 Vue.use(VueCookie);
 Vue.use(Vuex);
-
-import store from './store.js'
-import {createProvider} from './vue-apollo'
 
 Vue.mixin(titleMixin);
 
