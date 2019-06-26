@@ -30,6 +30,7 @@
     "tiptap": "^1.22.1",
     "tiptap-extensions": "^1.22.1",
     "vue": "^2.6.10",
+    "vue-analytics": "^5.17.0",
     "vue-apollo": "^3.0.0-beta.11",
     "vue-content-loader": "^0.2.2",
     "vue-cookie": "^1.1.4",

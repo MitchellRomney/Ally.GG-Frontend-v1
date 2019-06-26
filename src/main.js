@@ -15,17 +15,22 @@ import LogoBounce from './components/loading/logoBounce'
 import VueNativeSock from 'vue-native-websocket'
 import Vue2TouchEvents from 'vue2-touch-events'
 import store from './store.js'
+import VueAnalytics from 'vue-analytics'
 
 
 Vue.use(Vue2TouchEvents);
+Vue.use(VueCookie);
+Vue.use(Vuex);
+
+Vue.use(VueAnalytics, {
+    id: 'UA-142475995-1',
+    router
+});
 
 Vue.use(VueNativeSock, process.env.VUE_APP_WS_URL, {
     store: store,
     connectManually: true,
 });
-
-Vue.use(VueCookie);
-Vue.use(Vuex);
 
 Vue.mixin(titleMixin);
 
