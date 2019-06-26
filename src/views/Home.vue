@@ -17,11 +17,11 @@
                 <div v-if="summoners.length === 0">
                     You have not verified any Summoners yet!
                 </div>
-                <div v-else class="summoners">
-                    <div class="summoner" v-for="summoner in summoners">
+                <transition-group name="fade" tag="div" v-else class="summoners">
+                    <div class="summoner" v-for="summoner in summoners" :key="summoner.summonerId">
                         <router-link :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
                             <div class="avatar">
-                                <img class="resp-img" v-if="summoner.profileIconId"
+                                <img class="resp-img" v-if="summoner.profileIconId" alt="SummonerIcon"
                                      :src="'https://ddragon.leagueoflegends.com/cdn/9.10.1/img/profileicon/' + summoner.profileIconId + '.png'">
                             </div>
                             <h3 class="name">
@@ -30,7 +30,7 @@
                             <span class="level">Level: {{ summoner.summonerLevel }}</span>
                         </router-link>
                     </div>
-                </div>
+                </transition-group>
             </div>
         </div>
     </div>
@@ -126,6 +126,7 @@
 
                         .summoner {
                             text-align: center;
+                            transition: all 0.5s ease;
 
                             .avatar {
                                 width: 100px;
