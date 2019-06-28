@@ -99,8 +99,8 @@ let router = new Router({
             component: Summoners,
         },
         {
-            path: '/summoners/:summoner',
-            redirect: 'summoners/:summoner/general',
+            path: '/summoners/:server/:summoner',
+            redirect: 'summoners/:server/:summoner/general',
             name: 'summoner_profile',
             meta: {
                 requiresAuth: true,

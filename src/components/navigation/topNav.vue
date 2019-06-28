@@ -10,19 +10,28 @@
                    v-model="search_entry"
                    placeholder="Find a Summoner...">
             <div class="server-select">
-                <div class="selected-server">{{ search_server }}</div>
-                <div class="server-dropdown">
-                    <div class="server" v-for="server in search_server_options" v-if="server !== search_server">
-                        {{ server }}
-                    </div>
-                </div>
+                <select aria-label="server" id="server" class="selected-server" name="server" v-model="search_server">
+                    <option value="BR1">BR</option>
+                    <option value="EUN1">EUN</option>
+                    <option value="EUW1">EUW</option>
+                    <option value="JP1">JP</option>
+                    <option value="KR">KR</option>
+                    <option value="LA1">LAN</option>
+                    <option value="LA2">LAS</option>
+                    <option value="NA1">NA</option>
+                    <option value="OC1" selected="selected">OCE</option>
+                    <option value="TR1">TR</option>
+                    <option value="RU">RU</option>
+                    <option value="PBE1">PBE</option>
+                </select>
             </div>
             <div class="search-results" v-if="search_results || search_loading">
                 <pulse-loader v-if="search_loading" :color="'#FF0081'"></pulse-loader>
                 <ul class="results" v-else>
                     <li class="header" v-if="search_summoner_results.length > 0">Summoners</li>
                     <li class="result" v-for="summoner in search_summoner_results.slice(0,10)" :key="summoner.id">
-                        <router-link :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
+                        <router-link
+                                :to="{ name: 'summoner_profile', params: { server: summoner.server, summoner: summoner.summonerName }}">
                             <img class="resp-img"
                                  :src="'https://ddragon.leagueoflegends.com/cdn/9.10.1/img/profileicon/' + summoner.profileIconId + '.png'">
                             <span v-on:click="clearSearch">{{ summoner.summonerName }}</span>
@@ -31,9 +40,9 @@
                     </li>
                     <li class="header" v-if="search_champion_results.length > 0">Champions</li>
                     <li class="result" v-for="champion in search_champion_results.slice(0,10)" :key="champion.champId">
-                        <router-link :to="{ name: 'summoner_profile', params: { summoner: champion.champId }}">
+                        <router-link @click="clearSearch" :to="{ name: 'summoner_profile', params: { summoner: champion.champId }}">
                             <img class="resp-img" :src="getChampionTileUrl(champion)" :alt="champion.name"/>
-                            <span v-on:click="clearSearch">{{ champion.name }}</span>
+                            <span>{{ champion.name }}</span>
                             <span class="level"><span v-for="tag in champion.tags"> {{ tag }} </span></span>
                         </router-link>
                     </li>
@@ -44,7 +53,7 @@
             <font-awesome-icon icon="bell"/>
         </div>
         <div class="profile" v-if="user.username">
-            <div class="avatar" @click="toggleMenu">
+            <div class="avatar" @click="toggleMenu" v-click-outside="closeMenu">
                 <div class="img-wrapper">
                     <img class="resp-img" src="../../assets/images/placeholder.png" :alt="user.username">
                 </div>
@@ -73,12 +82,13 @@
 
     let query_summonerSearch =
         `
-        query Search($entry: String) {
-          summonerSearch(entry: $entry) {
+        query Search($entry: String, $server: String) {
+          summonerSearch(entry: $entry, server: $server) {
             summonerId
             summonerName
             summonerLevel
             profileIconId
+            server
           }
           championSearch(entry: $entry) {
             name
@@ -102,7 +112,7 @@
                 search_summoner_results: [],
                 search_champion_results: [],
                 search_loading: false,
-                search_server: 'OCE',
+                search_server: 'OC1',
                 search_server_options: ['OCE', 'NA', 'KR', 'EUW']
             }
         },
@@ -124,6 +134,11 @@
             toggleMenu() {
                 this.open_menu = !this.open_menu;
             },
+            closeMenu() {
+                if (this.open_menu) {
+                    this.open_menu = false;
+                }
+            },
             logout() {
                 this.$cookie.delete('token');
                 this.$store.commit('logout');
@@ -136,7 +151,8 @@
                     data: {
                         query: query_summonerSearch,
                         variables: {
-                            entry: this.search_entry
+                            entry: this.search_entry,
+                            server: this.search_server
                         },
                     }
                 }).then((response) => {
@@ -253,6 +269,9 @@
                     .selected-server {
                         font-weight: bold;
                         padding: 5px 10px;
+                        border: none;
+                        background-color: transparent;
+                        color: white;
                     }
 
                     &:focus {

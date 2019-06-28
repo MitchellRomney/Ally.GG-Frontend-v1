@@ -115,7 +115,7 @@
         }
 
         &.dark {
-            background-color: $palette-dark-primary;
+            background-color: $palette-dark-secondary;
         }
     }
 </style>

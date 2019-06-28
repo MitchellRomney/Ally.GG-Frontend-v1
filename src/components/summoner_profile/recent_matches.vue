@@ -29,6 +29,8 @@
                     <div class="splash-wrapper">
                         <div class="splash"
                              :style="{ 'background-image': 'url(' + getChampionSplashUrl(match.champion) + ')' }">
+                            <img v-if="match.lane !== 'NONE'" class="resp-img role" :src="getRoleIconUrl(match.lane)"
+                                 :alt="match.lane"/>
                         </div>
                     </div>
                     <div class="head">
@@ -45,8 +47,6 @@
                             <h4 class="time">{{ match.match.gameDurationTime }}</h4>
                         </div>
                         <div class="match-info">
-                            <img v-if="match.lane !== 'NONE'" class="resp-img role" :src="getRoleIconUrl(match.lane)"
-                                 :alt="match.lane"/>
                             <div class="info">
                                 <span class="queue">{{ match.match.queue }}</span>
                                 <span class="timeago">{{ match.match.timeago }}</span>
@@ -119,32 +119,50 @@
                     </div>
                     <div class="players">
                         <div class="blue-team">
-                            <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 100">
+                            <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 100"
+                                 :index="player.participantId" :key="player.participantId">
                                 <div v-if="player.summoner.summonerName">
                                     <router-link
                                             :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
-                                        {{ player.summoner.summonerName }}
-                                    </router-link>
-                                </div>
-                                <div v-else v-cloak>
-                                    <router-link
-                                            :to="{ name: 'champion_profile', params: { champion: player.summoner.champion.champId }}">
-                                        {{ player.summoner.champion.name }}
-                                    </router-link>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="red-team">
-                            <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 200">
-                                <div v-if="player.summoner">
-                                    <router-link
-                                            :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
+                                        <div class="champion">
+                                            <img class="resp-img" :src="getChampionTileUrl(player.champion)"
+                                                 :alt="player.champion.name"/>
+                                        </div>
                                         {{ player.summoner.summonerName }}
                                     </router-link>
                                 </div>
                                 <div v-else v-cloak>
                                     <router-link
                                             :to="{ name: 'champion_profile', params: { champion: player.champion.champId }}">
+                                        <div class="champion">
+                                            <img class="resp-img" :src="getChampionTileUrl(player.champion)"
+                                                 :alt="player.champion.name"/>
+                                        </div>
+                                        {{ player.summoner.champion.name }}
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="red-team">
+                            <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 200"
+                                 :index="player.participantId" :key="player.participantId">
+                                <div v-if="player.summoner">
+                                    <router-link
+                                            :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
+                                        <div class="champion">
+                                            <img class="resp-img" :src="getChampionTileUrl(player.champion)"
+                                                 :alt="player.champion.name"/>
+                                        </div>
+                                        {{ player.summoner.summonerName }}
+                                    </router-link>
+                                </div>
+                                <div v-else v-cloak>
+                                    <router-link
+                                            :to="{ name: 'champion_profile', params: { champion: player.champion.champId }}">
+                                        <div class="champion">
+                                            <img class="resp-img" :src="getChampionTileUrl(player.champion)"
+                                                 :alt="player.champion.name"/>
+                                        </div>
                                         {{ player.champion.name }}
                                     </router-link>
                                 </div>
@@ -389,6 +407,12 @@
                             background-size: cover;
                             transform: scale(1.1, 1.1);
                             height: 100%;
+                            display: flex;
+
+                            .role {
+                                margin-bottom: 25px;
+                                width: 50px;
+                            }
                         }
                     }
 
@@ -400,20 +424,20 @@
 
                         .champion {
                             font-family: 'Panton Black', sans-serif;
-                            font-size: 2.5rem;
-                            height: 50px;
+                            font-size: 2rem;
+                            height: 35px;
                             color: $palette-primary;
                         }
 
                         .vs {
                             display: flex;
-                            padding: 10px;
+                            padding: 0 10px;
                             align-items: center;
                             color: $palette-primary;
 
                             img {
-                                width: 35px;
-                                height: 35px;
+                                width: 25px;
+                                height: 25px;
                                 border-radius: 10px;
                                 margin-left: 10px;
                             }
@@ -608,11 +632,41 @@
 
                             .player {
                                 width: 100%;
+
+                                a {
+                                    display: flex;
+
+                                    .champion {
+                                        height: 20px;
+                                        border-radius: 50%;
+                                        overflow: hidden;
+                                    }
+                                }
                             }
                         }
 
                         .blue-team {
                             text-align: right;
+
+                            .player {
+                                a {
+                                    flex-direction: row-reverse;
+
+                                    .champion {
+                                        margin-left: 10px;
+                                    }
+                                }
+                            }
+                        }
+
+                        .red-team {
+                            .player {
+                                a {
+                                    .champion {
+                                        margin-right: 10px;
+                                    }
+                                }
+                            }
                         }
                     }
                 }

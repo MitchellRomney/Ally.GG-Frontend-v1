@@ -5,7 +5,7 @@
         <div class="ranked-panel">
             <h2>Ranked Solo</h2>
             <transition name="fade" mode="out-in">
-                <PulseLoader v-if="!summonerLoaded" :color="'#FF0081'" key="1"></PulseLoader>
+                <PulseLoader v-if="!summoner.summonerName" :color="'#FF0081'" key="1"></PulseLoader>
                 <div v-else v-cloak key="2">
                     <h5 class="rank" v-if="summoner.rankedSolo">
                         {{ summoner.rankedSolo.tier }} {{ summoner.rankedSolo.rank }}
@@ -170,6 +170,7 @@
                         transform-origin: center;
                         transform: scaleX(-1);
                         stroke-linecap: round;
+                        transition: stroke-dasharray 0.5s ease;
                     }
 
                     .donut-ring {

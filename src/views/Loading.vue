@@ -26,6 +26,7 @@
                 summonerName
                 profileIconId
                 summonerId
+                server
                 summonerLevel
               }
               darkMode
@@ -115,7 +116,6 @@
                         }
                     }).then((response) => {
                         this.userLoaded = true;
-                        console.log(response);
                         this.$store.commit('setUser', response.data.data.user);
                         this.webSocketManager();
                     });

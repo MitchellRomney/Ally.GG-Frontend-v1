@@ -12,6 +12,10 @@ html {
   cursor: pointer;
 }
 
+img, button {
+  user-select: none;
+}
+
 body {
   margin: 0;
 }

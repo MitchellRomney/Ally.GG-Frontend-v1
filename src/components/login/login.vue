@@ -55,6 +55,7 @@
                   profileIconId
                   summonerLevel
                   summonerId
+                  server
                 }
                 darkMode
                 premium

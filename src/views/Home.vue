@@ -19,7 +19,7 @@
                 </div>
                 <transition-group name="fade" tag="div" v-else class="summoners">
                     <div class="summoner" v-for="summoner in summoners" :key="summoner.summonerId">
-                        <router-link :to="{ name: 'summoner_profile', params: { summoner: summoner.summonerName }}">
+                        <router-link :to="{ name: 'summoner_profile', params: { server: summoner.server, summoner: summoner.summonerName }}">
                             <div class="avatar">
                                 <img class="resp-img" v-if="summoner.profileIconId" alt="SummonerIcon"
                                      :src="'https://ddragon.leagueoflegends.com/cdn/9.10.1/img/profileicon/' + summoner.profileIconId + '.png'">

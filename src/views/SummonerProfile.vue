@@ -216,9 +216,10 @@
     import {ContentLoader} from 'vue-content-loader';
 
     let query_getSummonerInfo =
-        `query SummonerProfile($summonerName: String) {
-          summoner(summonerName: $summonerName) {
+        `query SummonerProfile($summonerName: String, $server: String) {
+          summoner(summonerName: $summonerName, server: $server) {
             summonerId
+            server
             summonerName
             profileIconId
             summonerLevel
@@ -270,8 +271,8 @@
         }`;
 
     let query_getSummonerMatches =
-        `query SummonerPlayers($summonerName: String, $games: Int) {
-          summonerPlayers(summonerName: $summonerName, games: $games) {
+        `query SummonerPlayers($summonerName: String, $server: String, $games: Int) {
+          summonerPlayers(summonerName: $summonerName, server: $server, games: $games) {
             match {
               gameId
               queue
@@ -392,8 +393,8 @@
         }`;
 
     let mutation_updateSummoner =
-        `mutation updateSummoner($summonerId: String!){
-          updateSummoner(summonerId: $summonerId){
+        `mutation updateSummoner($summonerId: String!, $server: String!){
+          updateSummoner(summonerId: $summonerId, server: $server){
             newMatches
           }
         }`;
@@ -431,8 +432,9 @@
                     this.summonerLoaded = false;
                     this.matchesLoaded = false;
                     this.summonerIconLoaded = false;
+
                     this.getSummonerInfo();
-                    this.webSocketManager();
+                    this.getMatches();
                 }
             },
         },
@@ -510,13 +512,13 @@
                         query: query_getSummonerInfo,
                         variables: {
                             summonerName: this.$route.params.summoner,
-                            games: 10
+                            server: this.$route.params.server
                         },
                     }
                 }).then((summonerProfileInfo) => {
                     this.summoner = summonerProfileInfo.data.data.summoner;
-                    // this.matches = summonerProfileInfo.data.data.summonerPlayers;
                     this.summonerLoaded = true;
+
                     this.webSocketManager();
 
                     if (this.summonerIcon.complete) {
@@ -526,11 +528,10 @@
                             this.summonerIconLoaded = true;
                         })
                     }
-
-                    this.getMatches();
                 });
             },
             getMatches() {
+                console.log('Getting Matches')
                 axios({
                     url: process.env.VUE_APP_API_URL + '/graphql',
                     method: 'post',
@@ -538,10 +539,12 @@
                         query: query_getSummonerMatches,
                         variables: {
                             summonerName: this.$route.params.summoner,
+                            server: this.$route.params.server,
                             games: 10
                         },
                     }
                 }).then((response) => {
+                    console.log('Got Matches')
                     this.matches = response.data.data.summonerPlayers;
                     this.matchesLoaded = true;
                 });
@@ -560,6 +563,7 @@
                         query: mutation_updateSummoner,
                         variables: {
                             summonerId: this.summoner.summonerId,
+                            server: this.summoner.server
                         },
                     }
                 }).then((response) => {
@@ -580,10 +584,11 @@
                 }
 
                 this.$connect(
-                    process.env.VUE_APP_WS_URL + '/summoner/' + this.summoner.summonerId, {
+                    process.env.VUE_APP_WS_URL + '/summoner/' + this.summoner.server + '/' + this.summoner.summonerId, {
                         format: 'json',
                         store: this.$store,
                     });
+
                 this.$options.sockets.onmessage = (response) => {
 
                     // Parse and store data in variable.
@@ -594,15 +599,17 @@
 
                         // If data is a new match...
                         if ('match' in data.data) {
+                            console.log(data.data);
+
+                            // Decrease the remaining matches count by 1.
+                            this.remaining_matches += -1;
+
                             let player = JSON.parse(data.data.match).player;
 
                             console.log(data.message);
 
                             // Add new match to match list.
                             this.matches.push(player);
-
-                            // Decrease the remaining matches count by 1.
-                            this.remaining_matches += -1;
 
                             // Else if data is new Summoner data..
                         } else if ('summoner' in data.data) {
@@ -632,6 +639,7 @@
         },
         mounted() {
             this.getSummonerInfo();
+            this.getMatches();
         }
     }
 </script>
@@ -652,7 +660,7 @@
                 }
 
                 .top-wrapper {
-                    margin-top: 10px;
+                    padding-top: 10px;
                     display: grid;
                     background-color: white;
                     width: 100%;
