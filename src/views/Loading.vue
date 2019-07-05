@@ -8,35 +8,39 @@
     import * as JWT from 'jwt-decode';
     import axios from 'axios';
 
-    let query_fetchUser =
-        `query fetchUser($id: Int) {
-          user(id: $id) {
-            id
-            username
-            firstName
-            lastName
-            isStaff
-            isActive
-            isSuperuser
-            lastLogin
-            dateJoined
-            Profiles {
+    let mutate_initialLoad =
+        `mutation InitialLoad($userId: Int) {
+          initialLoad(userId: $userId) {
+            user {
               id
-              Summoners {
-                summonerName
-                profileIconId
-                summonerId
-                server
-                summonerLevel
+              username
+              firstName
+              lastName
+              isStaff
+              isActive
+              isSuperuser
+              lastLogin
+              dateJoined
+              Profiles {
+                id
+                Summoners {
+                  summonerName
+                  profileIconId
+                  summonerId
+                  server
+                  summonerLevel
+                }
+                darkMode
+                premium
+                premiumStart
+                dateModified
+                dateCreated
               }
-              darkMode
-              premium
-              premiumStart
-              dateModified
-              dateCreated
             }
+            patch
           }
-        }`;
+        }
+        `;
 
     let mutation_refreshToken =
         `
@@ -109,14 +113,15 @@
                         method: "POST",
                         url: process.env.VUE_APP_API_URL + '/graphql',
                         data: {
-                            query: query_fetchUser,
+                            query: mutate_initialLoad,
                             variables: {
-                                id: this.$cookie.get('userId')
+                                userId: this.$cookie.get('userId')
                             },
                         }
                     }).then((response) => {
                         this.userLoaded = true;
-                        this.$store.commit('setUser', response.data.data.user);
+                        this.$store.commit('setUser', response.data.data.initialLoad.user);
+                        this.$store.commit('setPatch', response.data.data.initialLoad.patch);
                         this.webSocketManager();
                     });
                 } else {

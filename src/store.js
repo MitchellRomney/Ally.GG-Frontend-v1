@@ -9,6 +9,7 @@ Vue.use(VueCookie);
 const store = new Vuex.Store({
     state: {
         stateLoaded: false,
+        patch: '',
         user: {},
         summoners: {},
         socket: {
@@ -23,6 +24,9 @@ const store = new Vuex.Store({
             if (user.Profiles[0].Summoners.length > 0) {
                 state.summoners = user.Profiles[0].Summoners;
             }
+        },
+        setPatch(state, patch) {
+          state.patch = patch;
         },
         addSummoner(state, summoner) {
           if (summoner) {

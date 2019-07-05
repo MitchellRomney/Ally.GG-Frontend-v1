@@ -439,6 +439,9 @@
             },
         },
         computed: {
+            patch() {
+              return this.$store.state.patch
+            },
             darkMode() {
                 if (this.$store.state.stateLoaded){
                     return this.$store.state.user.Profiles[0].darkMode
@@ -468,7 +471,7 @@
             summonerIcon() {
                 if (this.summoner.profileIconId) {
                     const summonerIcon = new Image();
-                    summonerIcon.src = 'https://ddragon.leagueoflegends.com/cdn/9.12.1/img/profileicon/' + this.summoner.profileIconId + '.png';
+                    summonerIcon.src = 'https://ddragon.leagueoflegends.com/cdn/' + this.patch + '/img/profileicon/' + this.summoner.profileIconId + '.png';
                     return summonerIcon
                 }
             },

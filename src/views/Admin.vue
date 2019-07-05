@@ -11,17 +11,30 @@
                 <div class="success" v-if="success !== null">
                     {{ success }}
                 </div>
-                <div class="buttons">
+                <div class="main-buttons">
                     <div class="generate-key">
                         <span v-if="newKey">{{ newKey }}</span>
                         <button @click="CreateAccessKey">Generate Early Access Key</button>
+                    </div>
+                </div>
+                <div class="integrity">
+                    <div class="header">
+                        <h2>Data Integrity</h2>
+                        <button @click="getDataIntegrity(true)">Fix</button>
+                    </div>
+                    <div class="queue" v-for="(count, queue) in data_integrity.broken_matches">
+                        <strong>{{ queue }}</strong><br>
+                        <span :class="{ alert : count > 0 }">{{ count }}</span>
                     </div>
                 </div>
                 <div class="stats">
                     <div class="ranked">
                         <div class="header">
                             <h2>Ranked Summoners</h2>
-                            <button @click="UpdateAllRankedSummoners">Update All Ranked Summoners</button>
+                        </div>
+                        <div class="buttons">
+                            <button @click="UpdateRanked('OC1', 'RANKED_SOLO_5x5')">Update OCE</button>
+                            <button @click="UpdateRanked('NA1', 'RANKED_SOLO_5x5')">Update NA</button>
                         </div>
                         <div class="rank">
                             <img alt="Iron Tier" class="resp-img" src="../assets/images/ranked_medals/iron_1.png">
@@ -95,6 +108,20 @@
           }
         }`;
 
+    let mutate_DataIntegrity =
+        `mutation FixDataIntegrity($fix: Boolean!){
+          fixDataIntegrity(fix: $fix) {
+            brokenNormal
+            fixedNormal
+            brokenRanked3v3
+            fixedRanked3v3
+            brokenRankedSolo
+            fixedRankedSolo
+            brokenRankedFlex
+            fixedRankedFlex
+          }
+        }`;
+
     let mutate_GetStats =
         `mutation {
           getStats {
@@ -128,12 +155,21 @@
                 newKey: '',
                 stats: {},
 
+                data_integrity: {
+                    broken_matches: {
+                        'Broken Ranked Solo Matches': 0,
+                        'Broken Ranked Flex Matches': 0,
+                        'Broken Normal Matches': 0,
+                        'Broken Ranked 3v3 Matches': 0
+                    }
+                },
+
                 loading: false,
                 success: null,
             }
         },
         methods: {
-            UpdateAllRankedSummoners() {
+            UpdateRanked(server, queue) {
                 this.loading = true;
 
                 axios({
@@ -142,8 +178,8 @@
                     data: {
                         query: mutate_getAllRankedSummoners,
                         variables: {
-                            server: 'OC1',
-                            queue: 'RANKED_SOLO_5x5'
+                            server: server,
+                            queue: queue
                         },
                     }
                 }).then((response) => {
@@ -177,9 +213,30 @@
             getMedalUrl(tier, rank) {
                 return require('../assets/images/ranked_medals/' + tier.toLowerCase() + '_' + rank + '.png');
             },
+            getDataIntegrity(fix) {
+                axios({
+                    url: process.env.VUE_APP_API_URL + '/graphql',
+                    method: 'post',
+                    data: {
+                        query: mutate_DataIntegrity,
+                        variables: {
+                            fix: fix
+                        },
+                    }
+                }).then((response) => {
+                    let data = response.data.data.fixDataIntegrity;
+                    console.log(data);
+                    let matches = this.data_integrity.broken_matches;
+                    matches['Broken Ranked Solo Matches'] = data.brokenRankedSolo;
+                    matches['Broken Ranked Flex Matches'] = data.brokenRankedFlex;
+                    matches['Broken Ranked 3v3 Matches'] = data.brokenRanked3v3;
+                    matches['Broken Normal Matches'] = data.brokenNormal;
+                });
+            },
         },
         mounted() {
             this.GetStats();
+            this.getDataIntegrity(false);
         }
     }
 </script>
@@ -205,16 +262,53 @@
                     }
                 }
 
-                .buttons {
-                    display: flex;
+                .main-buttons {
+                    margin-bottom: 20px;
+                }
 
-                    button {
-                        margin-right: 10px;
+                .integrity {
+                    display: flex;
+                    padding: 20px;
+                    background-color: white;
+                    border: 3px solid #f4f4f4;
+                    border-radius: 20px;
+                    justify-content: space-evenly;
+                    flex-wrap: wrap;
+
+                    .header {
+                        width: 100%;
+                        margin-bottom: 20px;
+                        display: flex;
+                        justify-content: space-between;
+                    }
+
+                    .queue {
+                        text-align: center;
+
+                        span {
+                            color: $palette-win;
+
+                            &.alert {
+                                color: $palette-loss;
+                                font-weight: bold;
+                            }
+                        }
                     }
                 }
 
                 .stats {
                     margin-top: 20px;
+
+                    .buttons {
+                        display: flex;
+                        justify-content: space-evenly;
+                        margin-bottom: 20px;
+                        width: 100%;
+
+                        button {
+                            margin: 0 10px;
+                        }
+                    }
 
                     .ranked {
                         display: flex;
@@ -262,6 +356,12 @@
                 background-color: $palette-dark-secondary;
 
                 .content {
+                    .integrity {
+                        background-color: $palette-dark-primary;
+                        border: 3px solid $palette-dark-border;
+                        color: white;
+                    }
+
                     .stats {
                         .ranked {
                             background-color: $palette-dark-primary;
