@@ -469,9 +469,13 @@
                 });
             },
             summonerIcon() {
+                console.log(this.summoner.profileIconId);
                 if (this.summoner.profileIconId) {
                     const summonerIcon = new Image();
                     summonerIcon.src = 'https://ddragon.leagueoflegends.com/cdn/' + this.patch + '/img/profileicon/' + this.summoner.profileIconId + '.png';
+                    console.log(summonerIcon);
+                    console.log(summonerIcon.src);
+                    console.log(this.patch);
                     return summonerIcon
                 }
             },
