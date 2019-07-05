@@ -35,7 +35,7 @@
     import axios from 'axios';
 
     let mutation_login =
-        `mutation TokenAuth($username: String!, $password: String!) {
+        `mutation Login($username: String!, $password: String!) {
           login(username: $username, password: $password) {
             user {
               token
@@ -65,7 +65,8 @@
               }
             }
           }
-        }`;
+        }
+        `;
 
     export default {
         name: 'login-component',
