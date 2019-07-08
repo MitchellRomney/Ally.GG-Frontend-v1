@@ -132,7 +132,7 @@
     import {Bold} from 'tiptap-extensions'
 
     let query_getMatch =
-        `query ($gameId: Int!, $summonerId: String = "") {
+        `query ($gameId: BigInt, $server: String, $summonerId: String = "") {
           log(summonerId: $summonerId, gameId: $gameId) {
             good
             bad
@@ -141,7 +141,7 @@
               name
             }
           }
-          player(summonerId: $summonerId, gameId: $gameId) {
+          player(summonerId: $summonerId, gameId: $gameId, server: $server) {
             summoner {
               summonerName
             }
@@ -204,7 +204,7 @@
               name
             }
           }
-          match(gameId: $gameId) {
+          match(gameId: $gameId, server: $server) {
             platformId
             gameId
             seasonId
@@ -368,7 +368,8 @@
                         query: query_getMatch,
                         variables: {
                             gameId: this.gameId,
-                            summonerId: this.summoner.summonerId
+                            summonerId: this.summoner.summonerId,
+                            server: this.summoner.server
                         },
                     }
                 }).then((response) => {

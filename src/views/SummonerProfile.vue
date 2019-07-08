@@ -5,7 +5,7 @@
                 <div class="avatar-wrapper">
                     <transition name="fade" mode="out-in">
                         <div class="content-loader" v-if="!summonerIconLoaded" key="1">
-                            <content-loader :width="150" :height="150"
+                            <content-loader :width="150" :height="130"
                                             :primaryColor="conLoadPrimary"
                                             :secondaryColor="conLoadSecondary"></content-loader>
                         </div>
@@ -34,7 +34,7 @@
                 <div class="title">
                     <transition name="fade" mode="out-in">
                         <div class="content-loader" v-if="!summonerLoaded" key="1">
-                            <content-loader :width="150" :height="20"
+                            <content-loader :width="150" :height="15"
                                             :primaryColor="conLoadPrimary"
                                             :secondaryColor="conLoadSecondary"></content-loader>
                         </div>
@@ -53,21 +53,14 @@
                     </transition>
                 </div>
                 <div class="options">
-                    <transition name="fade" mode="out-in">
-                        <div class="content-loader" v-if="!summonerLoaded" key="1">
-                            <content-loader :width="150" :height="60"
-                                            :primaryColor="conLoadPrimary"
-                                            :secondaryColor="conLoadSecondary"></content-loader>
-                        </div>
-                        <div class="content" v-else v-cloak key="2">
-                            <a href="#">
-                                <font-awesome-icon icon="ellipsis-h"/>
-                            </a>
-                            <a href="#" class="star">
-                                <font-awesome-icon icon="star"/>
-                            </a>
-                        </div>
-                    </transition>
+                    <div class="content">
+                        <a href="#">
+                            <font-awesome-icon icon="ellipsis-h"/>
+                        </a>
+                        <a href="#" class="star">
+                            <font-awesome-icon icon="star"/>
+                        </a>
+                    </div>
                 </div>
                 <div class="ranked-stats">
                     <transition name="fade" mode="out-in">
@@ -181,14 +174,18 @@
                 </div>
                 <ul id="summoner-menu">
                     <router-link to="general">
-                        <li class="general">General</li>
+                        <li class="menu-item general">General</li>
                     </router-link>
-                    <router-link to="matches">
-                        <li class="matches">Matches</li>
-                    </router-link>
-                    <router-link to="champions">
-                        <li class="champions">Champions</li>
-                    </router-link>
+                    <!-- <router-link to="matches"> -->
+                    <a title="Under Construction" v-tippy="{ arrow : true,  animation : 'perspective'}">
+                        <li class="menu-item matches disabled">Matches</li>
+                    </a>
+                    <!-- </router-link> -->
+                    <!-- <router-link to="champions"> -->
+                    <a title="Under Construction" v-tippy="{ arrow : true,  animation : 'perspective'}">
+                        <li class="menu-item champions disabled">Champions</li>
+                    </a>
+                    <!-- </router-link> -->
                 </ul>
             </div>
             <div id="summoner-content-wrapper">
@@ -201,7 +198,7 @@
                     <a href="https://www.theearthissquare.com" target="_blank">
                         <transition name="fade" mode="out-in">
                             <img class="resp-img" src="../assets/images/teis-logo.png" v-if="!darkMode"/>
-                            <img class="resp-img" src="../assets/images/teis-logo-white.png" v-else v-cloak />
+                            <img class="resp-img" src="../assets/images/teis-logo-white.png" v-else v-cloak/>
                         </transition>
                     </a>
                 </div>
@@ -216,7 +213,7 @@
     import {ContentLoader} from 'vue-content-loader';
 
     let query_getSummonerInfo =
-        `query SummonerProfile($summonerName: String, $server: String) {
+        `query SummonerProfile($summonerName: String, $server: String, $games: Int) {
           summoner(summonerName: $summonerName, server: $server) {
             summonerId
             server
@@ -268,10 +265,6 @@
               ringValues
             }
           }
-        }`;
-
-    let query_getSummonerMatches =
-        `query SummonerPlayers($summonerName: String, $server: String, $games: Int) {
           summonerPlayers(summonerName: $summonerName, server: $server, games: $games) {
             match {
               gameId
@@ -279,70 +272,17 @@
               gameDurationTime
               timeago
               timestamp
-              players {
-                participantId
-                champion {
-                  champId
-                  name
-                }
-                team {
-                  teamId
-                }
-                summoner {
-                  summonerName
-                  rankedSolo {
-                    tier
-                    rank
-                    rankNumber
-                    lp
-                    leagueName
-                    wins
-                    losses
-                    ringValues
-                  }
-                  rankedFlex5 {
-                    tier
-                    rank
-                    rankNumber
-                    lp
-                    leagueName
-                    wins
-                    losses
-                    ringValues
-                  }
-                  rankedFlex3 {
-                    tier
-                    rank
-                    rankNumber
-                    lp
-                    leagueName
-                    wins
-                    losses
-                    ringValues
-                  }
-                }
-              }
             }
             champion {
               key
               name
               champId
             }
-            lane
-            laneOpponent {
-              champion {
-                key
-                name
-                champId
-              }
-            }
             win
             kills
             deaths
             assists
             kdaAverage
-            champLevel
-            killParticipation
             totalMinionsKilled
             csPmin
             item0 {
@@ -440,10 +380,10 @@
         },
         computed: {
             patch() {
-              return this.$store.state.patch
+                return this.$store.state.patch
             },
             darkMode() {
-                if (this.$store.state.stateLoaded){
+                if (this.$store.state.stateLoaded) {
                     return this.$store.state.user.Profiles[0].darkMode
                 } else return null
             },
@@ -473,9 +413,6 @@
                 if (this.summoner.profileIconId) {
                     const summonerIcon = new Image();
                     summonerIcon.src = 'https://ddragon.leagueoflegends.com/cdn/' + this.patch + '/img/profileicon/' + this.summoner.profileIconId + '.png';
-                    console.log(summonerIcon);
-                    console.log(summonerIcon.src);
-                    console.log(this.patch);
                     return summonerIcon
                 }
             },
@@ -519,11 +456,13 @@
                         query: query_getSummonerInfo,
                         variables: {
                             summonerName: this.$route.params.summoner,
-                            server: this.$route.params.server
+                            server: this.$route.params.server,
+                            games: 10
                         },
                     }
-                }).then((summonerProfileInfo) => {
-                    this.summoner = summonerProfileInfo.data.data.summoner;
+                }).then((response) => {
+                    this.summoner = response.data.data.summoner;
+                    this.matches = response.data.data.summonerPlayers;
                     this.summonerLoaded = true;
 
                     this.webSocketManager();
@@ -535,25 +474,6 @@
                             this.summonerIconLoaded = true;
                         })
                     }
-                });
-            },
-            getMatches() {
-                console.log('Getting Matches')
-                axios({
-                    url: process.env.VUE_APP_API_URL + '/graphql',
-                    method: 'post',
-                    data: {
-                        query: query_getSummonerMatches,
-                        variables: {
-                            summonerName: this.$route.params.summoner,
-                            server: this.$route.params.server,
-                            games: 10
-                        },
-                    }
-                }).then((response) => {
-                    console.log('Got Matches')
-                    this.matches = response.data.data.summonerPlayers;
-                    this.matchesLoaded = true;
                 });
             },
             updateSummoner() {
@@ -637,7 +557,7 @@
 
                             // If Summoner has updated with a name change, change URL path.
                             if (this.summoner.summonerName !== this.$route.params.summoner) {
-                                this.$router.replace('/summoners/' + this.summoner.summonerName);
+                                this.$router.replace('/summoners/' + this.summoner.server + '/' + this.summoner.summonerName);
                             }
                         }
                     }
@@ -646,7 +566,6 @@
         },
         mounted() {
             this.getSummonerInfo();
-            this.getMatches();
         }
     }
 </script>
@@ -667,19 +586,17 @@
                 }
 
                 .top-wrapper {
-                    padding-top: 10px;
                     display: grid;
                     background-color: white;
                     width: 100%;
                     grid-gap: 15px;
                     grid-template: 1fr auto 0.5fr 0.5fr / repeat(4, 1fr);
                     grid-template-areas: "avatar title title title" "ranked ranked ranked ranked" "update update update options" "menu menu menu menu";
-                    padding: 0 20px;
                     transition: all 0.5s ease;
 
                     @media #{$bp-md}{
                         grid-gap: 0 15px;
-                        grid-template: 150px 90px 60px / 150px repeat(11, 1fr);
+                        grid-template: 120px 90px 60px / 150px repeat(11, 1fr);
                         grid-template-areas: "avatar title title title title title title title title title options options" "update ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked ranked" "menu menu menu menu menu menu menu menu menu menu menu menu";
                     }
 
@@ -821,18 +738,17 @@
                     .ranked-stats {
                         grid-area: ranked;
                         display: flex;
+                        align-items: center;
 
                         .content-loader {
-                            width: 33%;
+                            width: 25%;
                             margin-right: 10px;
                         }
 
                         .content {
-                            width: 33%;
+                            width: 25%;
                             text-align: center;
-                            margin: auto;
                             position: relative;
-                            height: 100%;
 
                             .unranked {
                                 .text {
@@ -929,7 +845,7 @@
                                 }
                             }
 
-                            li {
+                            .menu-item {
                                 align-items: center;
                                 justify-content: center;
                                 font-size: 1rem;
@@ -941,6 +857,11 @@
                                 width: 100%;
                                 display: flex;
                                 padding: 10px;
+
+                                &.disabled {
+                                    opacity: 0.4;
+                                    cursor: initial;
+                                }
 
                                 @media #{$bp-md}{
                                     font-size: 1.5rem;

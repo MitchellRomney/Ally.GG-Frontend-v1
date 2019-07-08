@@ -8,15 +8,15 @@
                 {{ name }}
             </div>
         </router-link>
-        <div class="disabled" v-else>
+        <div class="disabled"
+             v-else
+             v-tippy="{ arrow : true,  animation : 'perspective', placement: 'right'}"
+             :title="message">
             <div class="icon">
                 <font-awesome-icon :icon=icon />
             </div>
             <div class="name">
                 {{ name }}
-            </div>
-            <div class="tooltip">
-                {{ message }}
             </div>
         </div>
     </li>

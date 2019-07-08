@@ -10,9 +10,7 @@
             <NavItem name="Improve" link='None' icon="trophy"
                      message="You need to verify at least 1 Summoner to use this feature."
                      v-if="summoners.length === 0"/>
-            <li class="dark-mode">
-                <button @click="darkMode">Dark Mode</button>
-            </li>
+            <NavItem name="Settings" link="/settings" icon="cog"/>
         </ul>
     </nav>
 </template>

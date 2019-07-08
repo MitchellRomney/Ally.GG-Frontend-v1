@@ -64,6 +64,7 @@
                 dateCreated
               }
             }
+            patch
           }
         }
         `;
@@ -105,15 +106,15 @@
                         if (response.data.data.login !== null) {
 
                             // Get the user information from the response and set the userId in cookies.
-                            let user = response.data.data.login.user;
-                            this.$cookie.set('userId', user.id);
+                            let data = response.data.data.login;
+                            this.$cookie.set('userId', data.user.id);
 
                             // Get the JWT token and set it in the Cookies to keep session.
-                            let token = user.token;
-                            this.$cookie.set('token', token);
+                            this.$cookie.set('token', data.user.token);
 
-                            // Put the user information in the current state.
-                            this.$store.commit('setUser', user);
+                            // Put the user information  & patch in the current state.
+                            this.$store.commit('setUser', data.user);
+                            this.$store.commit('setPatch', data.patch);
 
                             // Redirect to home.
                             this.$router.push('/');

@@ -9,8 +9,8 @@
                     <router-link
                             :to="{ name: 'summoner_profile', params: { server: summoner.server, summoner: summoner.summonerName }}">
                         <div class="avatar">
-                            <img class="resp-img" v-if="summoner.profileIconId"
-                                 :src="'https://ddragon.leagueoflegends.com/cdn/9.10.1/img/profileicon/' + summoner.profileIconId + '.png'">
+                            <img class="resp-img" v-if="summoner.profileIconId" alt="SummonerIcon"
+                                 :src="'https://ddragon.leagueoflegends.com/cdn/' + patch + '/img/profileicon/' + summoner.profileIconId + '.png'">
                         </div>
                         <h3 class="name">
                             {{ summoner.summonerName }}
@@ -144,6 +144,11 @@
                 isError: false,
                 errorMessage: '',
             }
+        },
+        computed: {
+            patch() {
+                return this.$store.state.patch
+            },
         },
         methods: {
             getSoloLadder() {

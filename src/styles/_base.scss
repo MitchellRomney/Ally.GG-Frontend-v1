@@ -8,6 +8,12 @@ html {
   width: 100vw;
 }
 
+body {
+  font-family: 'Panton', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 *[data-href] {
   cursor: pointer;
 }
@@ -75,22 +81,23 @@ input:focus, textarea:focus, select:focus {
 }
 
 .container {
-  margin: auto;
+  margin: 0 auto;
 
   @media #{$bp-sm}{
-    max-width: 560px;
+    // max-width: 560px;
   }
 
   @media #{$bp-md}{
-    max-width: 750px;
+    // max-width: 750px;
   }
 
   @media #{$bp-lg}{
-    max-width: 980px;
+    // max-width: 980px;
   }
 
   @media #{$bp-xl}{
-    max-width: 1180px;
+    padding: 0 5%;
+    max-width: 1920px;
   }
 }
 

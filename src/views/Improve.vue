@@ -29,8 +29,8 @@
     import axios from 'axios';
 
     let query_getSummonerInfo =
-        `query SummonerProfile($summonerName: String, $games: Int) {
-          summonerPlayers(summonerName: $summonerName, games: $games) {
+        `query SummonerProfile($summonerName: String, $server: String, $games: Int) {
+          summonerPlayers(summonerName: $summonerName, server: $server,  games: $games) {
             match {
               gameId
             }
@@ -53,6 +53,7 @@
           getSummoners(summonerIds: $summonerIds) {
             summonerName
             summonerId
+            server
           }
         }`;
 
@@ -106,11 +107,13 @@
                         query: query_getSummonerInfo,
                         variables: {
                             summonerName: this.summoners[this.selectedSummoner].summonerName,
+                            server: this.summoners[this.selectedSummoner].server,
                             games: 50
                         },
                     }
                 }).then((response) => {
                     this.matchList = response.data.data.summonerPlayers;
+                    console.log(this.summoners[this.selectedSummoner].summonerName);
                     this.$router.push({name: 'improve_match', params: {match: this.matchList[0].match.gameId}});
                     this.loading = false;
                 });

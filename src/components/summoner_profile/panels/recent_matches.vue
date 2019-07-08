@@ -55,7 +55,7 @@
                     </div>
                     <div class="stats">
                         <div class="items">
-                            <div class="trinket">
+                            <div class="trinket" :title="match.item6.name" v-tippy>
                                 <img v-if="match.item6.itemId !== 0"
                                      :src="getItemUrl(match.item6.itemId)"
                                      :alt="match.item6.name">
@@ -120,7 +120,8 @@
                     <div class="players">
                         <div class="blue-team">
                             <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 100"
-                                 :index="player.participantId" :key="player.participantId">
+                                 :index="player.participantId" :key="player.participantId"
+                                 :class="{ main : player.champion.champId === match.champion.champId }">
                                 <div v-if="player.summoner.summonerName">
                                     <router-link
                                             :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
@@ -145,7 +146,8 @@
                         </div>
                         <div class="red-team">
                             <div class="player" v-for="player in match.match.players" v-if="player.team.teamId === 200"
-                                 :index="player.participantId" :key="player.participantId">
+                                 :index="player.participantId" :key="player.participantId"
+                                 :class="{ main : player.champion.champId === match.champion.champId }">
                                 <div v-if="player.summoner">
                                     <router-link
                                             :to="{ name: 'summoner_profile', params: { summoner: player.summoner.summonerName }}">
@@ -623,7 +625,7 @@
                         padding: 10px;
                         display: grid;
                         grid-template: auto / 1fr 1fr;
-                        grid-gap: 20px;
+                        grid-gap: 5px;
 
                         .blue-team, .red-team {
                             display: flex;
@@ -632,15 +634,21 @@
 
                             .player {
                                 width: 100%;
+                                font-size: 0.7rem;
 
                                 a {
                                     display: flex;
+                                    align-items: center;
 
                                     .champion {
                                         height: 20px;
                                         border-radius: 50%;
                                         overflow: hidden;
                                     }
+                                }
+
+                                &.main {
+                                    font-weight: bold;
                                 }
                             }
                         }

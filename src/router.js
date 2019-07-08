@@ -5,6 +5,7 @@ import UserProfile from './views/UserProfile'
 import Login from './views/Login.vue'
 import Admin from './views/Admin.vue'
 import Loading from './views/Loading.vue'
+import Settings from './views/Settings'
 import LoginComp from './components/login/login'
 import Register from './components/login/register'
 import Improve from './views/Improve.vue'
@@ -14,7 +15,6 @@ import SummonerProfile from './views/SummonerProfile.vue'
 import SummonerProfile_General from './components/summoner_profile/general.vue'
 import SummonerProfile_Matches from './components/summoner_profile/matches.vue'
 import SummonerProfile_Champions from './components/summoner_profile/champions.vue'
-import SummonerProfile_Achievements from './components/summoner_profile/achievements.vue'
 import VueCookie from 'vue-cookie'
 import Vuex from "vuex"
 import Store from './store.js'
@@ -99,6 +99,14 @@ let router = new Router({
             component: Summoners,
         },
         {
+            path: '/settings/',
+            meta: {
+                requiresAuth: true
+            },
+            name: 'settings',
+            component: Settings
+        },
+        {
             path: '/summoners/:server/:summoner',
             redirect: 'summoners/:server/:summoner/general',
             name: 'summoner_profile',
@@ -119,10 +127,6 @@ let router = new Router({
                     path: 'champions',
                     component: SummonerProfile_Champions
                 },
-                {
-                    path: 'achievements',
-                    component: SummonerProfile_Achievements
-                }
             ]
         },
         {

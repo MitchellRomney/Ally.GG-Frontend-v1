@@ -64,9 +64,6 @@
 
 <style lang="scss">
     #ally-gg {
-        font-family: 'Panton', Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
         width: 100vw;
         margin: 0;
         color: $palette-primary;
@@ -91,6 +88,7 @@
 
             #view-wrapper {
                 height: calc(100vh - 65px);
+                overflow-y: scroll;
             }
         }
 
@@ -110,7 +108,6 @@
 
         #view-wrapper {
             grid-area: main;
-            overflow-y: scroll;
             height: 100vh;
         }
 

@@ -1,7 +1,5 @@
 <template>
     <div class="content-general container">
-        <RecentMatches :matches="matches" :matchLoading="matchLoading"
-                       :matchesRemaining="matchesRemaining" :newMatches="newMatches"></RecentMatches>
         <div class="ranked-panel">
             <h2>Ranked Solo</h2>
             <transition name="fade" mode="out-in">
@@ -75,17 +73,22 @@
                 </div>
             </transition>
         </div>
+        <TopChampions></TopChampions>
+        <MatchHistory :matches="matches" :matchLoading="matchLoading"
+                      :matchesRemaining="matchesRemaining" :newMatches="newMatches"></MatchHistory>
     </div>
 </template>
 
 <script>
-    import RecentMatches from './recent_matches';
+    import MatchHistory from './panels/match_history.vue';
+    import TopChampions from './panels/top_champions.vue';
     import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 
     export default {
         name: 'general',
         components: {
-            RecentMatches,
+            MatchHistory,
+            TopChampions,
             PulseLoader
         },
         props: {
@@ -121,15 +124,14 @@
         .content-general {
             display: grid;
             grid-gap: 20px;
-            grid-template: 400px / repeat(3, 1fr);
-            grid-auto-rows: 400px;
+            grid-template: repeat(5, 200px) / repeat(4, 1fr);
             color: $palette-primary;
             transition: all 0.5s ease;
 
             .ranked-panel {
                 background-color: white;
                 border: 3px solid #f4f4f4;
-                border-radius: 20px;
+                border-radius: 5px;
                 padding: 20px;
                 grid-column-end: span 3;
                 transition: all 0.5s ease;
@@ -137,6 +139,7 @@
 
                 @media #{$bp-md}{
                     grid-column-end: span 1;
+                    grid-row-end: span 2;
                 }
 
                 .v-spinner {
