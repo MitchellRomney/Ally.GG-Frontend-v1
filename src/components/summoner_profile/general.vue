@@ -73,7 +73,7 @@
                 </div>
             </transition>
         </div>
-        <TopChampions></TopChampions>
+        <TopChampions :topChampions="topChampions" :summonerStatsLoaded="summonerStatsLoaded"></TopChampions>
         <MatchHistory :matches="matches" :matchLoading="matchLoading"
                       :matchesRemaining="matchesRemaining" :newMatches="newMatches"></MatchHistory>
     </div>
@@ -96,8 +96,10 @@
             matches: Array,
             summonerLoaded: Boolean,
             matchLoading: Boolean,
+            summonerStatsLoaded: Boolean,
             matchesRemaining: Number,
-            newMatches: Number
+            newMatches: Number,
+            topChampions: Array
         },
         methods: {
             getMedalUrl(tier, rank) {
@@ -124,22 +126,26 @@
         .content-general {
             display: grid;
             grid-gap: 20px;
-            grid-template: repeat(5, 200px) / repeat(4, 1fr);
+            grid-template: auto / repeat(4, 1fr);
             color: $palette-primary;
             transition: all 0.5s ease;
+
+            @media #{$bp-md}{
+                grid-template: repeat(5, 200px) / repeat(4, 1fr);
+            }
 
             .ranked-panel {
                 background-color: white;
                 border: 3px solid #f4f4f4;
                 border-radius: 5px;
                 padding: 20px;
-                grid-column-end: span 3;
+                grid-column-end: span 4;
                 transition: all 0.5s ease;
                 position: relative;
+                grid-row-end: span 2;
 
                 @media #{$bp-md}{
                     grid-column-end: span 1;
-                    grid-row-end: span 2;
                 }
 
                 .v-spinner {

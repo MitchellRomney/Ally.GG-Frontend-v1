@@ -33,7 +33,7 @@
                         <router-link
                                 :to="{ name: 'summoner_profile', params: { server: summoner.server, summoner: summoner.summonerName }}">
                             <img class="resp-img"
-                                 :src="'https://ddragon.leagueoflegends.com/cdn/9.10.1/img/profileicon/' + summoner.profileIconId + '.png'">
+                                 :src="summonerIcon(summoner).src">
                             <span v-on:click="clearSearch">{{ summoner.summonerName }}</span>
                             <span class="level">Level {{ summoner.summonerLevel }}</span>
                         </router-link>
@@ -113,7 +113,6 @@
                 search_champion_results: [],
                 search_loading: false,
                 search_server: 'OC1',
-                search_server_options: ['OCE', 'NA', 'KR', 'EUW']
             }
         },
         watch: {
@@ -172,7 +171,7 @@
                 this.search_champion_results = [];
             },
             goSummoner() {
-                this.$router.push({name: 'summoner_profile', params: {summoner: this.search_entry}});
+                this.$router.push({name: 'summoner_profile', params: {summoner: this.search_entry, server: this.search_server}});
                 this.search_entry = null;
                 this.search_summoner_results = [];
                 this.search_champion_results = [];
@@ -180,14 +179,24 @@
             getChampionTileUrl(champion) {
                 return require('../../assets/images/champion-tiles/' + champion.champId + '_0.jpg');
             },
+            summonerIcon(summoner) {
+                if (summoner.profileIconId) {
+                    const summonerIcon = new Image();
+                    summonerIcon.src = 'https://ddragon.leagueoflegends.com/cdn/' + this.patch + '/img/profileicon/' + summoner.profileIconId + '.png';
+                    return summonerIcon
+                }
+            },
         },
         computed: {
+            patch() {
+                return this.$store.state.patch
+            },
             user() {
                 return this.$store.state.user
             },
             search_results() {
                 return this.search_summoner_results.length > 0 || this.search_champion_results.length > 0
-            }
+            },
         },
     }
 </script>
@@ -261,7 +270,6 @@
                     height: 35px;
                     display: flex;
                     align-items: center;
-                    background-color: $palette-accent;
                     color: white;
                     cursor: pointer;
                     position: relative;
@@ -271,7 +279,8 @@
                         padding: 5px 10px;
                         border: none;
                         background-color: transparent;
-                        color: white;
+                        color: #b5b5b5;
+                        height: 100%;
                     }
 
                     &:focus {

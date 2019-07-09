@@ -82,6 +82,8 @@ input:focus, textarea:focus, select:focus {
 
 .container {
   margin: 0 auto;
+  padding: 0 5%;
+  max-width: 1920px;
 
   @media #{$bp-sm}{
     // max-width: 560px;
@@ -96,8 +98,7 @@ input:focus, textarea:focus, select:focus {
   }
 
   @media #{$bp-xl}{
-    padding: 0 5%;
-    max-width: 1920px;
+    // max-width: 1920px;
   }
 }
 

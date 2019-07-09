@@ -1,6 +1,6 @@
 <template>
     <div id="summonerProfile">
-        <div class="page-content">
+        <div class="page-content" v-if="!noSummoner">
             <div class="top-wrapper container">
                 <div class="avatar-wrapper">
                     <transition name="fade" mode="out-in">
@@ -191,7 +191,8 @@
             <div id="summoner-content-wrapper">
                 <router-view :matches="sortedMatches" :summoner="summoner" :summonerLoaded="summonerLoaded"
                              :matchLoading="!matchesLoaded" :matchesRemaining="remaining_matches"
-                             :newMatches="newMatches"></router-view>
+                             :newMatches="newMatches" :topChampions="topChampions"
+                             :summonerStatsLoaded="summonerStatsLoaded"></router-view>
             </div>
             <footer>
                 <div class="teis-logo">
@@ -203,6 +204,9 @@
                     </a>
                 </div>
             </footer>
+        </div>
+        <div class="no-summoner" v-else v-cloak>
+            There is no summoner by that name.
         </div>
     </div>
 </template>
@@ -339,6 +343,20 @@
           }
         }`;
 
+    let mutation_summonerStats =
+        `mutation SummonerStats($summonerName: String!) {
+          summonerStats(summonerName: $summonerName) {
+            topChampions {
+              champion {
+                name
+                champId
+              }
+              winrate
+              games
+            }
+          }
+        }`;
+
     export default {
         name: 'summoner_profile',
         components: {
@@ -350,6 +368,7 @@
                 // Summoner Data
                 summoner: {},
                 matches: [],
+                topChampions: [],
 
                 // Misc Data
                 remaining_matches: 0,
@@ -358,10 +377,12 @@
                 // Loading Flags
                 summonerIconLoaded: false,
                 summonerLoaded: false,
+                summonerStatsLoaded: false,
                 matchesLoaded: false,
 
                 // Error Handling
                 isError: false,
+                noSummoner: false,
                 errorMessage: '',
             }
         },
@@ -372,9 +393,11 @@
                     this.summonerLoaded = false;
                     this.matchesLoaded = false;
                     this.summonerIconLoaded = false;
+                    this.noSummoner = false;
+                    summonerStatsLoaded: false;
 
                     this.getSummonerInfo();
-                    this.getMatches();
+                    this.getSummonerStats();
                 }
             },
         },
@@ -409,7 +432,6 @@
                 });
             },
             summonerIcon() {
-                console.log(this.summoner.profileIconId);
                 if (this.summoner.profileIconId) {
                     const summonerIcon = new Image();
                     summonerIcon.src = 'https://ddragon.leagueoflegends.com/cdn/' + this.patch + '/img/profileicon/' + this.summoner.profileIconId + '.png';
@@ -461,18 +483,46 @@
                         },
                     }
                 }).then((response) => {
-                    this.summoner = response.data.data.summoner;
-                    this.matches = response.data.data.summonerPlayers;
-                    this.summonerLoaded = true;
+                    let data = response.data.data;
 
-                    this.webSocketManager();
+                    if (data.summoner !== null) {
+                        this.summoner = data.summoner;
+                        this.matches = data.summonerPlayers;
+                        this.summonerLoaded = true;
 
-                    if (this.summonerIcon.complete) {
-                        this.summonerIconLoaded = true;
-                    } else {
-                        this.summonerIcon.addEventListener('load', () => {
+                        this.webSocketManager();
+
+                        if (this.summonerIcon.complete) {
                             this.summonerIconLoaded = true;
-                        })
+                        } else {
+                            this.summonerIcon.addEventListener('load', () => {
+                                this.summonerIconLoaded = true;
+                            })
+                        }
+                    } else {
+                        let errors = response.data.errors;
+                        for (let key in errors) {
+                            if (errors[key].message = "Summoner matching query does not exist.") {
+                                this.noSummoner = true;
+                            }
+                        }
+                    }
+                });
+            },
+            getSummonerStats() {
+                axios({
+                    url: process.env.VUE_APP_API_URL + '/graphql',
+                    method: 'post',
+                    data: {
+                        query: mutation_summonerStats,
+                        variables: {
+                            summonerName: this.$route.params.summoner,
+                        },
+                    }
+                }).then((response) => {
+                    if (response.data.data.summonerStats !== null) {
+                        this.topChampions = response.data.data.summonerStats.topChampions;
+                        this.summonerStatsLoaded = true;
                     }
                 });
             },
@@ -526,14 +576,11 @@
 
                         // If data is a new match...
                         if ('match' in data.data) {
-                            console.log(data.data);
 
                             // Decrease the remaining matches count by 1.
                             this.remaining_matches += -1;
 
                             let player = JSON.parse(data.data.match).player;
-
-                            console.log(data.message);
 
                             // Add new match to match list.
                             this.matches.push(player);
@@ -566,6 +613,7 @@
         },
         mounted() {
             this.getSummonerInfo();
+            this.getSummonerStats();
         }
     }
 </script>
@@ -741,14 +789,22 @@
                         align-items: center;
 
                         .content-loader {
-                            width: 25%;
+                            width: 33%;
                             margin-right: 10px;
+
+                            @media #{$bp-xl}{
+                                width: 25%;
+                            }
                         }
 
                         .content {
-                            width: 25%;
+                            width: 33%;
                             text-align: center;
                             position: relative;
+
+                            @media #{$bp-xl}{
+                                width: 25%;
+                            }
 
                             .unranked {
                                 .text {

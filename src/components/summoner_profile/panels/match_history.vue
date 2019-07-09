@@ -17,10 +17,7 @@
                     Queue
                 </div>
                 <div class="kda">
-                    KDA
-                </div>
-                <div class="kda-average">
-                    KDA Average
+                    KDA (Avg.)
                 </div>
                 <div class="cs10">
                     CS
@@ -51,10 +48,7 @@
                     {{ match.match.queue }}
                 </div>
                 <div class="kda">
-                    {{ match.kills }}/{{ match.deaths }}/{{ match.assists }}
-                </div>
-                <div class="kda-average">
-                    {{ match.kdaAverage }}
+                    {{ match.kills }}/{{ match.deaths }}/{{ match.assists }} ({{ match.kdaAverage }})
                 </div>
                 <div class="cs10">
                     {{ match.totalMinionsKilled }} ({{ match.csPmin }})
@@ -213,17 +207,33 @@
 
                 .labels, .match {
                     display: grid;
-                    grid-template: 1fr / repeat(12, 1fr);
+                    grid-template: 1fr / repeat(5, 1fr);
                     align-items: center;
                     width: 100%;
                     justify-content: space-evenly;
 
+                    @media #{$bp-md}{
+                        grid-template: 1fr / repeat(11, 1fr);
+                    }
+
                     .champion {
-                        grid-column-end: span 2;
+                        grid-column-end: span 1;
+
+                        @media #{$bp-md}{
+                            grid-column-end: span 2;
+                        }
                     }
 
                     .items {
                         grid-column-end: span 3;
+                    }
+
+                    .items, .spells, .runes {
+                        display: none;
+
+                        @media #{$bp-md}{
+                            display: block;
+                        }
                     }
                 }
 
@@ -257,6 +267,8 @@
                     }
 
                     .spells, .items, .runes {
+                        display: none;
+
                         .item-1, .item-2, .item-3, .item-4, .item-5, .item-6, .trinket, .summoner-1, .summoner-2,
                         .rune-primary, .rune-secondary {
                             border-radius: 50%;
@@ -268,6 +280,18 @@
 
                         .item-1, .item-2, .item-3, .item-4, .item-5, .item-6, .trinket {
                             background-color: lightgrey;
+                        }
+
+                        @media #{$bp-md}{
+                            display: flex;
+                        }
+                    }
+
+                    .champion-name {
+                        display: none;
+
+                        @media #{$bp-md}{
+                            display: flex;
                         }
                     }
 
