@@ -128,7 +128,6 @@
             grid-gap: 20px;
             grid-template: auto / repeat(4, 1fr);
             color: $palette-primary;
-            transition: all 0.5s ease;
 
             @media #{$bp-md}{
                 grid-template: repeat(5, 200px) / repeat(4, 1fr);
@@ -140,7 +139,6 @@
                 border-radius: 5px;
                 padding: 20px;
                 grid-column-end: span 4;
-                transition: all 0.5s ease;
                 position: relative;
                 grid-row-end: span 2;
 
@@ -183,7 +181,6 @@
                     }
 
                     .donut-ring {
-                        transition: stroke 0.5s ease;
                         stroke: lightgrey;
                     }
 

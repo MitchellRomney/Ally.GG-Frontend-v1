@@ -1,5 +1,5 @@
 <template>
-    <div id="top-nav">
+    <div id="top-nav" :class="{ border : border }">
         <div class="menu" @click="$emit('toggle-nav')">
             <font-awesome-icon icon="bars"/>
         </div>
@@ -40,7 +40,8 @@
                     </li>
                     <li class="header" v-if="search_champion_results.length > 0">Champions</li>
                     <li class="result" v-for="champion in search_champion_results.slice(0,10)" :key="champion.champId">
-                        <router-link @click="clearSearch" :to="{ name: 'summoner_profile', params: { summoner: champion.champId }}">
+                        <router-link @click="clearSearch"
+                                     :to="{ name: 'summoner_profile', params: { summoner: champion.champId }}">
                             <img class="resp-img" :src="getChampionTileUrl(champion)" :alt="champion.name"/>
                             <span>{{ champion.name }}</span>
                             <span class="level"><span v-for="tag in champion.tags"> {{ tag }} </span></span>
@@ -52,26 +53,68 @@
         <div class="notifications">
             <font-awesome-icon icon="bell"/>
         </div>
-        <div class="profile" v-if="user.username">
-            <div class="avatar" @click="toggleMenu" v-click-outside="closeMenu">
-                <div class="img-wrapper">
-                    <img class="resp-img" src="../../assets/images/placeholder.png" :alt="user.username">
+        <div class="profile" v-if="user.username" v-click-outside="closeMenu">
+            <div class="user" @click="toggleMenu">
+                <div class="avatar">
+                    <div class="img-wrapper">
+                        <img class="resp-img" src="../../assets/images/placeholder.png" :alt="user.username">
+                    </div>
+                </div>
+                <div>
+                    <h4>{{ user.username }}</h4>
+                    <a href="#">
+                        <span><font-awesome-icon icon="circle"/>Online</span>
+                    </a>
+                </div>
+                <div class="caret">
+                    <font-awesome-icon icon="caret-down"/>
                 </div>
             </div>
             <ul v-if="open_menu" class="options-dropdown">
-                <li v-if="user.isSuperuser">
-                    <router-link to="/admin">Admin Panel</router-link>
+                <li class="category">
+                    Personal
                 </li>
-                <li><a @click="logout">Logout</a></li>
-            </ul>
-            <div class="user">
-                <router-link :to="{ name: 'user_profile', params: { user: user.username }}">
-                    <h4>{{ user.username }}</h4>
+                <router-link to="/settings">
+                    <li>
+                        <font-awesome-icon icon="cog"/>
+                        <div class="item-name">
+                            User Settings
+                        </div>
+                    </li>
                 </router-link>
-                <a href="#">
-                    <span><font-awesome-icon icon="circle"/>Online</span>
-                </a>
-            </div>
+                <router-link to="/admin">
+                    <li v-if="user.isSuperuser">
+                        <font-awesome-icon icon="tools"/>
+                        <div class="item-name">
+                            Admin Panel
+                        </div>
+                    </li>
+                </router-link>
+                <li class="category">
+                    Special
+                </li>
+                <li>
+                    <font-awesome-icon icon="moon"/>
+                    <div class="item-name">
+                        <span>Dark Mode</span>
+                    </div>
+                    <div class="input">
+                        <toggle-button
+                                @change="darkModeHandler"
+                                :value="user.Profiles[0].darkMode"
+                                switch-color="#141d26"
+                                :sync="true"
+                                :disabled="!darkModeSwitch"/>
+                    </div>
+                </li>
+                <div class="divider"></div>
+                <li class="logout" @click="logout">
+                    <font-awesome-icon icon="sign-out-alt"/>
+                    <div class="item-name">
+                        Log Out
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -98,6 +141,19 @@
         }
         `;
 
+    let query_updateProfile =
+        `mutation($userId: Int!, $darkMode: Boolean!) {
+          updateProfile(userId: $userId, darkMode: $darkMode){
+            updated
+            profile {
+              user {
+                username
+              }
+              darkMode
+            }
+          }
+        }`;
+
     export default {
         name: 'TopNav',
         components: {
@@ -106,6 +162,7 @@
         data() {
             return {
                 open_menu: false,
+                darkModeSwitch: true,
 
                 // Search
                 search_entry: null,
@@ -171,7 +228,10 @@
                 this.search_champion_results = [];
             },
             goSummoner() {
-                this.$router.push({name: 'summoner_profile', params: {summoner: this.search_entry, server: this.search_server}});
+                this.$router.push({
+                    name: 'summoner_profile',
+                    params: {summoner: this.search_entry, server: this.search_server}
+                });
                 this.search_entry = null;
                 this.search_summoner_results = [];
                 this.search_champion_results = [];
@@ -186,6 +246,27 @@
                     return summonerIcon
                 }
             },
+            darkModeHandler() {
+                if (this.darkModeSwitch && this.user !== null) {
+                    this.darkModeSwitch = false;
+                    this.$store.state.user.Profiles[0].darkMode = !this.$store.state.user.Profiles[0].darkMode;
+                    axios({
+                        url: process.env.VUE_APP_API_URL + '/graphql',
+                        method: 'post',
+                        data: {
+                            query: query_updateProfile,
+                            variables: {
+                                userId: this.$store.state.user.id,
+                                darkMode: this.$store.state.user.Profiles[0].darkMode
+                            },
+                        }
+                    }).then((response) => {
+                        if (response.data.data.updateProfile.updated) {
+                            this.darkModeSwitch = true;
+                        }
+                    });
+                }
+            }
         },
         computed: {
             patch() {
@@ -196,6 +277,9 @@
             },
             search_results() {
                 return this.search_summoner_results.length > 0 || this.search_champion_results.length > 0
+            },
+            border() {
+                return this.$route.params.summoner == null
             },
         },
     }
@@ -210,7 +294,10 @@
             display: flex;
             height: 65px;
             width: 100%;
-            transition: all 0.5s ease;
+
+            &.border {
+                border-bottom: 1px solid #DFE3E8;
+            }
 
             @media #{$bp-md}{
                 width: calc(100vw - 130px);
@@ -248,7 +335,6 @@
                     border-right: none;
                     padding: 5px 10px;
                     background-color: white;
-                    transition: background-color 0.5s ease;
 
                     &:focus {
                         + .server-select + .search-results {
@@ -348,7 +434,6 @@
                         }
 
                         .result {
-                            transition: all 0.5s ease;
                             border-radius: 5px;
                             width: 100%;
                             padding: 5px;
@@ -401,48 +486,34 @@
 
             .profile {
                 grid-area: profile;
-                display: flex;
+                display: table;
                 align-items: center;
                 justify-content: flex-end;
                 position: relative;
-
-                .avatar {
-                    margin-right: 10px;
-                    cursor: pointer;
-
-                    .img-wrapper {
-                        height: 40px;
-                        width: 40px;
-                        border-radius: 50%;
-                        overflow: hidden;
-                    }
-                }
-
-                .options-dropdown {
-                    position: absolute;
-                    top: 100%;
-                    right: 0;
-                    width: 150px;
-                    padding: 10px;
-                    border-radius: 10px 2px 10px 10px;
-                    background-color: white;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                    transition: all 0.3s ease-in-out 0s, visibility 0s linear 0.3s, z-index 0s linear 0.01s;
-                    text-align: center;
-                    z-index: 1050;
-                    border: 1px solid #DFE3E8;
-
-                    li {
-                        cursor: pointer;
-                    }
-                }
+                border: 1px solid #DFE3E8;
+                z-index: 100;
+                height: 45px;
+                margin-top: 10px;
+                border-radius: 5px;
+                cursor: pointer;
 
                 .user {
-                    margin-right: 15px;
-                    display: none;
+                    display: flex;
+                    height: 45px;
+                    padding: 5px 15px;
 
-                    @media #{$bp-md}{
-                        display: block;
+                    .avatar {
+                        margin-right: 10px;
+                        cursor: pointer;
+                        display: flex;
+                        align-content: center;
+
+                        .img-wrapper {
+                            height: 35px;
+                            width: 35px;
+                            border-radius: 50%;
+                            overflow: hidden;
+                        }
                     }
 
                     span {
@@ -456,6 +527,70 @@
                             margin-right: 5px;
                         }
                     }
+
+                    .caret {
+                        margin-left: 60px;
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+
+                .options-dropdown {
+                    border-radius: 5px;
+                    background-color: white;
+                    z-index: 1050;
+
+                    .divider {
+                        border-top: 1px solid #DFE3E8;
+                        margin: 0 10px;
+                    }
+
+                    li {
+                        cursor: pointer;
+                        display: grid;
+                        grid-template: auto / 30px auto auto;
+                        font-weight: bold;
+                        font-size: 0.9rem;
+                        padding: 15px 10px;
+
+                        svg {
+                            opacity: 0.6;
+                            display: flex;
+                            align-self: center;
+                            justify-self: center;
+                        }
+
+                        .item-name {
+                            display: flex;
+                            justify-self: baseline;
+                            width: 100%;
+
+                            span {
+                                margin: auto auto auto 0;
+                            }
+                        }
+
+                        &.category {
+                            display: flex;
+                            cursor: initial;
+                            padding: 10px 10px 5px 10px;
+                            opacity: 0.6;
+
+                            &:hover {
+                                background-color: initial;
+                                color: initial;
+                            }
+                        }
+
+                        &.logout {
+                            border-radius: 0 0 5px 5px;
+                        }
+
+                        &:hover {
+                            background-color: $palette-accent;
+                            color: white;
+                        }
+                    }
                 }
             }
         }
@@ -463,6 +598,10 @@
         &.dark {
             #top-nav {
                 background-color: $palette-dark-primary;
+
+                &.border {
+                    border-bottom: 1px solid $palette-dark-border;
+                }
 
                 .menu {
                     color: white;
@@ -500,10 +639,15 @@
                 }
 
                 .profile {
+                    border: 1px solid $palette-dark-border;
+                    color: white;
+
                     .options-dropdown {
-                        background-color: $palette-dark-secondary;
-                        box-shadow: $dark-shadow;
-                        border: 1px solid $palette-dark-border;
+                        background-color: $palette-dark-primary;
+
+                        .divider {
+                            border-top: 1px solid $palette-dark-border;
+                        }
                     }
                 }
             }

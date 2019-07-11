@@ -7,7 +7,9 @@
         </transition>
         <TopNav v-if="loadDashboard" @toggle-nav="openNav = !openNav"/>
         <div id="view-wrapper">
-            <router-view/>
+            <transition name="fade" mode="out-in">
+                <router-view/>
+            </transition>
         </div>
     </div>
 </template>
@@ -69,7 +71,6 @@
         color: $palette-primary;
         min-height: 100vh;
         background-color: $palette-secondary;
-        transition: all 0.5s ease;
 
         &.main {
             display: grid;
@@ -89,6 +90,7 @@
             #view-wrapper {
                 height: calc(100vh - 65px);
                 overflow-y: scroll;
+                background-color: #F6F7FB;
             }
         }
 
@@ -113,6 +115,12 @@
 
         &.dark {
             background-color: $palette-dark-secondary;
+
+            &.main {
+                #view-wrapper {
+                    background-color: $palette-dark-secondary;
+                }
+            }
         }
     }
 </style>

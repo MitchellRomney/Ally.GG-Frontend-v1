@@ -189,7 +189,6 @@
             display: flex;
             flex-direction: column;
             color: $palette-primary;
-            transition: all 0.5s ease;
 
             @media #{$bp-md}{
                 grid-row-end: span 3;
@@ -245,7 +244,6 @@
 
                 .match {
                     background-color: rgba(255, 74, 20, 0.3);
-                    transition: all 0.25s ease;
 
                     .kda, .queue, .cs10, .timeago, .kda-average {
                         text-align: center;

@@ -4,7 +4,8 @@ import App from './App.vue'
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {
     faHome, faUsers, faTrophy, faBell, faCaretDown, faCircle, faArrowLeft, faArrowRight,
-    faEllipsisH, faUserSecret, faStar, faCrown, faCheck, faBars, faCog
+    faEllipsisH, faUserSecret, faStar, faCrown, faCheck, faBars, faCog, faSignOutAlt, faMoon,
+    faTools
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import router from './router'
@@ -17,12 +18,14 @@ import Vue2TouchEvents from 'vue2-touch-events'
 import store from './store.js'
 import VueAnalytics from 'vue-analytics'
 import VueTippy from 'vue-tippy'
+import ToggleButton from 'vue-js-toggle-button'
 
 
 Vue.use(VueTippy);
 Vue.use(Vue2TouchEvents);
 Vue.use(VueCookie);
 Vue.use(Vuex);
+Vue.use(ToggleButton);
 
 Vue.use(VueAnalytics, {
     id: 'UA-142475995-1',
@@ -51,7 +54,10 @@ library.add(
     faArrowLeft,
     faArrowRight,
     faBars,
-    faCog
+    faCog,
+    faSignOutAlt,
+    faMoon,
+    faTools
 );
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);

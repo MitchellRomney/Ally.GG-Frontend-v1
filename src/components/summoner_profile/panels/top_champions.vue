@@ -70,7 +70,6 @@
             display: flex;
             flex-direction: column;
             color: $palette-primary;
-            transition: all 0.5s ease;
             padding: 20px;
 
             @media #{$bp-md}{

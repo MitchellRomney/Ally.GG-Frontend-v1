@@ -243,6 +243,7 @@
 
 <style scoped lang="scss">
     #ally-gg {
+
         .admin {
             background-color: #F6F7FB;
             color: $palette-primary;

@@ -74,10 +74,7 @@
 <style scoped lang="scss">
     #ally-gg {
         .home {
-            background-color: #F6F7FB;
             min-height: calc(100vh - 65px);
-            border-top: 1px solid #DFE3E8;
-            transition: all 0.5s ease;
             padding: 20px;
 
             @media #{$bp-md}{
@@ -111,7 +108,6 @@
                     border: 3px solid #f4f4f4;
                     border-radius: 20px;
                     padding: 20px;
-                    transition: all 0.5s ease;
                 }
 
                 #summoners {
@@ -129,7 +125,6 @@
 
                         .summoner {
                             text-align: center;
-                            transition: all 0.5s ease;
 
                             .avatar {
                                 width: 100px;

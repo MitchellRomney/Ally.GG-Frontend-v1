@@ -19,19 +19,6 @@
     import NavItem from './navItem';
     import axios from 'axios';
 
-    let query_updateProfile =
-        `mutation($userId: Int!, $darkMode: Boolean!) {
-          updateProfile(userId: $userId, darkMode: $darkMode){
-            updated
-            profile {
-              user {
-                username
-              }
-              darkMode
-            }
-          }
-        }`;
-
     export default {
         name: 'Navbar',
         components: {
@@ -59,27 +46,6 @@
             },
         },
         methods: {
-            darkMode() {
-                if (this.darkModeSwitch && this.user !== null) {
-                    this.darkModeSwitch = false;
-                    this.$store.state.user.Profiles[0].darkMode = !this.$store.state.user.Profiles[0].darkMode;
-                    axios({
-                        url: process.env.VUE_APP_API_URL + '/graphql',
-                        method: 'post',
-                        data: {
-                            query: query_updateProfile,
-                            variables: {
-                                userId: this.$store.state.user.id,
-                                darkMode: this.$store.state.user.Profiles[0].darkMode
-                            },
-                        }
-                    }).then((response) => {
-                        if (response.data.data.updateProfile.updated) {
-                            this.darkModeSwitch = true;
-                        }
-                    });
-                }
-            }
         }
     }
 </script>
@@ -88,7 +54,7 @@
     #ally-gg {
         nav {
             grid-area: nav;
-            border-right: 1px solid #DFE3E8;
+            border-right: 1px solid $palette-border;
             text-align: left;
             background-color: white;
             position: fixed;
@@ -96,7 +62,6 @@
             width: 130px;
             flex-direction: column;
             align-items: center;
-            transition: all 0.5s ease;
             left: -130px;
             z-index: 2000;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);

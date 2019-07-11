@@ -15,6 +15,9 @@ import SummonerProfile from './views/SummonerProfile.vue'
 import SummonerProfile_General from './components/summoner_profile/general.vue'
 import SummonerProfile_Matches from './components/summoner_profile/matches.vue'
 import SummonerProfile_Champions from './components/summoner_profile/champions.vue'
+import Settings_Account from './components/Settings/account.vue'
+import Settings_Privacy from './components/Settings/privacy.vue'
+import Settings_Premium from './components/Settings/premium.vue'
 import VueCookie from 'vue-cookie'
 import Vuex from "vuex"
 import Store from './store.js'
@@ -28,6 +31,9 @@ Vue.use(Router);
 
 let router = new Router({
     mode: 'history',
+    scrollBehavior(to, from, savedPosition) {
+        return {x: 0, y: 0}
+    },
     routes: [
         {
             path: '/',
@@ -99,12 +105,27 @@ let router = new Router({
             component: Summoners,
         },
         {
-            path: '/settings/',
+            path: '/settings',
+            redirect: 'settings/account',
             meta: {
                 requiresAuth: true
             },
             name: 'settings',
-            component: Settings
+            component: Settings,
+            children: [
+                {
+                    path: 'account',
+                    component: Settings_Account
+                },
+                {
+                    path: 'privacy',
+                    component: Settings_Privacy
+                },
+                {
+                    path: 'premium',
+                    component: Settings_Premium
+                },
+            ]
         },
         {
             path: '/summoners/:server/:summoner',
@@ -137,9 +158,6 @@ let router = new Router({
             },
         }
     ],
-    scrollBehavior(to, from, savedPosition) {
-        return {x: 0, y: 0}
-    }
 });
 
 router.beforeEach((to, from, next) => {

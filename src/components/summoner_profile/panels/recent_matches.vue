@@ -265,7 +265,6 @@
             display: flex;
             flex-direction: column;
             color: $palette-primary;
-            transition: all 0.5s ease;
 
             @media #{$bp-md}{
                 grid-column-end: span 2;
@@ -277,7 +276,6 @@
                 opacity: 0;
                 top: 0;
                 left: 0;
-                transition: all 0.5s ease;
                 border-radius: 20px;
                 background-image: repeating-linear-gradient(
                                 -45deg,
@@ -518,7 +516,6 @@
                                 width: 30px;
                                 background-color: lightgrey;
                                 border-radius: 4px;
-                                transition: background-color 0.5s ease;
                             }
 
                             .trinket {

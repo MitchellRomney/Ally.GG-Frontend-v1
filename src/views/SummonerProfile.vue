@@ -627,7 +627,6 @@
 
             .page-content {
                 background-color: white;
-                transition: all 0.5s ease;
 
                 &.loaded {
                     height: 100%;
@@ -640,7 +639,6 @@
                     grid-gap: 15px;
                     grid-template: 1fr auto 0.5fr 0.5fr / repeat(4, 1fr);
                     grid-template-areas: "avatar title title title" "ranked ranked ranked ranked" "update update update options" "menu menu menu menu";
-                    transition: all 0.5s ease;
 
                     @media #{$bp-md}{
                         grid-gap: 0 15px;
@@ -675,7 +673,6 @@
                                 border-top-left-radius: 10px;
                                 font-size: 12px;
                                 font-weight: bold;
-                                transition: background-color 0.5s ease;
 
                                 @media #{$bp-md}{
                                     font-size: 24px;
@@ -907,7 +904,6 @@
                                 font-size: 1rem;
                                 opacity: 0.6;
                                 cursor: pointer;
-                                transition: all 0.25s ease;
                                 border-bottom: 2px solid transparent;
                                 height: 100%;
                                 width: 100%;
@@ -932,7 +928,6 @@
                     border-top: 3px solid #f4f4f4;
                     min-height: calc(100vh - 315px);
                     padding: 20px;
-                    transition: all 0.5s ease;
 
                     @media #{$bp-md}{
                         padding: 20px 0;
