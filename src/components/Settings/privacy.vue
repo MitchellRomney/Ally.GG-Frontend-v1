@@ -13,4 +13,13 @@
 </script>
 
 <style scoped lang="scss">
+    #ally-gg {
+        #privacy {
+            padding: 10px;
+
+            .header {
+                margin: 2rem 0;
+            }
+        }
+    }
 </style>

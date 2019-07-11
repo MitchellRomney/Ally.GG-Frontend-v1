@@ -10,6 +10,16 @@
             <transition name="fade" mode="out-in">
                 <router-view/>
             </transition>
+            <footer>
+                <div class="teis-logo">
+                    <a href="https://www.theearthissquare.com" target="_blank">
+                        <transition name="fade" mode="out-in">
+                            <img class="resp-img" src="./assets/images/teis-logo.png" v-if="!darkMode"/>
+                            <img class="resp-img" src="./assets/images/teis-logo-white.png" v-else v-cloak/>
+                        </transition>
+                    </a>
+                </div>
+            </footer>
         </div>
     </div>
 </template>
@@ -91,6 +101,23 @@
                 height: calc(100vh - 65px);
                 overflow-y: scroll;
                 background-color: #F6F7FB;
+
+                footer {
+                    height: 100px;
+                    background-color: #F6F7FB;
+                    border-top: 3px solid #f4f4f4;
+                    display: flex;
+                    flex-direction: row-reverse;
+                    padding: 20px;
+                    align-items: center;
+
+                    .teis-logo {
+                        width: 100px;
+                        display: flex;
+                        align-items: center;
+                        padding: 10px;
+                    }
+                }
             }
         }
 
@@ -119,6 +146,12 @@
             &.main {
                 #view-wrapper {
                     background-color: $palette-dark-secondary;
+
+                    footer {
+                        background-color: $palette-dark-secondary;
+                        border-top: 3px solid $palette-dark-border;
+                    }
+
                 }
             }
         }

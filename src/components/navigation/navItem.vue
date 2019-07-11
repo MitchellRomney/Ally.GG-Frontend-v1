@@ -104,16 +104,14 @@
                 }
             }
 
-            &.Settings {
+            &.Premium {
                 margin-top: auto;
             }
         }
 
         &.dark {
             .nav-item {
-                .nav-link {
-                    color: white;
-                }
+                color: white;
             }
         }
     }

@@ -194,16 +194,6 @@
                              :newMatches="newMatches" :topChampions="topChampions"
                              :summonerStatsLoaded="summonerStatsLoaded"></router-view>
             </div>
-            <footer>
-                <div class="teis-logo">
-                    <a href="https://www.theearthissquare.com" target="_blank">
-                        <transition name="fade" mode="out-in">
-                            <img class="resp-img" src="../assets/images/teis-logo.png" v-if="!darkMode"/>
-                            <img class="resp-img" src="../assets/images/teis-logo-white.png" v-else v-cloak/>
-                        </transition>
-                    </a>
-                </div>
-            </footer>
         </div>
         <div class="no-summoner" v-else v-cloak>
             There is no summoner by that name.
@@ -623,6 +613,7 @@
         #summonerProfile {
             width: 100%;
             position: relative;
+            min-height: calc(100vh - 65px);
             color: $palette-primary;
 
             .page-content {
@@ -933,23 +924,6 @@
                         padding: 20px 0;
                     }
                 }
-
-                footer {
-                    height: 100px;
-                    background-color: #F6F7FB;
-                    border-top: 3px solid #f4f4f4;
-                    display: flex;
-                    flex-direction: row-reverse;
-                    padding: 20px;
-                    align-items: center;
-
-                    .teis-logo {
-                        width: 100px;
-                        display: flex;
-                        align-items: center;
-                        padding: 10px;
-                    }
-                }
             }
         }
 
@@ -1002,11 +976,6 @@
                     }
 
                     #summoner-content-wrapper {
-                        background-color: $palette-dark-secondary;
-                        border-top: 3px solid $palette-dark-border;
-                    }
-
-                    footer {
                         background-color: $palette-dark-secondary;
                         border-top: 3px solid $palette-dark-border;
                     }

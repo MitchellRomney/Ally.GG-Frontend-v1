@@ -190,6 +190,7 @@
         #summoners {
             position: relative;
             padding: 20px;
+            min-height: calc(100vh - 65px);
 
             @media #{$bp-md}{
                 padding: 50px;

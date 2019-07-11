@@ -1,6 +1,10 @@
 <template>
     <div id="settings">
         <div class="page-content container">
+            <h1 class="page-header">
+                <font-awesome-icon icon="cog"/>
+                User Settings
+            </h1>
             <ul class="settings-nav">
                 <router-link to="account">
                     <li class="nav-item">Account</li>
@@ -37,22 +41,16 @@
             .page-content {
                 max-width: 1280px;
 
+                .page-header {
+                    margin: 2rem 0;
+                }
+
                 .settings-nav {
                     display: flex;
                     border-bottom: 1px solid $palette-border;
 
                     .nav-item {
                         padding: 10px;
-                    }
-                }
-
-                .view-wrapper {
-                    #premium, #privacy, #account {
-                        padding: 10px;
-
-                        .header {
-                            margin: 1.5rem 0;
-                        }
                     }
                 }
             }

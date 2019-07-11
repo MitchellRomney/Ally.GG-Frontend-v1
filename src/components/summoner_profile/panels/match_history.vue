@@ -37,7 +37,7 @@
                     {{ match.match.timeago }}
                 </div>
                 <div class="champion-icon">
-                    <div class="icon-wrapper">
+                    <div class="icon-wrapper" :title="match.champion.name" v-tippy>
                         <img class="resp-img" :src="getChampionTileUrl(match.champion)" :alt="match.champion.name"/>
                     </div>
                 </div>
@@ -54,12 +54,12 @@
                     {{ match.totalMinionsKilled }} ({{ match.csPmin }})
                 </div>
                 <div class="spells">
-                    <div class="summoner-1">
+                    <div class="summoner-1" :title="match.spell1Id.name" v-tippy>
                         <img :src="getSSpellUrl(match.spell1Id)"
                              class="resp-img"
                              :alt="match.spell1Id.name"/>
                     </div>
-                    <div class="summoner-2">
+                    <div class="summoner-2" :title="match.spell2Id.name" v-tippy>
                         <img :src="getSSpellUrl(match.spell2Id)"
                              class="resp-img"
                              :alt="match.spell2Id.name"/>
@@ -72,37 +72,37 @@
                              :src="getItemUrl(match.item6.itemId)"
                              :alt="match.item6.name">
                     </div>
-                    <div class="item-1">
+                    <div class="item-1" :title="match.item0.name" v-tippy>
                         <img v-if="match.item0.itemId !== 0"
                              class="resp-img"
                              :src="getItemUrl(match.item0.itemId)"
                              :alt="match.item0.name"/>
                     </div>
-                    <div class="item-2">
+                    <div class="item-2" :title="match.item1.name" v-tippy>
                         <img v-if="match.item1.itemId !== 0"
                              class="resp-img"
                              :src="getItemUrl(match.item1.itemId)"
                              :alt="match.item1.name"/>
                     </div>
-                    <div class="item-3">
+                    <div class="item-3" :title="match.item2.name" v-tippy>
                         <img v-if="match.item2.itemId !== 0"
                              class="resp-img"
                              :src="getItemUrl(match.item2.itemId)"
                              :alt="match.item2.name"/>
                     </div>
-                    <div class="item-4">
+                    <div class="item-4" :title="match.item3.name" v-tippy>
                         <img v-if="match.item3.itemId !== 0"
                              class="resp-img"
                              :src="getItemUrl(match.item3.itemId)"
                              :alt="match.item3.name"/>
                     </div>
-                    <div class="item-5">
+                    <div class="item-5" :title="match.item4.name" v-tippy>
                         <img v-if="match.item4.itemId !== 0"
                              class="resp-img"
                              :src="getItemUrl(match.item4.itemId)"
                              :alt="match.item4.name"/>
                     </div>
-                    <div class="item-6">
+                    <div class="item-6" :title="match.item5.name" v-tippy>
                         <img v-if="match.item5.itemId !== 0"
                              class="resp-img"
                              :src="getItemUrl(match.item5.itemId)"
@@ -110,12 +110,12 @@
                     </div>
                 </div>
                 <div class="runes">
-                    <div class="rune-primary">
+                    <div class="rune-primary" :title="match.perk0.name" v-tippy>
                         <img :src="getPrimaryRuneUrl(match.perk0)"
                              class="resp-img"
                              :alt="match.perk0.name"/>
                     </div>
-                    <div class="rune-secondary">
+                    <div class="rune-secondary" :title="match.perk4.name" v-tippy>
                         <img :src="getSecondaryStyleUrl(match.perkSubStyle)"
                              class="resp-img"
                              :alt="match.perk4.name"/>

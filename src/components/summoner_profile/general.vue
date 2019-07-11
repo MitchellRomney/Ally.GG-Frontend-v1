@@ -4,7 +4,10 @@
             <h2>Ranked Solo</h2>
             <transition name="fade" mode="out-in">
                 <PulseLoader v-if="!summoner.summonerName" :color="'#FF0081'" key="1"></PulseLoader>
-                <div v-else v-cloak key="2">
+                <div v-else-if="summoner.summonerName && !summoner.rankedSolo" key="2">
+                    This Summoner isn't ranked yet.
+                </div>
+                <div v-else v-cloak key="3">
                     <h5 class="rank" v-if="summoner.rankedSolo">
                         {{ summoner.rankedSolo.tier }} {{ summoner.rankedSolo.rank }}
                     </h5>
@@ -141,6 +144,8 @@
                 grid-column-end: span 4;
                 position: relative;
                 grid-row-end: span 2;
+                display: flex;
+                flex-direction: column;
 
                 @media #{$bp-md}{
                     grid-column-end: span 1;
