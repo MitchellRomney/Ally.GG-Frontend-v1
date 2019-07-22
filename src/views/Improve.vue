@@ -1,5 +1,8 @@
 <template>
     <div id="improve">
+        <div class="construction">
+            <h2>This feature is still heavily under development.</h2>
+        </div>
         <div class="content container">
             <div class="match-list">
                 <router-link :to="'' + match.match.gameId" class="match-wrapper" v-for="match in matchList">
@@ -151,11 +154,14 @@
 <style scoped lang="scss">
     #ally-gg {
         #improve {
-            height: 100%;
-            padding: 20px;
-
-            @media #{$bp-md}{
-                padding: 50px;
+            .construction {
+                height: 100px;
+                background-color: $palette-loss;
+                color: white;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .content {
@@ -163,6 +169,12 @@
                 height: 100%;
                 grid-template: calc(100vh - 65px) / 1fr 3fr;
                 grid-template-areas: "list info";
+                padding: 20px;
+
+                @media #{$bp-md}{
+                    padding: 50px;
+                }
+
 
                 .match-list {
                     grid-area: list;

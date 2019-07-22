@@ -8,7 +8,8 @@
                    class="search-input"
                    type="text"
                    v-model="search_entry"
-                   placeholder="Find a Summoner...">
+                   placeholder="Find a Summoner..."
+                   aria-label="Summoner Search">
             <div class="server-select">
                 <select aria-label="server" id="server" class="selected-server" name="server" v-model="search_server">
                     <option value="BR1">BR</option>
@@ -367,6 +368,7 @@
                         background-color: transparent;
                         color: #b5b5b5;
                         height: 100%;
+                        -moz-appearance: none;
                     }
 
                     &:focus {
@@ -610,10 +612,12 @@
                 .search {
                     .server-select {
                         border: 1px solid $palette-dark-border;
+                        border-left: none;
 
-                        .server-dropdown {
-                            border: 1px solid $palette-dark-border;
-                            color: white;
+                        .selected-server {
+                            option {
+                                background-color: $palette-dark-primary;
+                            }
                         }
                     }
 
@@ -621,6 +625,7 @@
                         border: 1px solid $palette-dark-border;
                         background-color: $palette-dark-primary;
                         color: white;
+                        border-right: none;
 
                         &::placeholder {
                             color: white;

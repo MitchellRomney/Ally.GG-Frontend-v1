@@ -15,6 +15,7 @@ import SummonerProfile from './views/SummonerProfile.vue'
 import SummonerProfile_General from './components/summoner_profile/general.vue'
 import SummonerProfile_Matches from './components/summoner_profile/matches.vue'
 import SummonerProfile_Champions from './components/summoner_profile/champions.vue'
+import ChampionProfile from './views/ChampionProfile'
 import Settings_Account from './components/Settings/account.vue'
 import Settings_Privacy from './components/Settings/privacy.vue'
 import Settings_Premium from './components/Settings/premium.vue'
@@ -156,6 +157,7 @@ let router = new Router({
             meta: {
                 requiresAuth: true,
             },
+            component: ChampionProfile,
         }
     ],
 });

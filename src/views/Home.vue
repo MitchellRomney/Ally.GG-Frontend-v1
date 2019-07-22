@@ -3,12 +3,14 @@
         <transition name="fade">
             <verify-modal v-if="showVerifyModal" @close="showVerifyModal = false"></verify-modal>
         </transition>
-        <div class="page-header">
+        <!-- <div class="page-header">
             <h1>
                 Hey <span>{{ user.username }}</span>, what are we doing today?
             </h1>
-        </div>
-        <div class="content">
+        </div> -->
+        <div class="content container">
+            <Slides />
+            <Feed />
             <div id="summoners" class="panel">
                 <div class="panel-header">
                     <h2>Your Summoners</h2>
@@ -38,11 +40,15 @@
 
 <script>
     import VerifyModal from '../components/verify_modal'
+    import Slides from '../components/Home/slides.vue'
+    import Feed from '../components/Home/feed.vue'
 
     export default {
         name: 'home',
         title: 'Home - Ally.GG',
         components: {
+            Slides,
+            Feed,
             VerifyModal
         },
         data() {
@@ -74,13 +80,6 @@
 <style scoped lang="scss">
     #ally-gg {
         .home {
-            min-height: calc(100vh - 65px);
-            padding: 20px;
-
-            @media #{$bp-md}{
-                padding: 50px;
-            }
-
             .page-header {
                 text-align: center;
                 font-family: 'Panton Black', sans-serif;
@@ -98,19 +97,25 @@
                 display: grid;
                 grid-template: 300px / 1fr;
                 grid-auto-columns: 300px;
+                min-height: calc(100vh - 65px);
+                padding: 20px;
+                grid-gap: 20px;
 
                 @media #{$bp-md}{
-                    grid-template: 300px / repeat(3, 1fr);
+                    grid-template: 1fr 1fr / repeat(3, 1fr);
+                    grid-template-areas: "slides slides feed" "summoners . feed";
                 }
 
                 .panel {
                     background-color: white;
                     border: 3px solid #f4f4f4;
-                    border-radius: 20px;
-                    padding: 20px;
+                    border-radius: 5px;
                 }
 
                 #summoners {
+                    grid-area: summoners;
+                    padding: 20px;
+
                     .panel-header {
                         display: flex;
                         flex-direction: row;

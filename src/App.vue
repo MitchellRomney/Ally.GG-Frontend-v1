@@ -70,6 +70,17 @@
             }
         },
         mounted() {
+            (function () {
+                let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+                link.type = 'image/x-icon';
+                link.rel = 'icon';
+                if (process.env.NODE_ENV === 'development'){
+                    link.href = '/favicon/dev-favicon-32x32.png';
+                } else {
+                    link.href = '/favicon/favicon-32x32.png';
+                }
+                document.getElementsByTagName('head')[0].appendChild(link);
+            })();
         }
     }
 </script>

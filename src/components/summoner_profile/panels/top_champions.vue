@@ -7,23 +7,25 @@
                 </h2>
             </div>
             <div class="champion" v-for="champion in topChampions" v-if="summonerStatsLoaded">
-                <div class="champion-icon">
-                    <div class="icon-wrapper">
-                        <img class="resp-img" :src="getChampionTileUrl(champion.champion)"
-                             :alt="champion.champion.name"/>
+                <router-link :to="{ name: 'champion_profile', params: { champion: champion.champion.champId }}">
+                    <div class="champion-icon">
+                        <div class="icon-wrapper" :title="champion.champion.name" v-tippy>
+                            <img class="resp-img" :src="getChampionTileUrl(champion.champion)"
+                                 :alt="champion.champion.name"/>
+                        </div>
                     </div>
-                </div>
-                <div class="name">
-                    {{ champion.champion.name }}
-                </div>
-                <div class="winrate">
+                    <div class="name">
+                        {{ champion.champion.name }}
+                    </div>
+                    <div class="winrate">
                     <span :class="{
                         high : champion.winrate >= 60,
                         average : champion.winrate > 40 && champion.winrate < 60,
                         low : champion.winrate <= 40}">
                         {{ champion.winrate }}%
                     </span> | {{ champion.games }} Played
-                </div>
+                    </div>
+                </router-link>
             </div>
         </div>
     </div>
@@ -87,7 +89,7 @@
                     grid-column-end: span 3;
                 }
 
-                .champion {
+                .champion a {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
