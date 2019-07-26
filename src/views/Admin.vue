@@ -34,6 +34,8 @@
                         </div>
                         <div class="buttons">
                             <button @click="UpdateRanked('OC1', 'RANKED_SOLO_5x5')">Update OCE</button>
+                            <button @click="UpdateRanked('EUW1', 'RANKED_SOLO_5x5')">Update EUW</button>
+                            <button @click="UpdateRanked('EUN1', 'RANKED_SOLO_5x5')">Update EUN</button>
                             <button @click="UpdateRanked('NA1', 'RANKED_SOLO_5x5')">Update NA</button>
                         </div>
                         <div class="rank">
