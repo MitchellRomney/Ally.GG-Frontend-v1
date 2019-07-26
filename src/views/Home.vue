@@ -3,11 +3,6 @@
         <transition name="fade">
             <verify-modal v-if="showVerifyModal" @close="showVerifyModal = false"></verify-modal>
         </transition>
-        <!-- <div class="page-header">
-            <h1>
-                Hey <span>{{ user.username }}</span>, what are we doing today?
-            </h1>
-        </div> -->
         <div class="content container">
             <Slides />
             <Feed />
@@ -103,7 +98,7 @@
 
                 @media #{$bp-md}{
                     grid-template: 1fr 1fr / repeat(3, 1fr);
-                    grid-template-areas: "slides slides feed" "summoners . feed";
+                    grid-template-areas: "summoners summoners feed" "slides slides feed";
                 }
 
                 .panel {
