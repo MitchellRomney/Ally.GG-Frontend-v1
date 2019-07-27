@@ -6,32 +6,34 @@
                     Top Champions
                 </h2>
             </div>
-            <div class="champion" v-for="champion in topChampions" v-if="summonerStatsLoaded">
-                <router-link :to="{ name: 'champion_profile', params: { champion: champion.champion.champId }}">
-                    <div class="champion-icon">
-                        <div class="icon-wrapper" :title="champion.champion.name" v-tippy>
-                            <img class="resp-img" :src="getChampionTileUrl(champion.champion)"
-                                 :alt="champion.champion.name"/>
+            <div class="champion-wrapper" v-if="summonerStatsLoaded">
+                <div class="champion" v-for="champion in topChampions" :key="champion.champId">
+                    <router-link :to="{ name: 'champion_profile', params: { champion: champion.champion.champId }}">
+                        <div class="champion-icon">
+                            <div class="icon-wrapper" :title="champion.champion.name" v-tippy>
+                                <img class="resp-img" :src="getChampionTileUrl(champion.champion)"
+                                     :alt="champion.champion.name"/>
+                            </div>
                         </div>
-                    </div>
-                    <div class="name">
-                        {{ champion.champion.name }}
-                    </div>
-                    <div class="winrate">
+                        <div class="name">
+                            {{ champion.champion.name }}
+                        </div>
+                        <div class="winrate">
                     <span :class="{
                         high : champion.winrate >= 60,
                         average : champion.winrate > 40 && champion.winrate < 60,
                         low : champion.winrate <= 40}">
                         {{ champion.winrate }}%
                     </span> | {{ champion.games }} Played
-                    </div>
-                </router-link>
+                        </div>
+                    </router-link>
+                </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-    import {ContentLoader} from 'vue-content-loader';
+    // import {ContentLoader} from 'vue-content-loader';
 
     export default {
         name: 'match_history',
@@ -40,7 +42,7 @@
             return {}
         },
         components: {
-            ContentLoader,
+            // ContentLoader,
         },
         props: {
             topChampions: Array,
@@ -50,6 +52,7 @@
             $route(before, after) {
                 // Check if they've loaded a new Summoner.
                 if (before.params.summoner !== after.params.summoner) {
+                    console.log('new summoner');
                 }
             },
         },
@@ -79,50 +82,56 @@
             }
 
             .champions {
-                display: grid;
-                grid-template: auto repeat(2, 1fr) / repeat(3, 1fr);
-                grid-gap: 20px;
+                display: flex;
+                flex-direction: column;
                 height: 100%;
-                align-items: center;
 
                 .head {
                     grid-column-end: span 3;
                 }
 
-                .champion a {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-self: center;
-                    font-weight: bold;
-                    text-align: center;
+                .champion-wrapper {
+                    display: grid;
+                    grid-template: repeat(2, 1fr) / repeat(3, 1fr);
+                    grid-gap: 20px;
+                    height: 100%;
+                    padding: 20px 0;
 
-                    .champion-icon {
-                        height: 75px;
-                        width: 75px;
-                        border-radius: 50%;
-                        overflow: hidden;
-                    }
+                    .champion a {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-self: center;
+                        font-weight: bold;
+                        text-align: center;
 
-                    .name {
-                        font-size: 1.1rem;
-                        margin: 5px 0;
-                    }
+                        .champion-icon {
+                            height: 75px;
+                            width: 75px;
+                            border-radius: 50%;
+                            overflow: hidden;
+                        }
 
-                    .winrate {
-                        font-size: 0.9rem;
+                        .name {
+                            font-size: 1.1rem;
+                            margin: 5px 0;
+                        }
 
-                        span {
-                            &.high {
-                                color: $palette-win;
-                            }
+                        .winrate {
+                            font-size: 0.9rem;
 
-                            &.average {
-                                color: orange;
-                            }
+                            span {
+                                &.high {
+                                    color: $palette-win;
+                                }
 
-                            &.low {
-                                color: $palette-loss;
+                                &.average {
+                                    color: orange;
+                                }
+
+                                &.low {
+                                    color: $palette-loss;
+                                }
                             }
                         }
                     }

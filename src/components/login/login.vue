@@ -66,8 +66,7 @@
             }
             patch
           }
-        }
-        `;
+        }`;
 
     export default {
         name: 'login-component',
@@ -117,7 +116,7 @@
                             this.$store.commit('setPatch', data.patch);
 
                             // Redirect to home.
-                            this.$router.push('/');
+                            this.$router.push({ name: 'home'});
 
                         } else {
                             this.loading = false;

@@ -1,5 +1,5 @@
 <template>
-    <div id="ally-gg" :class="{ main: loadDashboard, dark: darkMode }"
+    <div id="ally-gg" :class="{ main: loadDashboard, dark: darkMode, landing: landingPage }"
          v-touch:swipe.right="swipeRight" v-touch:swipe.left="swipeLeft">
         <Navbar v-if="loadDashboard" :class="{ open: openNav }"/>
         <transition name="fade">
@@ -10,7 +10,7 @@
             <transition name="fade" mode="out-in">
                 <router-view/>
             </transition>
-            <footer>
+            <footer v-if="loadDashboard">
                 <div class="teis-logo">
                     <a href="https://www.theearthissquare.com" target="_blank">
                         <transition name="fade" mode="out-in">
@@ -44,7 +44,8 @@
 
                 // Paths that are part of the guest website, not the main dashboard.
                 let websitePaths = [
-                    '/login',
+                    '/',
+                    '/login/',
                     '/register',
                     '/contact',
                     '/loading',
@@ -52,6 +53,16 @@
 
                 // Return false if the current path is not part of the main dashboard.
                 return !websitePaths.includes(this.$route.path)
+            },
+            landingPage() {
+
+                // Paths that are part of the guest website, not the main dashboard.
+                let websitePaths = [
+                    '/',
+                ];
+
+                // Return false if the current path is not part of the main dashboard.
+                return websitePaths.includes(this.$route.path)
             },
             darkMode() {
                 if (Object.keys(this.$store.state.user).length !== 0) {
@@ -74,7 +85,7 @@
                 let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
                 link.type = 'image/x-icon';
                 link.rel = 'icon';
-                if (process.env.NODE_ENV === 'development'){
+                if (process.env.NODE_ENV === 'development') {
                     link.href = '/favicon/dev-favicon-32x32.png';
                 } else {
                     link.href = '/favicon/favicon-32x32.png';
@@ -129,6 +140,13 @@
                         padding: 10px;
                     }
                 }
+            }
+        }
+
+        &.landing {
+            #view-wrapper {
+                overflow-y: scroll;
+                background-color: white;
             }
         }
 

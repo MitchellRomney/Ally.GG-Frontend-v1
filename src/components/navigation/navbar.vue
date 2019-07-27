@@ -1,20 +1,20 @@
 <template>
     <nav id="nav">
-        <router-link to="/">
+        <router-link :to="{ name: 'home' }">
             <div class="logo-wrapper">
                 <img class="logo resp-img" alt="Ally.GG Logo" src="../../assets/images/icon.png">
             </div>
         </router-link>
         <ul class="nav-items">
 
-            <NavItem exact name="Home" link="/" icon="home"/>
+            <NavItem exact name="Home" link="home" icon="home"/>
 
-            <NavItem name="Summoners" link="/summoners" icon="users"/>
+            <NavItem name="Summoners" link="summoners" icon="users"/>
 
             <NavItem name="Champions" link="None" icon="fire"
                      message="Not yet available. Please check back soon." />
 
-            <NavItem name="Improve" link="/improve" icon="trophy" v-if="summoners.length > 0"/>
+            <NavItem name="Improve" link="improve" icon="trophy" v-if="summoners.length > 0"/>
 
             <NavItem name="Improve" link='None' icon="trophy"
                      message="You need to verify at least 1 Summoner to use this feature."

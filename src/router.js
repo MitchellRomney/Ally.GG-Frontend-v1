@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Landing from './views/website/Home.vue'
 import Home from './views/Home.vue'
 import UserProfile from './views/UserProfile'
 import Login from './views/Login.vue'
@@ -32,12 +33,17 @@ Vue.use(Router);
 
 let router = new Router({
     mode: 'history',
-    scrollBehavior(to, from, savedPosition) {
+    scrollBehavior() {
         return {x: 0, y: 0}
     },
     routes: [
         {
-            path: '/',
+          path: '/',
+          name: 'landing',
+          component: Landing,
+        },
+        {
+            path: '/home',
             name: 'home',
             meta: {
                 requiresAuth: true
@@ -166,7 +172,7 @@ router.beforeEach((to, from, next) => {
 
     let token = Vue.cookie.get('token');
 
-    if (token && to.name !== 'login') {
+    if (token) {
         // If there is a JWT token, always use it as Auth header.
         Vue.prototype.$http.defaults.headers.common['Authorization'] = 'JWT ' + token;
 
@@ -174,12 +180,26 @@ router.beforeEach((to, from, next) => {
         let token_creation = new Date(token_payload.origIat * 1000);
 
         if (token_creation.addDays(7) < Date.now()) {
+
+            delete Vue.prototype.$http.defaults.headers.common['Authorization'];
+
+            if (to.name !== 'login') {
+                next({
+                    name: 'login',
+                    query: {
+                        nextUrl: to.fullPath
+                    }
+                });
+            } else {
+                next();
+            }
+        } else if (to.name === 'login'){
             next({
-                path: '/login',
-                query: {
-                    nextUrl: to.fullPath
-                }
+                name: 'home',
             });
+            router.push('loading');
+        } else {
+            next();
         }
     }
 
@@ -189,12 +209,12 @@ router.beforeEach((to, from, next) => {
         // If user doesn't have a token (ie. Not authenticated), send to login.
         if (!token) {
             next({
-                path: '/login',
-            })
+                name: 'login',
+            });
 
         } else if (!Store.state.stateLoaded) {
             next({
-                path: '/loading',
+                name: 'loading',
                 query: {
                     nextUrl: to.fullPath
                 }
@@ -207,19 +227,19 @@ router.beforeEach((to, from, next) => {
         // If user doesn't have a token (ie. Not authenticated), send to login.
         if (!token) {
             next({
-                path: '/login',
+                name: 'login',
             })
 
         } else if (!Store.state.stateLoaded) {
             next({
-                path: '/loading',
+                name: 'loading',
                 query: {
                     nextUrl: to.fullPath
                 }
             })
         } else if (!Store.state.user.isSuperuser) {
             next({
-                path: '/'
+                name: 'home'
             })
         }
     }

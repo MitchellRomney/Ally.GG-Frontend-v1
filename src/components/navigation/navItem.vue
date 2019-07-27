@@ -1,6 +1,6 @@
 <template>
     <li class="nav-item" :class="name">
-        <router-link :to=link class="nav-link" :exact="exact" v-if="link !== 'None'">
+        <router-link :to="{ name: link }" class="nav-link" :exact="exact" v-if="link !== 'None'">
             <div class="icon">
                 <font-awesome-icon :icon=icon />
             </div>

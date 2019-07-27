@@ -135,7 +135,7 @@
                 if (this.$route.query.nextUrl != null) {
                     this.$router.push(this.$route.query.nextUrl);
                 } else {
-                    this.$router.push('/');
+                    this.$router.push({ name: 'home'});
                 }
             },
             webSocketManager() {
