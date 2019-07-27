@@ -1,5 +1,28 @@
 <template>
     <div id="summonerProfile">
+        <transition name="fade">
+            <div class="summoner-options-wrapper" v-if="openMenu">
+                <div class="options-back" @click="closeMenu"></div>
+                <div class="summoner-options">
+                    <h2 class="header">Extra Summoner Options</h2>
+                    <div class="full-update">
+                        <div class="label">
+                            <h3>Comprehensive Update</h3>
+                            <small>Pressing this button updates the Summoner and fetches all of their matches for the
+                                season
+                                that
+                                are not yet in the Ally.GG database.
+                            </small>
+                        </div>
+                        <div class="trigger">
+                            <button @click="updateSummoner(-1)">
+                                Execute
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
         <div class="page-content" v-if="!noSummoner">
             <div class="top-wrapper container">
                 <div class="avatar-wrapper">
@@ -27,7 +50,7 @@
                         </div>
                         <div class="content" v-else v-cloak key="2">
                             <span class="last-updated">Last Updated: <span>{{ summoner.lastUpdated }}</span></span>
-                            <button v-on:click="updateSummoner">Update Summoner</button>
+                            <button v-on:click="updateSummoner(10)">Update Summoner</button>
                         </div>
                     </transition>
                 </div>
@@ -54,12 +77,14 @@
                 </div>
                 <div class="options">
                     <div class="content">
-                        <a href="#">
+                        <div class="option" @click="toggleMenu" title="More Options"
+                             v-tippy="{ arrow : true,  animation : 'perspective'}">
                             <font-awesome-icon icon="ellipsis-h"/>
-                        </a>
-                        <a href="#" class="star">
+                        </div>
+                        <div class="option star" title="Add Summoner to Favourites"
+                             v-tippy="{ arrow : true,  animation : 'perspective'}">
                             <font-awesome-icon icon="star"/>
-                        </a>
+                        </div>
                     </div>
                 </div>
                 <div class="ranked-stats">
@@ -327,8 +352,8 @@
         }`;
 
     let mutation_updateSummoner =
-        `mutation updateSummoner($summonerId: String!, $server: String!){
-          updateSummoner(summonerId: $summonerId, server: $server){
+        `mutation updateSummoner($summonerId: String!, $server: String!, $games: Int!){
+          updateSummoner(summonerId: $summonerId, server: $server, games: $games){
             newMatches
           }
         }`;
@@ -363,6 +388,7 @@
                 // Misc Data
                 remaining_matches: 0,
                 newMatches: 0,
+                openMenu: false,
 
                 // Loading Flags
                 summonerIconLoaded: false,
@@ -457,6 +483,12 @@
             }
         },
         methods: {
+            toggleMenu() {
+                this.openMenu = !this.openMenu;
+            },
+            closeMenu() {
+                this.openMenu = false;
+            },
             getSummonerInfo() {
                 /**
                  * @param data.summonerPlayers   List of recent Player objects for a Summoner.
@@ -516,7 +548,7 @@
                     }
                 });
             },
-            updateSummoner() {
+            updateSummoner(games) {
                 /**
                  * @param data.newMatches   List of new matches not yet in the database.
                  */
@@ -530,7 +562,8 @@
                         query: mutation_updateSummoner,
                         variables: {
                             summonerId: this.summoner.summonerId,
-                            server: this.summoner.server
+                            server: this.summoner.server,
+                            games: games
                         },
                     }
                 }).then((response) => {
@@ -615,6 +648,67 @@
             position: relative;
             min-height: calc(100vh - 65px);
             color: $palette-primary;
+
+            .summoner-options-wrapper {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                width: 100vw;
+                display: flex;
+                align-items: center;
+                justify-items: center;
+                z-index: 9999;
+
+                .options-back {
+                    position: fixed;
+                    left: 0;
+                    top: 0;
+                    height: 100vh;
+                    width: 100vw;
+                    background-color: rgba(0, 0, 0, 0.4);
+                    z-index: 9998;
+                }
+
+                .summoner-options {
+                    width: 40%;
+                    height: 40%;
+                    margin: auto;
+                    padding: 20px;
+                    background-color: white;
+                    border: 3px solid #f4f4f4;
+                    border-radius: 2px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    color: $palette-primary;
+                    z-index: 9999;
+
+                    .header {
+                        margin-bottom: 50px;
+                        align-self: start;
+                    }
+
+                    .full-update {
+                        display: flex;
+
+                        .label {
+                            width: 50%;
+                        }
+
+                        .trigger {
+                            width: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            button {
+                                width: 50%;
+                            }
+                        }
+                    }
+                }
+            }
 
             .page-content {
                 background-color: white;
@@ -737,7 +831,7 @@
                             width: 100%;
                         }
 
-                        a {
+                        .option {
                             width: 30px;
                             height: 30px;
                             display: flex;
@@ -745,6 +839,8 @@
                             align-items: center;
                             background-color: #DFE3E8;
                             border-radius: 50%;
+                            position: relative;
+                            cursor: pointer;
 
                             @media #{$bp-md}{
                                 width: 40px;
