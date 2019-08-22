@@ -119,10 +119,21 @@
                             },
                         }
                     }).then((response) => {
-                        this.userLoaded = true;
-                        this.$store.commit('setUser', response.data.data.initialLoad.user);
-                        this.$store.commit('setPatch', response.data.data.initialLoad.patch);
-                        this.webSocketManager();
+                        if ('errors' in response.data){
+                            for (let key in response.data.errors){
+                                let error = response.data.errors[key];
+                                if (error.message === 'Error decoding signature'){
+                                    this.$cookie.delete('token');
+                                    this.$store.commit('logout');
+                                    this.$router.go();
+                                }
+                            }
+                        } else {
+                            this.userLoaded = true;
+                            this.$store.commit('setUser', response.data.data.initialLoad.user);
+                            this.$store.commit('setPatch', response.data.data.initialLoad.patch);
+                            this.webSocketManager();
+                        }
                     });
                 } else {
                     this.userLoaded = true;

@@ -1,4 +1,4 @@
-/* Palette */
+/* OLD Palette */
 $palette-primary: #030B1E;
 $palette-secondary: #FFFFFF;
 $palette-accent: #FF0081;
@@ -17,5 +17,14 @@ $bp-lg: "(min-width: 992px)"; // col-lg
 $bp-xl: "(min-width: 1200px)"; // col-xl
 
 /* Extra */
-$shadow: 0 5px 10px rgba(154,160,185,.05), 0 15px 40px rgba(166,173,201,.2);
+$shadow: 0 5px 5px rgba(69, 93, 199, .05), 0 10px 10px rgba(69, 93, 199, .1);
+$shadow-right: 5px 0 5px rgba(69, 93, 199, .05), 10px 0 10px rgba(69, 93, 199, .1);
 $dark-shadow: 0 5px 10px rgba(0,0,0,.05), 0 15px 40px rgba(0,0,0,.2);
+
+/* Palette */
+$AllyPinkPurple: linear-gradient(180deg, #FF0081 0%, #D90ADD 100%);
+$AllyPink: #FF0081;
+$AllyWin: #2D9CDB;
+$AllyLoss: #EB5757;
+$AllyBlack: #030B1E;
+$AllyBackground: #EBEFF2;

@@ -1,165 +1,348 @@
 <template>
-    <div class="home">
-        <transition name="fade">
-            <verify-modal v-if="showVerifyModal" @close="showVerifyModal = false"></verify-modal>
-        </transition>
+    <div id="home">
         <div class="content container">
-            <Slides />
-            <Feed />
-            <div id="summoners" class="panel">
-                <div class="panel-header">
-                    <h2>Your Summoners</h2>
-                    <button @click="connectSummoner">Add+</button>
-                </div>
-                <div v-if="summoners.length === 0">
-                    You have not verified any Summoners yet!
-                </div>
-                <transition-group name="fade" tag="div" v-else class="summoners">
-                    <div class="summoner" v-for="summoner in summoners" :key="summoner.summonerId">
-                        <router-link :to="{ name: 'summoner_profile', params: { server: summoner.server, summoner: summoner.summonerName }}">
-                            <div class="avatar">
-                                <img class="resp-img" v-if="summoner.profileIconId" alt="SummonerIcon"
-                                     :src="'https://ddragon.leagueoflegends.com/cdn/' + patch + '/img/profileicon/' + summoner.profileIconId + '.png'">
-                            </div>
-                            <h3 class="name">
-                                {{ summoner.summonerName }}
-                            </h3>
-                            <span class="level">Level: {{ summoner.summonerLevel }}</span>
-                        </router-link>
+            <RankedGrowthPanel/>
+            <SummonerPanel :summoner="summoner" :summonerIconLoaded="summonerIconLoaded"
+                           :summonerLoaded="summonerLoaded" v-on:update="updateSummoner(-1)"/>
+            <div class="recent-stats-wrapper">
+                <h2 class="panel-header">Recent Statistics</h2>
+                <div class="recent-stats-flex">
+                    <div class="recent-stats-grid">
+                        <SmallStatisticPanel :content="homeStats.averageKda" :gradient="true" :loaded="homeStatsLoaded"/>
+                        <SmallStatisticPanel :content="homeStats.averageCs" :loaded="homeStatsLoaded"/>
+                        <SmallStatisticPanel :content="homeStats.averageVision" :loaded="homeStatsLoaded"/>
+                        <SmallStatisticPanel :content="homeStats.winrate" :loaded="homeStatsLoaded"/>
                     </div>
-                </transition-group>
+                </div>
             </div>
+            <MatchHistoryPanel :matches="matches"/>
+            <ActivityHeatmapPanel/>
         </div>
     </div>
 </template>
 
 <script>
-    import VerifyModal from '../components/verify_modal'
-    import Slides from '../components/Home/slides.vue'
-    import Feed from '../components/Home/feed.vue'
+    import ActivityHeatmapPanel from '../components/Home/ActivityHeatmapPanel'
+    import MatchHistoryPanel from '../components/Home/MatchHistoryPanel'
+    import RankedGrowthPanel from '../components/Home/RankedGrowthPanel'
+    import SmallStatisticPanel from '../components/Home/SmallStatisticPanel'
+    import SummonerPanel from '../components/Home/SummonerPanel'
+    import axios from 'axios'
+
+    let query_getSummonerInfo =
+        `query SummonerProfile($summonerName: String, $server: String, $games: Int) {
+          summoner(summonerName: $summonerName, server: $server) {
+            summonerId
+            server
+            summonerName
+            profileIconId
+            summonerLevel
+            lastUpdated
+            userProfile {
+              friends {
+                user {
+                  id
+                  username
+                }
+              }
+              premium
+              premiumStart
+              user {
+                username
+              }
+            }
+            rankedSolo {
+              tier
+              rank
+              rankNumber
+              lp
+              leagueName
+              wins
+              losses
+              ringValues
+            }
+            rankedFlex5 {
+              tier
+              rank
+              rankNumber
+              lp
+              leagueName
+              wins
+              losses
+              ringValues
+            }
+            rankedFlex3 {
+              tier
+              rank
+              rankNumber
+              lp
+              leagueName
+              wins
+              losses
+              ringValues
+            }
+          }
+          summonerPlayers(summonerName: $summonerName, server: $server, games: $games) {
+            match {
+              gameId
+              queue
+              gameDurationTime
+              timeago
+              timestamp
+            }
+            champion {
+              key
+              name
+              champId
+            }
+            win
+            kills
+            deaths
+            assists
+            kdaAverage
+            totalMinionsKilled
+            neutralMinionsKilled
+            csPmin
+            item0 {
+              itemId
+              name
+            }
+            item1 {
+              itemId
+              name
+            }
+            item2 {
+              itemId
+              name
+            }
+            item3 {
+              itemId
+              name
+            }
+            item4 {
+              itemId
+              name
+            }
+            item5 {
+              itemId
+              name
+            }
+            item6 {
+              itemId
+              name
+            }
+            spell1Id {
+              name
+              imageFull
+            }
+            spell2Id {
+              name
+              imageFull
+            }
+            perk0 {
+              name
+              icon
+            }
+            perkSubStyle
+            perk4 {
+              name
+            }
+          }
+        }`;
+
+    let mutate_getHomeStats =
+        `mutation getHomeStats($summonerName: String!, $server: String!, $games: Int!) {
+          homeStats(summonerName: $summonerName, server: $server, games: $games) {
+            averageKda {
+              statistic
+              icon
+              value
+              growth
+              scope
+            }
+            averageCs {
+              statistic
+              icon
+              value
+              growth
+              scope
+            }
+            averageVision {
+              statistic
+              icon
+              value
+              growth
+              scope
+            }
+            winrate {
+              statistic
+              icon
+              value
+              growth
+              scope
+            }
+          }
+        }`;
+
+    let mutation_updateSummoner =
+        `mutation updateSummoner($summonerId: String!, $server: String!, $games: Int!){
+          updateSummoner(summonerId: $summonerId, server: $server, games: $games){
+            newMatches
+          }
+        }`;
 
     export default {
         name: 'home',
         title: 'Home - Ally.GG',
         components: {
-            Slides,
-            Feed,
-            VerifyModal
+            ActivityHeatmapPanel,
+            MatchHistoryPanel,
+            RankedGrowthPanel,
+            SmallStatisticPanel,
+            SummonerPanel
         },
         data() {
             return {
-                showVerifyModal: false,
+                selectedSummoner: this.$store.state.user.Profiles[0].Summoners[0],
+                summoner: {},
+                homeStats: {},
+                matches: [],
+
+                homeStatsLoaded: false,
+                summonerLoaded: false,
+                summonerIconLoaded: false,
             }
         },
         computed: {
             patch() {
-              return this.$store.state.patch
+                return this.$store.state.patch
             },
             user() {
                 return this.$store.state.user
             },
             summoners() {
                 return this.user.Profiles[0].Summoners
+            },
+            summonerIcon() {
+                if (this.summoner.profileIconId) {
+                    const summonerIcon = new Image();
+                    summonerIcon.src = 'https://ddragon.leagueoflegends.com/cdn/' + this.patch + '/img/profileicon/' + this.summoner.profileIconId + '.png';
+                    return summonerIcon
+                }
             }
         },
         methods: {
-            connectSummoner() {
-                this.showVerifyModal = true;
-            }
+            getSummonerInfo() {
+                axios({
+                    url: process.env.VUE_APP_API_URL + '/graphql',
+                    method: 'post',
+                    data: {
+                        query: query_getSummonerInfo,
+                        variables: {
+                            summonerName: this.selectedSummoner.summonerName,
+                            server: this.selectedSummoner.server,
+                            games: 20
+                        },
+                    }
+                }).then((response) => {
+                    let data = response.data.data;
+
+                    if (data.summoner !== null) {
+                        this.summoner = data.summoner;
+                        this.matches = data.summonerPlayers;
+                        this.summonerLoaded = true;
+
+                        if (this.summonerIcon.complete) {
+                            this.summonerIconLoaded = true;
+                        } else {
+                            this.summonerIcon.addEventListener('load', () => {
+                                this.summonerIconLoaded = true;
+                            })
+                        }
+                    }
+                });
+            },
+            getHomeStats() {
+                axios({
+                    url: process.env.VUE_APP_API_URL + '/graphql',
+                    method: 'post',
+                    data: {
+                        query: mutate_getHomeStats,
+                        variables: {
+                            summonerName: this.selectedSummoner.summonerName,
+                            server: this.selectedSummoner.server,
+                            games: 20
+                        },
+                    }
+                }).then((response) => {
+                    let data = response.data.data;
+
+                    if (data.homeStats !== null) {
+                        this.homeStats = data.homeStats;
+                        this.homeStatsLoaded = true;
+                    }
+                });
+            },
+            updateSummoner(games) {
+                this.summonerLoaded = false;
+                this.summonerIconLoaded = false;
+
+                axios({
+                    url: process.env.VUE_APP_API_URL + '/graphql',
+                    method: 'post',
+                    data: {
+                        query: mutation_updateSummoner,
+                        variables: {
+                            summonerId: this.summoner.summonerId,
+                            server: this.summoner.server,
+                            games: games
+                        },
+                    }
+                }).then((response) => {
+                    console.log(response);
+                })
+            },
         },
         mounted() {
+            this.getSummonerInfo();
+            this.getHomeStats();
         }
     }
 </script>
 
 <style scoped lang="scss">
-    #ally-gg {
-        .home {
-            .page-header {
-                text-align: center;
-                font-family: 'Panton Black', sans-serif;
-                padding-bottom: 50px;
-                color: $palette-primary;
+    #home {
+        .content {
+            display: grid;
+            grid-gap: 30px;
+            grid-template: repeat(12, 1fr) / repeat(24, 1fr);
+            grid-auto-rows: 1fr;
+            grid-auto-columns: 1fr;
+            padding-top: 50px;
+            padding-bottom: 50px;
+            min-height: 100vh;
 
-                h1 {
-                    span {
-                        color: $palette-accent;
-                    }
-                }
-            }
+            .recent-stats-wrapper {
+                grid-column-end: span 10;
+                grid-row-end: span 6;
+                display: flex;
+                flex-direction: column;
 
-            .content {
-                display: grid;
-                grid-template: 300px / 1fr;
-                grid-auto-columns: 300px;
-                min-height: calc(100vh - 65px);
-                padding: 20px;
-                grid-gap: 20px;
-
-                @media #{$bp-md}{
-                    grid-template: 1fr 1fr / repeat(3, 1fr);
-                    grid-template-areas: "summoners summoners feed" "slides slides feed";
+                .panel-header {
+                    text-shadow: 0 5px 20px rgba(52, 133, 255, 0.075), 0 4px 6px rgba(46, 89, 155, 0.2);
+                    padding-bottom: 10px;
                 }
 
-                .panel {
-                    background-color: white;
-                    border: 3px solid #f4f4f4;
-                    border-radius: 5px;
-                }
+                .recent-stats-flex {
+                    display: flex;
+                    height: 100%;
 
-                #summoners {
-                    grid-area: summoners;
-                    padding: 20px;
-
-                    .panel-header {
-                        display: flex;
-                        flex-direction: row;
-                        justify-content: space-between;
-                    }
-
-                    .summoners {
-                        display: flex;
-                        justify-content: space-evenly;
+                    .recent-stats-grid {
                         height: 100%;
-                        align-items: center;
-
-                        .summoner {
-                            text-align: center;
-
-                            .avatar {
-                                width: 100px;
-                                margin-bottom: 10px;
-
-                                img {
-                                    border-radius: 50%;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        &.dark {
-            .home {
-                background-color: $palette-dark-secondary;
-                border-top: 1px solid $palette-dark-border;
-
-                .page-header {
-                    color: white;
-
-                    h1 {
-                        span {
-                            color: $palette-accent;
-                        }
-                    }
-                }
-
-                .content {
-                    .panel {
-                        background-color: $palette-dark-primary;
-                        border: 3px solid $palette-dark-border;
-                        color: white;
+                        width: 100%;
+                        display: grid;
+                        grid-gap: 30px;
+                        grid-template: 1fr 1fr / 1fr 1fr;
                     }
                 }
             }

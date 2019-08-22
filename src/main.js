@@ -5,7 +5,7 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {
     faHome, faUsers, faTrophy, faBell, faCaretDown, faCircle, faArrowLeft, faArrowRight,
     faEllipsisH, faUserSecret, faStar, faCrown, faCheck, faBars, faCog, faSignOutAlt, faMoon,
-    faTools, faFire, faCheckCircle, faPaperPlane
+    faTools, faFire, faCheckCircle, faPaperPlane, faSkullCrossbones, faCoins, faEye, faMedal
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import router from './router'
@@ -60,7 +60,11 @@ library.add(
     faTools,
     faFire,
     faCheckCircle,
-    faPaperPlane
+    faPaperPlane,
+    faSkullCrossbones,
+    faCoins,
+    faEye,
+    faMedal
 );
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);

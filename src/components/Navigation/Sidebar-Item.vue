@@ -24,7 +24,7 @@
 
 <script>
     export default {
-        name: 'NavItem',
+        name: 'SidebarItem',
         props: {
             name: String,
             link: String,

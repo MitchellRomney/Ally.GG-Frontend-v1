@@ -2,43 +2,25 @@
     <nav id="nav">
         <router-link :to="{ name: 'home' }">
             <div class="logo-wrapper">
-                <img class="logo resp-img" alt="Ally.GG Logo" src="../../assets/images/icon.png">
+                <img class="logo resp-img" alt="Ally.GG Logo" src="../../assets/images/ally-white-noperiod.png">
             </div>
         </router-link>
         <ul class="nav-items">
-
-            <NavItem exact name="Home" link="home" icon="home"/>
-
-            <NavItem name="Summoners" link="summoners" icon="users"/>
-
-            <NavItem name="Champions" link="None" icon="fire"
-                     message="Not yet available. Please check back soon." />
-
-            <NavItem name="Improve" link="improve" icon="trophy" v-if="summoners.length > 0"/>
-
-            <NavItem name="Improve" link='None' icon="trophy"
-                     message="You need to verify at least 1 Summoner to use this feature."
-                     v-if="summoners.length === 0"/>
-
-            <NavItem name="Premium" link="None" icon="crown"
-                     message="Not yet available. Please check back soon." />
+            <SidebarItem exact name="Home" link="home" icon="home"/>
         </ul>
     </nav>
 </template>
 
 <script>
-    import NavItem from './navItem';
-    import axios from 'axios';
+    import SidebarItem from './Sidebar-Item';
 
     export default {
-        name: 'Navbar',
+        name: 'Sidebar',
         components: {
-            NavItem
+            SidebarItem
         },
         data() {
-            return {
-                darkModeSwitch: true
-            }
+            return {}
         },
         computed: {
             user() {
@@ -64,9 +46,8 @@
     #ally-gg {
         nav {
             grid-area: nav;
-            border-right: 1px solid $palette-border;
             text-align: left;
-            background-color: white;
+            background: $AllyPinkPurple;
             position: fixed;
             height: 100vh;
             width: 130px;
@@ -74,12 +55,14 @@
             align-items: center;
             left: -130px;
             z-index: 2000;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.25);
+            border-radius: 0 10px 10px 0;
             opacity: 0;
 
             @media #{$bp-md}{
-                box-shadow: none;
                 opacity: 1;
+                left: 0;
+                z-index: 950;
             }
 
             &.open {
@@ -87,13 +70,8 @@
                 opacity: 1;
             }
 
-            @media #{$bp-md}{
-                left: 0;
-                z-index: 950;
-            }
-
             .logo-wrapper {
-                height: 90px;
+                height: 120px;
                 display: flex;
                 align-items: center;
 
@@ -109,18 +87,6 @@
                 height: calc(100vh - 90px);
                 align-items: center;
 
-            }
-
-            .dark-mode {
-                margin-top: auto;
-                margin-bottom: 20px;
-            }
-        }
-
-        &.dark {
-            nav {
-                background-color: $palette-dark-primary;
-                border-right: 1px solid $palette-dark-border;
             }
         }
     }
