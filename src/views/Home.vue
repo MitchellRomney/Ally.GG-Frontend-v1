@@ -1,17 +1,29 @@
 <template>
     <div id="home">
         <div class="content container">
-            <RankedGrowthPanel/>
+            <RankedGrowthPanel :loaded="summonerLoaded" :matches="matches"/>
             <SummonerPanel :summoner="summoner" :summonerIconLoaded="summonerIconLoaded"
                            :summonerLoaded="summonerLoaded" v-on:update="updateSummoner(-1)"/>
             <div class="recent-stats-wrapper">
-                <h2 class="panel-header">Recent Statistics</h2>
+                <div class="panel-header">
+                    <h2>Recent Statistics</h2>
+                    <select v-model="recentStatsScope">
+                        <option value="10">Past 10 Games</option>
+                        <option selected value="20">Past 20 Games</option>
+                        <option value="30">Past 30 Games</option>
+                        <option value="40">Past 40 Games</option>
+                    </select>
+                </div>
                 <div class="recent-stats-flex">
                     <div class="recent-stats-grid">
-                        <SmallStatisticPanel :content="homeStats.averageKda" :gradient="true" :loaded="homeStatsLoaded"/>
-                        <SmallStatisticPanel :content="homeStats.averageCs" :loaded="homeStatsLoaded"/>
-                        <SmallStatisticPanel :content="homeStats.averageVision" :loaded="homeStatsLoaded"/>
-                        <SmallStatisticPanel :content="homeStats.winrate" :loaded="homeStatsLoaded"/>
+                        <SmallStatisticPanel :content="homeStats.averageKda" :gradient="true"
+                                             :loaded="homeStatsLoaded" :scope="recentStatsScope"/>
+                        <SmallStatisticPanel :content="homeStats.averageCs" :loaded="homeStatsLoaded"
+                                             :scope="recentStatsScope"/>
+                        <SmallStatisticPanel :content="homeStats.averageVision" :loaded="homeStatsLoaded"
+                                             :scope="recentStatsScope"/>
+                        <SmallStatisticPanel :content="homeStats.winrate" :loaded="homeStatsLoaded"
+                                             :scope="recentStatsScope"/>
                     </div>
                 </div>
             </div>
@@ -38,19 +50,6 @@
             profileIconId
             summonerLevel
             lastUpdated
-            userProfile {
-              friends {
-                user {
-                  id
-                  username
-                }
-              }
-              premium
-              premiumStart
-              user {
-                username
-              }
-            }
             rankedSolo {
               tier
               rank
@@ -59,7 +58,6 @@
               leagueName
               wins
               losses
-              ringValues
             }
             rankedFlex5 {
               tier
@@ -69,7 +67,6 @@
               leagueName
               wins
               losses
-              ringValues
             }
             rankedFlex3 {
               tier
@@ -79,7 +76,6 @@
               leagueName
               wins
               losses
-              ringValues
             }
           }
           summonerPlayers(summonerName: $summonerName, server: $server, games: $games) {
@@ -204,6 +200,7 @@
         data() {
             return {
                 selectedSummoner: this.$store.state.user.Profiles[0].Summoners[0],
+                recentStatsScope: '20',
                 summoner: {},
                 homeStats: {},
                 matches: [],
@@ -211,6 +208,12 @@
                 homeStatsLoaded: false,
                 summonerLoaded: false,
                 summonerIconLoaded: false,
+            }
+        },
+        watch: {
+            recentStatsScope() {
+                this.homeStatsLoaded = false;
+                this.getHomeStats();
             }
         },
         computed: {
@@ -271,7 +274,7 @@
                         variables: {
                             summonerName: this.selectedSummoner.summonerName,
                             server: this.selectedSummoner.server,
-                            games: 20
+                            games: parseInt(this.recentStatsScope)
                         },
                     }
                 }).then((response) => {
@@ -331,6 +334,9 @@
                 .panel-header {
                     text-shadow: 0 5px 20px rgba(52, 133, 255, 0.075), 0 4px 6px rgba(46, 89, 155, 0.2);
                     padding-bottom: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
                 }
 
                 .recent-stats-flex {

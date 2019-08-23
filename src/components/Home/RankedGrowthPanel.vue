@@ -1,21 +1,33 @@
 <template>
     <div id="RankedGrowthPanel">
-        <h2 class="panel-header">Ranked Growth</h2>
-        <div class="panel-wrapper">
-
+        <h2 class="panel-header">Stat Growth (CS Per Minute)</h2>
+        <div class="panel-wrapper-flex">
+            <div class="panel-wrapper">
+                <CSPerMin v-if="loaded" :matches="matches"></CSPerMin>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import CSPerMin from './GrowthPanel/CSPerMinGraph'
+
     export default {
         name: 'RankedGrowthPanel',
-        components: {},
+        props: {
+            matches: Array,
+            loaded: Boolean,
+        },
+        components: {
+            CSPerMin
+        },
         data() {
             return {}
         },
+        watch: {},
         computed: {},
-        methods: {}
+        methods: {},
+        mounted() {}
     }
 </script>
 
@@ -31,12 +43,19 @@
             padding-bottom: 10px;
         }
 
-        .panel-wrapper {
-            background-color: white;
-            box-shadow: 0 5px 20px rgba(52, 133, 255, 0.15), 0 4px 6px rgba(46, 89, 155, 0.4);
-            border-radius: 5px;
+        .panel-wrapper-flex {
+            display: flex;
             height: 100%;
-            width: 100%;
+
+            .panel-wrapper {
+                background-color: white;
+                box-shadow: 0 5px 20px rgba(52, 133, 255, 0.15), 0 4px 6px rgba(46, 89, 155, 0.4);
+                border-radius: 5px;
+                height: 100%;
+                width: 100%;
+                padding: 0 20px;
+                display: flex;
+            }
         }
     }
 </style>

@@ -18,6 +18,7 @@ import Vue2TouchEvents from 'vue2-touch-events'
 import store from './store.js'
 import VueAnalytics from 'vue-analytics'
 import VueTippy from 'vue-tippy'
+import HighchartsVue from 'highcharts-vue'
 import ToggleButton from 'vue-js-toggle-button'
 
 
@@ -26,6 +27,7 @@ Vue.use(Vue2TouchEvents);
 Vue.use(VueCookie);
 Vue.use(Vuex);
 Vue.use(ToggleButton);
+Vue.use(HighchartsVue);
 
 Vue.use(VueAnalytics, {
     id: 'UA-142475995-1',

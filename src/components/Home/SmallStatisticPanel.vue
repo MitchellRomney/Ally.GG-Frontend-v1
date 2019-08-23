@@ -1,28 +1,30 @@
 <template>
     <div id="StatisticPanel" :class="{ gradient : gradient }">
-        <div class="panel-wrapper" v-if="loaded">
-            <div class="scope">{{ content.scope }}</div>
-            <div class="icon">
-                <font-awesome-icon :icon="content.icon" size="4x"/>
-            </div>
-            <div class="bottom-wrapper">
-                <div class="statistic">
-                    {{ content.statistic }}
+        <transition name="fade" mode="out-in">
+            <div class="panel-wrapper" v-if="loaded">
+                <div class="scope">Past {{ scope }} Games</div>
+                <div class="icon">
+                    <font-awesome-icon :icon="content.icon" size="4x"/>
                 </div>
-                <div class="value-growth">
-                    <div class="value">
-                        {{ content.value }}
-                        <span v-if="content.statistic === 'Average KDA'">:1</span>
-                        <span v-if="content.statistic === 'Winrate'">%</span>
+                <div class="bottom-wrapper">
+                    <div class="statistic">
+                        {{ content.statistic }}
                     </div>
-                    <div class="growth" :class="{ positive : positiveGrowth }" v-if="content.growth">
-                        <span v-if="positiveGrowth">+ </span>
-                        {{ content.growth }}
-                        <span v-if="content.statistic === 'Winrate'">%</span>
+                    <div class="value-growth">
+                        <div class="value">
+                            {{ content.value }}
+                            <span v-if="content.statistic === 'Average KDA'">:1</span>
+                            <span v-if="content.statistic === 'Winrate'">%</span>
+                        </div>
+                        <div class="growth" :class="{ positive : positiveGrowth }" v-if="content.growth">
+                            <span v-if="positiveGrowth">+ </span>
+                            {{ content.growth }}
+                            <span v-if="content.statistic === 'Winrate'">%</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -32,7 +34,8 @@
         props: {
             content: Object,
             gradient: Boolean,
-            loaded: Boolean
+            loaded: Boolean,
+            scope: String
         },
         components: {},
         data() {
