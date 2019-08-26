@@ -7,6 +7,22 @@
   opacity: 0;
 }
 
+.nextPage-enter, .previousPage-leave-active {
+  opacity: 0;
+  transform: translateX(140px);
+  transition: all 0.6s ease-out;
+}
+.nextPage-enter-to, .previousPage-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all .6s ease-out;
+}
+.nextPage-leave-active, .previousPage-enter {
+  opacity: 0;
+  transform: translateX(-140px);
+  transition: all .6s ease-out;
+}
+
 @keyframes bounce-anim {
   0%, 90% {
     animation-timing-function: linear

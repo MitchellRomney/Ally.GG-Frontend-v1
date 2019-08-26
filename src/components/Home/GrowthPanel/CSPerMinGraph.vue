@@ -65,6 +65,11 @@
                             threshold: null
                         }
                     },
+                    xAxis: {
+                        labels: {
+                            enabled: false
+                        }
+                    },
                     credits: {
                         enabled: false
                     },
@@ -89,8 +94,6 @@
                     this.chartOptions.series = [{
                         data: series
                     }];
-
-                    console.log(this.chartOptions.series);
                 }
             },
             getChampionTileUrl(champion) {

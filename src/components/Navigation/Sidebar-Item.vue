@@ -1,5 +1,6 @@
 <template>
     <li class="nav-item" :class="name">
+        <div class="nav-back-pink"></div>
         <router-link :to="{ name: link }" class="nav-link" :exact="exact" v-if="link !== 'None'">
             <div class="icon">
                 <font-awesome-icon :icon=icon />
@@ -39,14 +40,26 @@
     #ally-gg {
         .nav-item {
             border-radius: 5px;
-            margin: 5px 0;
             font-weight: 500;
+            position: relative;
+            width: 100%;
+
+            .nav-back-pink {
+                z-index: -1;
+                background-color: $AllyPink;
+                width: 50%;
+                height: 100%;
+                position: absolute;
+            }
 
             .nav-link, .disabled {
                 display: flex;
                 align-items: center;
-                flex-direction: column;
-                padding: 20px 0;
+                height: 50px;
+                padding: 5px 0 5px 10px;
+                background-color: $AllyBackground;
+                margin-left: 20px;
+                border-radius: 10px;
 
                 &:hover {
                     .icon {
@@ -59,6 +72,7 @@
                 }
 
                 &.router-link-active {
+                    color: $AllyPink;
 
                     .icon {
                         opacity: 1;
@@ -74,10 +88,14 @@
                     border-radius: 5px;
                     opacity: 0.6;
                     font-size: 1.5rem;
+                    display: flex;
+                    align-items: center;
+                    margin-right: 10px;
                 }
 
                 .name {
                     opacity: 0.6;
+                    margin-top: 5px;
                 }
             }
 

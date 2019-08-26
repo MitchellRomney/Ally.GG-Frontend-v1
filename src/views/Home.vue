@@ -1,7 +1,7 @@
 <template>
     <div id="home">
         <div class="content container">
-            <RankedGrowthPanel :loaded="summonerLoaded" :matches="matches"/>
+            <RankedGrowthPanel :loaded="summonerLoaded" :matches="sortedMatches"/>
             <SummonerPanel :summoner="summoner" :summonerIconLoaded="summonerIconLoaded"
                            :summonerLoaded="summonerLoaded" v-on:update="updateSummoner(-1)"/>
             <div class="recent-stats-wrapper">
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <MatchHistoryPanel :matches="matches"/>
+            <MatchHistoryPanel :matches="sortedMatches"/>
             <ActivityHeatmapPanel/>
         </div>
     </div>
@@ -204,6 +204,7 @@
                 summoner: {},
                 homeStats: {},
                 matches: [],
+                remaining_matches: 0,
 
                 homeStatsLoaded: false,
                 summonerLoaded: false,
@@ -232,7 +233,14 @@
                     summonerIcon.src = 'https://ddragon.leagueoflegends.com/cdn/' + this.patch + '/img/profileicon/' + this.summoner.profileIconId + '.png';
                     return summonerIcon
                 }
-            }
+            },
+            sortedMatches() {
+                return this.matches.sort(function (a, b) {
+                    let x = a['match']['timestamp'];
+                    let y = b['match']['timestamp'];
+                    return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+                });
+            },
         },
         methods: {
             getSummonerInfo() {
@@ -244,7 +252,7 @@
                         variables: {
                             summonerName: this.selectedSummoner.summonerName,
                             server: this.selectedSummoner.server,
-                            games: 20
+                            games: 30
                         },
                     }
                 }).then((response) => {
@@ -254,6 +262,8 @@
                         this.summoner = data.summoner;
                         this.matches = data.summonerPlayers;
                         this.summonerLoaded = true;
+
+                        this.webSocketManager();
 
                         if (this.summonerIcon.complete) {
                             this.summonerIconLoaded = true;
@@ -302,9 +312,62 @@
                         },
                     }
                 }).then((response) => {
-                    console.log(response);
+                    // Store the data in an easier to use variable.
+                    let data = response.data.data.updateSummoner;
+                    this.remaining_matches = data.newMatches;
                 })
             },
+            webSocketManager() {
+                this.$disconnect();
+                if (this.$options.sockets.onmessage) {
+                    delete this.$options.sockets.onmessage;
+                }
+
+                this.$connect(
+                    process.env.VUE_APP_WS_URL + '/summoner/' + this.summoner.server + '/' + this.summoner.summonerId, {
+                        format: 'json',
+                        store: this.$store,
+                    });
+
+                this.$options.sockets.onmessage = (response) => {
+
+                    // Parse and store data in variable.
+                    let data = JSON.parse(response.data);
+
+                    // If there is proper data in the response...
+                    if (data.data) {
+
+                        // If data is a new match...
+                        if ('match' in data.data) {
+
+                            // Decrease the remaining matches count by 1.
+                            this.remaining_matches += -1;
+
+                            let player = JSON.parse(data.data.match).player;
+
+                            // Add new match to match list.
+                            this.matches.push(player);
+
+                            // Else if data is new Summoner data..
+                        } else if ('summoner' in data.data) {
+
+                            // Store the new Summoner information.
+                            this.summoner = JSON.parse(data.data.summoner).summoner;
+
+                            // Declare the Summoner as loaded.
+                            this.summonerLoaded = true;
+
+                            if (this.summonerIcon.complete) {
+                                this.summonerIconLoaded = true;
+                            } else {
+                                this.summonerIcon.addEventListener('load', () => {
+                                    this.summonerIconLoaded = true;
+                                })
+                            }
+                        }
+                    }
+                };
+            }
         },
         mounted() {
             this.getSummonerInfo();
