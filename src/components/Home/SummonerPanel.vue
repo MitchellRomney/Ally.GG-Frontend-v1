@@ -2,41 +2,67 @@
     <div id="SummonerPanel">
         <h2 class="panel-header">Summoner</h2>
         <div class="panel-wrapper">
-            <div class="panel-content">
-                <div class="avatar-wrapper">
-                    <transition name="fade" mode="out-in">
-                        <div class="content-loader" v-if="!summonerIconLoaded">
-                            <content-loader :width="100" :height="100"
-                                            :primaryColor="conLoadPrimary"
-                                            :secondaryColor="conLoadSecondary"></content-loader>
-                        </div>
-                        <div class="avatar" v-else v-cloak key="2">
-                            <img class="resp-img" v-if="summonerLoaded"
-                                 :onLoad="summonerIconLoaded = true"
-                                 :alt="summoner.summonerName + '\'s Summoner Icon'"
-                                 :src="summonerIcon.src">
-                        </div>
-                    </transition>
-                </div>
-                <div class="summoner-info">
-                    <div class="name">
-                        {{ summoner.summonerName }}
+            <transition name="fade" mode="out-in">
+                <div class="panel-content" v-if="!summonerSwitching" :key="1">
+                    <div class="avatar-wrapper">
+                        <transition name="fade" mode="out-in">
+                            <div class="content-loader" v-if="!summonerIconLoaded">
+                                <content-loader :width="100" :height="100"
+                                                :primaryColor="conLoadPrimary"
+                                                :secondaryColor="conLoadSecondary"></content-loader>
+                            </div>
+                            <div class="avatar" v-else v-cloak key="2">
+                                <img class="resp-img" v-if="summonerLoaded"
+                                     :onLoad="summonerIconLoaded = true"
+                                     :alt="summoner.summonerName + '\'s Summoner Icon'"
+                                     :src="summonerIcon.src">
+                            </div>
+                        </transition>
                     </div>
-                    <div class="last-updated">
-                        Last Updated: {{ summoner.lastUpdated }}
+                    <div class="summoner-info">
+                        <div class="name">
+                            {{ summoner.summonerName }}
+                        </div>
+                        <div class="last-updated">
+                            Last Updated: {{ summoner.lastUpdated }}
+                        </div>
+                    </div>
+                    <div class="summoner-ranks">
+                        <RankedTierIcon :rankedQueue="summoner.rankedSolo" v-if="summoner.rankedSolo"/>
+                        <RankedTierIcon :rankedQueue="summoner.rankedFlex5" v-if="summoner.rankedFlex5"/>
+                        <RankedTierIcon :rankedQueue="summoner.rankedFlex3" v-if="summoner.rankedFlex3"/>
+                        <RankedTierIcon :rankedQueue="summoner.rankedTFT" v-if="summoner.rankedTFT"/>
+                    </div>
+                    <div class="buttons">
+                        <button @click="$emit('update')">Update</button>
+                        <button @click="summonerSwitching = true" class="switch">Switch</button>
                     </div>
                 </div>
-                <div class="summoner-ranks">
-                    <RankedTierIcon :rankedQueue="summoner.rankedSolo" v-if="summoner.rankedSolo" />
-                    <RankedTierIcon :rankedQueue="summoner.rankedFlex5" v-if="summoner.rankedFlex5" />
-                    <RankedTierIcon :rankedQueue="summoner.rankedFlex3" v-if="summoner.rankedFlex3" />
-                    <RankedTierIcon :rankedQueue="summoner.rankedTFT" v-if="summoner.rankedTFT" />
+                <div class="summoner-switching" :key="2" v-else>
+                    <div class="summoner" v-for="summoner in summoners" @click="switchSummoner(summoner)">
+                        <div class="avatar-wrapper">
+                            <transition name="fade" mode="out-in">
+                                <div class="inner-content-loader" v-if="!summonerIconLoaded">
+                                    <content-loader :width="100" :height="100"
+                                                    :primaryColor="conLoadPrimary"
+                                                    :secondaryColor="conLoadSecondary"></content-loader>
+                                </div>
+                                <div class="avatar" v-else v-cloak key="2">
+                                    <img class="resp-img" v-if="summonerLoaded"
+                                         :onLoad="summonerIconLoaded = true"
+                                         :alt="summoner.summonerName + '\'s Summoner Icon'"
+                                         :src="summonerIcon.src">
+                                </div>
+                            </transition>
+                        </div>
+                        <div class="summoner-info">
+                            <div class="name">
+                                {{ summoner.summonerName }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="buttons">
-                    <button @click="$emit('update')">Update</button>
-                    <button class="switch">Switch</button>
-                </div>
-            </div>
+            </transition>
         </div>
     </div>
 </template>
@@ -53,31 +79,37 @@
         },
         props: {
             summoner: Object,
+            summonerIcon: HTMLImageElement,
             summonerIconLoaded: Boolean,
             summonerLoaded: Boolean,
         },
         data() {
-            return {}
+            return {
+                summonerSwitching: false,
+            }
         },
         computed: {
             patch() {
                 return this.$store.state.patch
             },
+            summoners() {
+                return this.$store.state.user.Profiles[0].Summoners
+            },
             conLoadPrimary() {
-                    return '#f9f9f9'
+                return '#f9f9f9'
             },
             conLoadSecondary() {
-                    return '#ecebeb'
-            },
-            summonerIcon() {
-                if (this.summoner.profileIconId) {
-                    const summonerIcon = new Image();
-                    summonerIcon.src = 'https://ddragon.leagueoflegends.com/cdn/' + this.patch + '/img/profileicon/' + this.summoner.profileIconId + '.png';
-                    return summonerIcon
-                }
+                return '#ecebeb'
             },
         },
-        methods: {}
+        methods: {
+            switchSummoner(summoner) {
+                if (summoner.summonerName !== this.summoner.summonerName) {
+                    this.$emit('switch', summoner);
+                }
+                this.summonerSwitching = false;
+            }
+        }
     }
 </script>
 
@@ -144,6 +176,35 @@
 
                         &.switch {
                             background-color: #3B4B61;
+                        }
+                    }
+                }
+            }
+
+            .summoner-switching {
+                height: 100%;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+
+                .summoner {
+                    display: flex;
+                    flex-direction: column;
+                    cursor: pointer;
+                    align-items: center;
+
+                    .avatar-wrapper {
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                    }
+
+                    .summoner-info {
+                        .name {
+                            text-shadow: 0 5px 20px rgba(52, 133, 255, 0.075), 0 4px 6px rgba(46, 89, 155, 0.2);
+                            font-family: 'Panton Black', sans-serif;
+                            font-size: 2rem;
                         }
                     }
                 }

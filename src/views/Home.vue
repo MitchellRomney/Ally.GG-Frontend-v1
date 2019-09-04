@@ -2,8 +2,8 @@
     <div id="home">
         <div class="content container">
             <RankedGrowthPanel :loaded="summonerLoaded" :matches="sortedMatches"/>
-            <SummonerPanel :summoner="summoner" :summonerIconLoaded="summonerIconLoaded"
-                           :summonerLoaded="summonerLoaded" v-on:update="updateSummoner(-1)"/>
+            <SummonerPanel :summoner="summoner" :summonerIconLoaded="summonerIconLoaded" :summonerIcon="summonerIcon"
+                           :summonerLoaded="summonerLoaded" v-on:update="updateSummoner(-1)" v-on:switch="switchSummoner"/>
             <div class="recent-stats-wrapper">
                 <div class="panel-header">
                     <h2>Recent Statistics</h2>
@@ -316,6 +316,15 @@
                     let data = response.data.data.updateSummoner;
                     this.remaining_matches = data.newMatches;
                 })
+            },
+            switchSummoner(summoner) {
+                this.summonerLoaded = false;
+                this.selectedSummoner = summoner;
+                this.summoner = summoner;
+
+                this.webSocketManager();
+                this.getSummonerInfo();
+                this.getHomeStats();
             },
             webSocketManager() {
                 this.$disconnect();
