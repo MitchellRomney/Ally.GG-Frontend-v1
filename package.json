@@ -16,7 +16,7 @@
     "@types/jwt-decode": "^2.2.1",
     "apexcharts": "^3.8.4",
     "async": "^3.0.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "chart.js": "^2.8.0",
     "connect-history-api-fallback": "^1.6.0",
     "core-js": "^2.6.5",
@@ -35,7 +35,6 @@
     "vue": "^2.6.10",
     "vue-analytics": "^5.17.0",
     "vue-apexcharts": "^1.4.0",
-    "vue-apollo": "^3.0.0-beta.11",
     "vue-chartjs": "^3.4.2",
     "vue-content-loader": "^0.2.2",
     "vue-cookie": "^1.1.4",
@@ -54,10 +53,7 @@
     "@vue/cli-service": "^3.7.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
-    "eslint-plugin-graphql": "^2.1.1",
     "eslint-plugin-vue": "^5.0.0",
-    "graphql-tag": "^2.9.0",
-    "vue-cli-plugin-apollo": "^0.20.0",
     "vue-loader": "^15.7.0",
     "vue-template-compiler": "^2.6.10"
   },
@@ -70,21 +66,10 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {
-      "graphql/template-strings": [
-        "error",
-        {
-          "env": "literal",
-          "projectName": "app"
-        }
-      ]
-    },
+    "rules": {},
     "parserOptions": {
       "parser": "babel-eslint"
-    },
-    "plugins": [
-      "graphql"
-    ]
+    }
   },
   "postcss": {
     "plugins": {
