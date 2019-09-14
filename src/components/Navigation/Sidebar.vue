@@ -10,6 +10,42 @@
         </router-link>
         <ul class="nav-items">
             <SidebarItem exact name="Home" link="home" icon="home"/>
+            <li class="profile" @click="toggleProfileMenu">
+                <transition name="fade">
+                    <div class="profile-menu" v-if="openProfileMenu">
+                        <ul class="options-dropdown">
+                            <router-link to="/settings">
+                                <li class="menu-link">
+                                    <font-awesome-icon icon="cog"/>
+                                    <div class="item-name">
+                                        User Settings
+                                    </div>
+                                </li>
+                            </router-link>
+                            <router-link to="/admin">
+                                <li v-if="user.isSuperuser" class="menu-link">
+                                    <font-awesome-icon icon="tools"/>
+                                    <div class="item-name">
+                                        Admin Panel
+                                    </div>
+                                </li>
+                            </router-link>
+                            <li class="divider"></li>
+                            <li class="logout menu-link" @click="logout">
+                                <font-awesome-icon icon="sign-out-alt"/>
+                                <div class="item-name">
+                                    Log Out
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </transition>
+                <div class="avatar-wrapper">
+                    <div class="avatar">
+                        <img class="resp-img" :alt="user.username" :src="user.Profiles[0].avatar">
+                    </div>
+                </div>
+            </li>
         </ul>
     </nav>
 </template>
@@ -23,7 +59,9 @@
             SidebarItem
         },
         data() {
-            return {}
+            return {
+                openProfileMenu: false,
+            }
         },
         computed: {
             user() {
@@ -41,7 +79,11 @@
                 }
             },
         },
-        methods: {}
+        methods: {
+            toggleProfileMenu() {
+                this.openProfileMenu = !this.openProfileMenu;
+            }
+        }
     }
 </script>
 
@@ -106,9 +148,90 @@
                 padding: 10px 0;
                 display: flex;
                 flex-direction: column;
-                height: calc(100vh - 90px);
+                height: calc(100vh - 130px);
                 align-items: center;
 
+                .profile {
+                    margin-top: auto;
+                    position: relative;
+                    cursor: pointer;
+
+                    .profile-menu {
+                        position: absolute;
+                        bottom: 110%;
+                        border-radius: 5px;
+                        background-color: white;
+                        width: 200px;
+                        box-shadow: $shadow;
+                        border: 1px solid #DFE3E8;
+
+                        .options-dropdown {
+                            border-radius: 5px;
+                            background-color: white;
+                            z-index: 1050;
+
+                            .divider {
+                                border-top: 1px solid #DFE3E8;
+                                margin: 0 10px;
+                            }
+
+                            .menu-link {
+                                cursor: pointer;
+                                display: grid;
+                                grid-template: auto / 30px auto auto;
+                                font-weight: bold;
+                                font-size: 0.9rem;
+                                padding: 15px 10px;
+
+                                svg {
+                                    opacity: 0.6;
+                                    display: flex;
+                                    align-self: center;
+                                    justify-self: center;
+                                }
+
+                                .item-name {
+                                    display: flex;
+                                    justify-self: baseline;
+                                    width: 100%;
+
+                                    span {
+                                        margin: auto auto auto 0;
+                                    }
+                                }
+
+                                &.logout {
+                                    border-radius: 0 0 5px 5px;
+                                }
+
+                                &:hover {
+                                    background-color: $palette-accent;
+                                    color: white;
+                                }
+                            }
+
+                            .category {
+                                display: flex;
+                                cursor: initial;
+                                padding: 10px 10px 5px 10px;
+                                opacity: 0.6;
+
+                                &:hover {
+                                    background-color: initial;
+                                    color: initial;
+                                }
+                            }
+                        }
+                    }
+
+                    .avatar-wrapper {
+                        width: 60px;
+                        height: 60px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                    }
+                }
             }
         }
     }

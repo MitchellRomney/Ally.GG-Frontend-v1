@@ -23,6 +23,7 @@
               dateJoined
               Profiles {
                 id
+                avatar
                 Summoners {
                   summonerName
                   profileIconId

@@ -2,8 +2,9 @@
     <div id="home">
         <div class="content container">
             <RankedGrowthPanel :loaded="summonerLoaded" :matches="sortedMatches"/>
-            <SummonerPanel :summoner="summoner" :summonerIconLoaded="summonerIconLoaded" :summonerIcon="summonerIcon"
-                           :summonerLoaded="summonerLoaded" v-on:update="updateSummoner(-1)" v-on:switch="switchSummoner"/>
+            <SummonerPanel :selectedSummoner="summoner" :summonerIcons="summonerIcons"
+                           :summonerLoaded="summonerLoaded" v-on:update="updateSummoner(-1)"
+                           v-on:switch="switchSummoner"/>
             <div class="recent-stats-wrapper">
                 <div class="panel-header">
                     <h2>Recent Statistics</h2>
@@ -208,7 +209,6 @@
 
                 homeStatsLoaded: false,
                 summonerLoaded: false,
-                summonerIconLoaded: false,
             }
         },
         watch: {
@@ -227,12 +227,26 @@
             summoners() {
                 return this.user.Profiles[0].Summoners
             },
-            summonerIcon() {
-                if (this.summoner.profileIconId) {
-                    const summonerIcon = new Image();
-                    summonerIcon.src = 'https://ddragon.leagueoflegends.com/cdn/' + this.patch + '/img/profileicon/' + this.summoner.profileIconId + '.png';
-                    return summonerIcon
+            summonerIcons() {
+                let summonerIcons = {};
+                let summoners = this.$store.state.user.Profiles[0].Summoners;
+                for (let key in summoners) {
+                    // Grab the Summoner
+                    let summoner = summoners[key];
+
+                    // Load the image.
+                    const icon = new Image();
+                    icon.src = 'https://ddragon.leagueoflegends.com/cdn/' + this.patch + '/img/profileicon/' + summoner.profileIconId + '.png';
+
+                    // Build the Icon object with a loaded flag.
+                    const summonerIcon = {
+                        icon: icon,
+                        loaded: false
+                    };
+
+                    summonerIcons[summoner.summonerName] = summonerIcon;
                 }
+                return summonerIcons
             },
             sortedMatches() {
                 return this.matches.sort(function (a, b) {
@@ -265,12 +279,16 @@
 
                         this.webSocketManager();
 
-                        if (this.summonerIcon.complete) {
-                            this.summonerIconLoaded = true;
-                        } else {
-                            this.summonerIcon.addEventListener('load', () => {
-                                this.summonerIconLoaded = true;
-                            })
+                        for (let key in this.summonerIcons) {
+                            let summonerIcon = this.summonerIcons[key];
+
+                            if (summonerIcon.icon.complete) {
+                                summonerIcon.loaded = true;
+                            } else {
+                                summonerIcon.icon.addEventListener('load', () => {
+                                    summonerIcon.loaded = true;
+                                })
+                            }
                         }
                     }
                 });

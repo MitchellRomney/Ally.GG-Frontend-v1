@@ -4,34 +4,36 @@
         <div class="panel-wrapper">
             <transition name="fade" mode="out-in">
                 <div class="panel-content" v-if="!summonerSwitching" :key="1">
-                    <div class="avatar-wrapper">
+                    <div class="avatar-wrapper" v-if="summonerIcons[selectedSummoner.summonerName]">
                         <transition name="fade" mode="out-in">
-                            <div class="content-loader" v-if="!summonerIconLoaded">
+                            <div class="content-loader" v-if="!summonerIcons[selectedSummoner.summonerName].loaded">
                                 <content-loader :width="100" :height="100"
                                                 :primaryColor="conLoadPrimary"
                                                 :secondaryColor="conLoadSecondary"></content-loader>
                             </div>
                             <div class="avatar" v-else v-cloak key="2">
-                                <img class="resp-img" v-if="summonerLoaded"
-                                     :onLoad="summonerIconLoaded = true"
-                                     :alt="summoner.summonerName + '\'s Summoner Icon'"
-                                     :src="summonerIcon.src">
+                                <img class="resp-img" v-if="summonerIcons[selectedSummoner.summonerName].loaded"
+                                     :onLoad="summonerIcons[selectedSummoner.summonerName].loaded = true"
+                                     :alt="selectedSummoner.summonerName + '\'s Summoner Icon'"
+                                     :src="summonerIcons[selectedSummoner.summonerName].icon.src">
                             </div>
                         </transition>
                     </div>
                     <div class="summoner-info">
                         <div class="name">
-                            {{ summoner.summonerName }}
+                            {{ selectedSummoner.summonerName }}
                         </div>
                         <div class="last-updated">
-                            Last Updated: {{ summoner.lastUpdated }}
+                            Last Updated: {{ selectedSummoner.lastUpdated }}
                         </div>
                     </div>
                     <div class="summoner-ranks">
-                        <RankedTierIcon :rankedQueue="summoner.rankedSolo" v-if="summoner.rankedSolo"/>
-                        <RankedTierIcon :rankedQueue="summoner.rankedFlex5" v-if="summoner.rankedFlex5"/>
-                        <RankedTierIcon :rankedQueue="summoner.rankedFlex3" v-if="summoner.rankedFlex3"/>
-                        <RankedTierIcon :rankedQueue="summoner.rankedTFT" v-if="summoner.rankedTFT"/>
+                        <RankedTierIcon :rankedQueue="selectedSummoner.rankedSolo" v-if="selectedSummoner.rankedSolo"/>
+                        <RankedTierIcon :rankedQueue="selectedSummoner.rankedFlex5"
+                                        v-if="selectedSummoner.rankedFlex5"/>
+                        <RankedTierIcon :rankedQueue="selectedSummoner.rankedFlex3"
+                                        v-if="selectedSummoner.rankedFlex3"/>
+                        <RankedTierIcon :rankedQueue="selectedSummoner.rankedTFT" v-if="selectedSummoner.rankedTFT"/>
                     </div>
                     <div class="buttons">
                         <button @click="$emit('update')">Update</button>
@@ -40,20 +42,26 @@
                 </div>
                 <div class="summoner-switching" :key="2" v-else>
                     <div class="summoner" v-for="summoner in summoners" @click="switchSummoner(summoner)">
-                        <div class="avatar-wrapper">
-                            <transition name="fade" mode="out-in">
-                                <div class="inner-content-loader" v-if="!summonerIconLoaded">
-                                    <content-loader :width="100" :height="100"
-                                                    :primaryColor="conLoadPrimary"
-                                                    :secondaryColor="conLoadSecondary"></content-loader>
-                                </div>
-                                <div class="avatar" v-else v-cloak key="2">
-                                    <img class="resp-img" v-if="summonerLoaded"
-                                         :onLoad="summonerIconLoaded = true"
-                                         :alt="summoner.summonerName + '\'s Summoner Icon'"
-                                         :src="summonerIcon.src">
-                                </div>
-                            </transition>
+                        <div class="avatar-outer-wrapper">
+                            <div class="circle" v-if="summoner.summonerName === selectedSummoner.summonerName">
+                                <font-awesome-icon icon="check"></font-awesome-icon>
+                            </div>
+                            <div class="avatar-wrapper">
+                                <transition name="fade" mode="out-in">
+                                    <div class="inner-content-loader"
+                                         v-if="!summonerIcons[summoner.summonerName].loaded">
+                                        <content-loader :width="100" :height="100"
+                                                        :primaryColor="conLoadPrimary"
+                                                        :secondaryColor="conLoadSecondary"></content-loader>
+                                    </div>
+                                    <div class="avatar" v-else v-cloak :key="2">
+                                        <img class="resp-img" v-if="summonerIcons[summoner.summonerName].loaded"
+                                             :onLoad="summonerIcons[summoner.summonerName].loaded = true"
+                                             :alt="summoner.summonerName + '\'s Summoner Icon'"
+                                             :src="summonerIcons[summoner.summonerName].icon.src">
+                                    </div>
+                                </transition>
+                            </div>
                         </div>
                         <div class="summoner-info">
                             <div class="name">
@@ -78,9 +86,8 @@
             RankedTierIcon
         },
         props: {
-            summoner: Object,
-            summonerIcon: HTMLImageElement,
-            summonerIconLoaded: Boolean,
+            selectedSummoner: Object,
+            summonerIcons: Object,
             summonerLoaded: Boolean,
         },
         data() {
@@ -104,7 +111,7 @@
         },
         methods: {
             switchSummoner(summoner) {
-                if (summoner.summonerName !== this.summoner.summonerName) {
+                if (summoner.summonerName !== this.selectedSummoner.summonerName) {
                     this.$emit('switch', summoner);
                 }
                 this.summonerSwitching = false;
@@ -193,18 +200,38 @@
                     cursor: pointer;
                     align-items: center;
 
-                    .avatar-wrapper {
-                        width: 80px;
-                        height: 80px;
-                        border-radius: 50%;
-                        overflow: hidden;
+                    .avatar-outer-wrapper {
+                        position: relative;
+
+                        .circle {
+                            height: 25px;
+                            width: 25px;
+                            border-radius: 50%;
+                            position: absolute;
+                            bottom: 0;
+                            right: 0;
+                            background-color: limegreen;
+                            box-shadow: 0 0 0 5px white;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: white;
+                            padding-top: 2px;
+                        }
+
+                        .avatar-wrapper {
+                            width: 80px;
+                            height: 80px;
+                            border-radius: 50%;
+                            overflow: hidden;
+                        }
                     }
 
                     .summoner-info {
                         .name {
-                            text-shadow: 0 5px 20px rgba(52, 133, 255, 0.075), 0 4px 6px rgba(46, 89, 155, 0.2);
-                            font-family: 'Panton Black', sans-serif;
-                            font-size: 2rem;
+                            opacity: 0.9;
+                            margin-top: 5px;
+                            font-weight: bold;
                         }
                     }
                 }
